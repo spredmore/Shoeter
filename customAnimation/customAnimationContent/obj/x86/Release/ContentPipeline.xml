@@ -1,0 +1,343 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>Sprites\Idle.png</Source>
+      <Name>Sprites\Idle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\Idle.xnb</Output>
+      <Time>2013-10-25T20:52:05.0990977-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\Run.png</Source>
+      <Name>Sprites\Run</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\Run.xnb</Output>
+      <Time>2013-10-26T02:14:40.0379846-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\idol6.png</Source>
+      <Name>Sprites\idol6</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\idol6.xnb</Output>
+      <Time>2013-10-27T22:49:22.2209464-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\TransparentBlock.png</Source>
+      <Name>Tiles\TransparentBlock</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\TransparentBlock.xnb</Output>
+      <Time>2013-11-11T22:24:16.6023388-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\test1.png</Source>
+      <Name>Tiles\test1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\test1.xnb</Output>
+      <Time>2013-11-11T22:16:21.0321378-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\test2.png</Source>
+      <Name>Tiles\test2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\test2.xnb</Output>
+      <Time>2013-11-11T22:16:21.0331378-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\test3.png</Source>
+      <Name>Tiles\test3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\test3.xnb</Output>
+      <Time>2013-11-11T22:16:21.0351379-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\64x64Hitbox.png</Source>
+      <Name>Sprites\64x64Hitbox</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\64x64Hitbox.xnb</Output>
+      <Time>2013-11-13T14:44:04.5232324-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\Jump.png</Source>
+      <Name>Sprites\Jump</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\Jump.xnb</Output>
+      <Time>2013-11-16T02:49:15.7918423-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\steeltop1.png</Source>
+      <Name>Tiles\steeltop1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\steeltop1.xnb</Output>
+      <Time>2013-12-16T22:46:34.3495797-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\steeltop2.png</Source>
+      <Name>Tiles\steeltop2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\steeltop2.xnb</Output>
+      <Time>2013-12-16T22:46:34.3515798-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\steeltop3.png</Source>
+      <Name>Tiles\steeltop3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\steeltop3.xnb</Output>
+      <Time>2013-12-16T22:46:34.35458-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\16x16Hitbox.png</Source>
+      <Name>Sprites\16x16Hitbox</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\16x16Hitbox.xnb</Output>
+      <Time>2014-01-02T03:03:25.3654813-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\64x64Hitbox2.png</Source>
+      <Name>Sprites\64x64Hitbox2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\64x64Hitbox2.xnb</Output>
+      <Time>2014-01-02T03:40:24.9464341-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\blueCircle.png</Source>
+      <Name>Sprites\blueCircle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\blueCircle.xnb</Output>
+      <Time>2014-02-25T19:43:38.2465077-05:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\border.png</Source>
+      <Name>Tiles\border</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\border.xnb</Output>
+      <Time>2014-04-08T00:07:40.1725994-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\blueCircle.png</Source>
+      <Name>Tiles\blueCircle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\blueCircle.xnb</Output>
+      <Time>2014-04-09T23:08:04.479162-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\Horizontal1PxBorder.png</Source>
+      <Name>Tiles\Horizontal1PxBorder</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\Horizontal1PxBorder.xnb</Output>
+      <Time>2014-04-09T23:20:57.8053937-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\Vertical1PxBorder.png</Source>
+      <Name>Tiles\Vertical1PxBorder</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\Vertical1PxBorder.xnb</Output>
+      <Time>2014-04-09T23:20:57.8073938-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\32x48Hitbox.png</Source>
+      <Name>Sprites\32x48Hitbox</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\32x48Hitbox.xnb</Output>
+      <Time>2014-04-12T17:51:16.292124-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\32x48Hitbox2.png</Source>
+      <Name>Sprites\32x48Hitbox2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\32x48Hitbox2.xnb</Output>
+      <Time>2014-04-12T17:51:16.2951242-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\32x48Sprite.png</Source>
+      <Name>Sprites\32x48Sprite</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\32x48Sprite.xnb</Output>
+      <Time>2014-04-12T17:53:22.5693467-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\16x32Hitbox.png</Source>
+      <Name>Sprites\16x32Hitbox</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\16x32Hitbox.xnb</Output>
+      <Time>2014-04-12T19:40:15.792162-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\16x32Hitbox2.png</Source>
+      <Name>Sprites\16x32Hitbox2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\16x32Hitbox2.xnb</Output>
+      <Time>2014-04-12T19:40:15.7951622-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\16x32Sprite.png</Source>
+      <Name>Sprites\16x32Sprite</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\16x32Sprite.xnb</Output>
+      <Time>2014-04-12T19:40:15.7971623-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\16x16Hitbox3.png</Source>
+      <Name>Sprites\16x16Hitbox3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\16x16Hitbox3.xnb</Output>
+      <Time>2014-04-13T02:06:34.0243724-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\16x16Hitbox2.png</Source>
+      <Name>Sprites\16x16Hitbox2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\16x16Hitbox2.xnb</Output>
+      <Time>2014-04-13T02:08:37.7644499-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\32guy.png</Source>
+      <Name>Sprites\32guy</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\32guy.xnb</Output>
+      <Time>2014-04-27T03:16:34.3677682-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\Guy32x48.png</Source>
+      <Name>Sprites\Guy32x48</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\Guy32x48.xnb</Output>
+      <Time>2014-04-28T21:40:18.9948729-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\Shoes.png</Source>
+      <Name>Sprites\Shoes</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\Shoes.xnb</Output>
+      <Time>2014-05-02T23:57:50.5382701-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Sprites\Shoes32x48.png</Source>
+      <Name>Sprites\Shoes32x48</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Sprites\Shoes32x48.xnb</Output>
+      <Time>2014-05-02T23:57:50.5412703-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Tiles\Goal-16.png</Source>
+      <Name>Tiles\Goal-16</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\Tiles\Goal-16.xnb</Output>
+      <Time>2014-06-07T19:28:56.9887528-04:00</Time>
+    </Item>
+    <Item>
+      <Source>debugFont.spritefont</Source>
+      <Name>debugFont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\debugFont.xnb</Output>
+      <Time>2013-10-27T22:59:05.4183033-04:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <TargetPlatform>Windows</TargetPlatform>
+      <TargetProfile>HiDef</TargetProfile>
+      <BuildConfiguration>Release</BuildConfiguration>
+      <CompressContent>true</CompressContent>
+      <RootDirectory>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimationContent\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimationContent\obj\x86\Release\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimation\bin\x86\Release\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2010-08-23T12:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
+        <Value>2010-08-23T12:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2010-08-23T12:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2010-08-23T12:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2010-08-23T12:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
+        <Value>2010-08-23T12:41:18-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Windows\Microsoft.Net\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2014-05-19T18:22:00.0129016-04:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>
