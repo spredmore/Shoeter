@@ -1,9 +1,9 @@
 -----------------------------------------------------------------------
 
 SSSSSSSSSS H	    H OOOOOOOOOO EEEEEEEEEE TTTTTTTTT EEEEEEEEEE RRRRRR
-S	   H	    H O	       O E              T     E          R    R
+S	       H	    H O	       O E              T     E          R    R
 SSSSSSSSSS HHHHHHHHHH O	       O EEEEEEEEEE     T     EEEEEEEEEE RRRRRR 
-	 S H	    H O	       O E              T     E          R RR
+	     S H	    H O	       O E              T     E          R RR
 SSSSSSSSSS H	    H OOOOOOOOOO EEEEEEEEEE     T     EEEEEEEEEE R   RR
 
 ------------------------------------------------------------------------
