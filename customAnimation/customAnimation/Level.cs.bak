@@ -84,25 +84,9 @@ namespace customAnimation
                     // Going up the y axis works the same way. (0, 0), (0, 64), (0, 128), etc.
                     //tiles[column, row].Position = new Vector2((row * 16), (column * 16));
 
-                    // Set the position of the tile in the Level array.
-                    tiles[column, row].PositionInArray = new Vector2(column, row);
-
                     // Draw a rectangle around the tile. We need this for collision detection.
                     tiles[column, row].Position = new Vector2((row * 16), (column * 16));
                     tiles[column, row].SourceRect = new Rectangle((int)tiles[column, row].Position.X, (int)tiles[column, row].Position.Y, 16, 16);
-
-                    // Set the rotation and center for the tile.
-                    if (tiles[column, row].IsLauncher == true)
-                    {
-                        tiles[column, row].Center = new Vector2(16 / 2, 16 / 2);
-                        //tiles[column, row].Center = new Vector2(0, 0);
-                        tiles[column, row].Rotation = Tile.getRotationInRadians(tiles[column, row]);
-                    }
-                    else
-                    {
-                        tiles[column, row].Center = new Vector2(0, 0);
-                        //tiles[column, row].Rotation = MathHelper.ToRadians(90); // Set the tile to face straight up (90 degrees).
-                    }
                     
                     // We are going to store all the impassable tiles rectangles in a list. We will use this for collision detection.
                     if (tiles[column, row].CollProperties == Tile.CollisionProperty.Impassable)
@@ -125,9 +109,7 @@ namespace customAnimation
                 // The inner loop goes through the rows.
                 for (int row = 0; row < numberOfTilesInRow; row++)
                 {
-                    //sb.Draw(tiles[column, row].Texture, tiles[column, row].Position, Color.White);
-                    //sb.Draw(tiles[column, row].Texture, tiles[column, row].Position, tiles[column, row].SourceRect, Color.White);
-                    sb.Draw(tiles[column, row].Texture, tiles[column, row].Position, null, Color.White, tiles[column, row].Rotation, tiles[column, row].Center, 1f, SpriteEffects.None, 0);
+                    sb.Draw(tiles[column, row].Texture, tiles[column, row].Position, Color.White);
                 }
             }
         }
@@ -140,23 +122,6 @@ namespace customAnimation
         public Vector2 getPlayerStartingPosition()
         {
             return playerStartingPosition;
-        }
-
-        public static Vector2 getTilePositionInArray(int positionX, int positionY)
-        {
-            Vector2 arrayPosition = new Vector2();
-            Vector2 tilePosition = new Vector2(positionY, positionX);
-
-            for (int column = 0; column < numberOfTileColumns; column++)
-            {
-                for (int row = 0; row < numberOfTileColumns; row++)
-                {
-                    if (Level.tiles[column, row].Position == tilePosition)
-                        arrayPosition = new Vector2(row, column);
-                }
-            }
-
-            return arrayPosition;
         }
     }
 }

@@ -25,10 +25,6 @@ namespace customAnimation
         char tileRepresentation;
         Rectangle sourceRect;           // The rectangle in which the animated sprite will be drawn.
         Vector2 position;               // Stores the position of a tile.
-        Single rotation;               // Stores the current rotation for the tile.
-        Vector2 center;                 // Stores the center of the tile.
-        Boolean isLauncher = false;
-        Vector2 positionInArray;
 
         public static string debug;
 
@@ -71,44 +67,16 @@ namespace customAnimation
             set { position = value; }
         }
 
-        public Single Rotation
-        {
-            get { return rotation; }
-            set { rotation = value; }
-        }
-
-        public Vector2 Center
-        {
-            get { return center; }
-            set { center = value; }
-        }
-
         public Rectangle SourceRect
         {
             get { return sourceRect; }
             set { sourceRect = value; }
         }
 
-        public Boolean IsLauncher
-        {
-            get { return isLauncher; }
-            set { isLauncher = value; }
-        }
-
-        public Vector2 PositionInArray
-        {
-            get { return positionInArray; }
-            set { positionInArray = value; }
-        }
-
         public Tile(char tileRepresentation, ref ContentManager content)
         {
             // Set the appropriate tile, dependent on what character is is.
             this.tileRepresentation = tileRepresentation;
-
-            // Set the tile's origin point. Unless the tile is a launcher, the origin is the top left corner.
-            this.center.X = 0;
-            this.center.Y = 0;
 
             // Load the Game1's ContentManager, so we can draw outside of Game1.cs.
             this.content = content;
@@ -154,38 +122,6 @@ namespace customAnimation
                 this.texture = content.Load<Texture2D>("Tiles/spring");
                 this.collisionProperty = CollisionProperty.Impassable;
             }
-            else if (tileRepresentation == '1' || tileRepresentation == '2' || tileRepresentation == '3' || tileRepresentation == '4' || tileRepresentation == '6' || tileRepresentation == '7' || tileRepresentation == '8' || tileRepresentation == '9')
-            {
-                this.texture = content.Load<Texture2D>("Tiles/launcher_0");
-                this.collisionProperty = CollisionProperty.Impassable;
-                this.isLauncher = true;
-            }
-        }
-
-        // Return the rotation a tile depending it's specified angle.
-        public static Single getRotationInRadians(Tile tile)
-        {
-            Single rotationInRadians;
-            float rotationInDegrees = getLauncherAngleInDegrees(tile) - 90; // It's negative so it points the correct direction.    
-
-            // Now that the center point has been set, set the tile's rotation to the angle specified by its representation.
-            rotationInRadians = MathHelper.ToRadians(rotationInDegrees);
-
-            return rotationInRadians;
-        }
-
-        // Returns the angle at which the launcher should shoot the player, depending on which launcher is passed in.
-        public static int getLauncherAngleInDegrees(Tile tile)
-        {
-            if (tile.TileRepresentation == '1' || tile.TileRepresentation == '!') return 315;
-            else if(tile.TileRepresentation == '2' || tile.TileRepresentation == '@') return 270;
-            else if (tile.TileRepresentation == '3' || tile.TileRepresentation == '#') return 225;
-            else if (tile.TileRepresentation == '4' || tile.TileRepresentation == '$') return 0;
-            else if (tile.TileRepresentation == '6' || tile.TileRepresentation == '^') return 180;
-            else if (tile.TileRepresentation == '7' || tile.TileRepresentation == '&') return 45;
-            else if (tile.TileRepresentation == '8' || tile.TileRepresentation == '*') return 90;
-            else if (tile.TileRepresentation == '9' || tile.TileRepresentation == '(') return 135;
-            else return -1;
         }        
     }
 }
