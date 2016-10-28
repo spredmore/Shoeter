@@ -37,6 +37,14 @@ namespace customAnimation
 		private int bouncingHorizontally = 0;       // -1 represents left, 0 represents no bouncing, 1 represents right.
 		public bool delaySpringCollision = false;   // The Shoes can't use a Spring right after another Spring has already been used.
 		Timer delaySpringCollisionTimer;            // Delays movement of the Shoes from using a Spring too quickly.
+		Timer launcherTimer;                        // Delay before the Guy is launched.
+		Timer delayBetweenLaunchesTimer;            // Delay so the Guy doesn't use another launcher too quickly.
+
+		Vector2 launcherVelocity;                   // Used for handling velocity while the Shoes are being launched.
+		public bool usingLauncher = false;
+		bool hasBeenLaunched = false;
+		private int collX;
+		private int collY;
 
 		bool turnOffFalling = false;
 
@@ -60,8 +68,12 @@ namespace customAnimation
 			gravity = 30f;
 			debug = "";
 			debug2 = "";
+			collX = 0;
+			collY = 0;
 
 			this.delaySpringCollisionTimer = new Timer(0.3f);
+			this.launcherTimer = new Timer(2f);
+			this.delayBetweenLaunchesTimer = new Timer(2f);
 		}
 
 		public void Update(GameTime gameTime, ref Guy guy)
@@ -75,6 +87,12 @@ namespace customAnimation
 
 		private void handleMovement(GameTime gameTime, ref Guy guy)
 		{
+			//debug = "delayBetweenLaunchesTimer: " + delayBetweenLaunchesTimer.TimerStarted.ToString();
+			debug = "usingLauncher: " + usingLauncher.ToString();
+			//debug = "isJumping: " + isJumping.ToString();
+			debug2 = "hasBeenLaunched: " + hasBeenLaunched.ToString();
+			
+
 			float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 			newKeyboardState = Keyboard.GetState(); // Get the new state of the keyboard.
 
@@ -91,13 +109,16 @@ namespace customAnimation
 			// ******************************************************
 			// Set the velocity based on if the Shoes are on the ground or in the air.
 			// ******************************************************
-			if (isJumping == true)
+			if (isJumping == true && usingLauncher == false && hasBeenLaunched == false)
 			{
 				velocity.X = airMovementSpeed;
 			}
+			else if (hasBeenLaunched == false) velocity.X = groundMovementSpeed;
 			else
 			{
-				velocity.X = groundMovementSpeed;
+				velocity.X = airMovementSpeed;
+				velocity.X *= Math.Sign(launcherVelocity.X);
+				velocity.X *= -1;
 			}
 
 			// ******************************************************
@@ -108,7 +129,7 @@ namespace customAnimation
 				&& ((newKeyboardState.IsKeyDown(up) && !oldKeyboardState.IsKeyDown(up)) || (newKeyboardState.IsKeyDown(Keys.Space) && !oldKeyboardState.IsKeyDown(Keys.Space))) 
 				&& standingOnGround() == true 
 				&& underTile() == false 
-				&& guy.tileAbove() == false)
+				/*&& guy.tileAbove() == false*/)
 			{
 				isJumping = true;
 				velocity.Y = jumpImpulse * -1;
@@ -118,7 +139,7 @@ namespace customAnimation
 			// Move if the player has pressed a key.
 			// ******************************************************
 			// Don't allow the Shoes to move while they are using a Launcher.
-			if (newKeyboardState.IsKeyDown(right) && delaySpringCollision == false)
+			if (newKeyboardState.IsKeyDown(right) && delaySpringCollision == false && usingLauncher == false)
 			{
 				bouncingHorizontally = 0;
 				position.X += velocity.X * delta;
@@ -129,7 +150,7 @@ namespace customAnimation
 				handleCollisions(State.RunningRight);
 				changeState(State.RunningRight);
 			}
-			if (newKeyboardState.IsKeyDown(left) && delaySpringCollision == false)
+			if (newKeyboardState.IsKeyDown(left) && delaySpringCollision == false && usingLauncher == false)
 			{
 				bouncingHorizontally = 0;
 				position.X -= velocity.X * delta;
@@ -147,11 +168,11 @@ namespace customAnimation
 			// ******************************************************
 			// Make the Shoes jump if the player has pressed the jump key, or the Shoes are in the middle of a jump.
 			// ******************************************************
-			if (isJumping == true)
+			if (isJumping == true && usingLauncher == false)
 			{
 				doPlayerJump(delta);
 			}
-			else
+			else if (usingLauncher == false)
 			{
 				handleFalling(delta); // Handles for when the player walks off the edge of a platform.
 			}
@@ -171,8 +192,37 @@ namespace customAnimation
 				guy.Position = Position;
 			}
 
+			if (delayBetweenLaunchesTimer.TimerCompleted == true)
+			{
+				delayBetweenLaunchesTimer.stopTimer();
+			}
+
+			if (usingLauncher == true)
+			{
+				doLauncher(gameTime, guy.power);
+			}
+
+			// Stops the Shoes from bouncing off the side of the screen during a launch.
+			if (FutureRectangleRect.Left < 0 && hasBeenLaunched == true && launcherTimer.TimerCompleted == true)
+			{
+				velocity.X = 0.0f;
+				hasBeenLaunched = false;
+			}
+			else if (FutureRectangleRect.Right > 1280 && hasBeenLaunched == true && launcherTimer.TimerCompleted == true)
+			{
+				position.X = screenWidth - spriteWidth;
+				hasBeenLaunched = false;
+			}
+
+			if (hasBeenLaunched == true)
+			{
+				position += velocity * delta;
+			}
+
 			// Update timers.
 			delaySpringCollisionTimer.Update(gameTime);
+			launcherTimer.Update(gameTime);
+			delayBetweenLaunchesTimer.Update(gameTime);
 
 			// Get the old state of the keyboard.
 			//oldKeyboardState = newKeyboardState; // Commented out so the interface works.
@@ -223,6 +273,7 @@ namespace customAnimation
 		// TO DO: Change method name to make actual sense.
 		private void handleFalling(float delta)
 		{
+
 			position.Y += velocity.Y;
 			velocity.Y += fallFromTileRate * delta;
 
@@ -244,6 +295,7 @@ namespace customAnimation
 				{
 					velocity.Y = 0f;
 					falling = false;
+					//hasBeenLaunched = false;
 				}
 			}
 
@@ -255,6 +307,8 @@ namespace customAnimation
 			}
 			else
 			{
+				//debug = hasBeenLaunched.ToString();
+				//hasBeenLaunched = false;
 				updateRectangles(0, -1);
 				handleCollisions(State.Jumping);
 				changeState(State.Jumping);
@@ -264,60 +318,100 @@ namespace customAnimation
 		// Only if there is an actual collision will any of these statments execute.
 		protected override void specializedCollision(State currentState, int y, int x)
 		{
-			if (currentState == State.RunningRight)
+			if (delayBetweenLaunchesTimer.TimerStarted == false)    // Ensures the Shoes don't use another Launcher too quickly.
 			{
-				if (Level.tiles[y, x].TileRepresentation == 'S')
+				if (currentState == State.RunningRight)
 				{
-					position.X = Level.tiles[y, x].Position.X - spriteWidth;
-					delaySpringCollision = true;
-					doSpring(currentState);
-				}
-				else
-				{
-					position.X = Level.tiles[y, x].Position.X - spriteWidth;
-				}
+					if (Level.tiles[y, x].TileRepresentation == 'S')
+					{
+						position.X = Level.tiles[y, x].Position.X - spriteWidth;
+						delaySpringCollision = true;
+						doSpring(currentState);
+					}
+					else if (Level.tiles[y, x].IsLauncher == true)
+					{
+						usingLauncher = true;
+						collY = y;
+						collX = x;
+					}
+					else
+					{
+						position.X = Level.tiles[y, x].Position.X - spriteWidth;
+						hasBeenLaunched = false;
+					}
 
-			}
-			else if (currentState == State.RunningLeft)
-			{
-				if (Level.tiles[y, x].TileRepresentation == 'S')
-				{
-					position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
-					delaySpringCollision = true;
-					doSpring(currentState);
 				}
-				else
+				else if (currentState == State.RunningLeft)
 				{
-					position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
-				}
+					if (Level.tiles[y, x].TileRepresentation == 'S')
+					{
+						position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
+						delaySpringCollision = true;
+						doSpring(currentState);
+					}
+					else if (Level.tiles[y, x].IsLauncher == true)
+					{
+						usingLauncher = true;
+						collY = y;
+						collX = x;
+					}
+					else
+					{
+						position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
+						hasBeenLaunched = false;
+					}
 
-			}
-			else if (currentState == State.Jumping)
-			{
-				if (Level.tiles[y, x].TileRepresentation == 'S')
-				{
-					doSpring(State.Decending);
 				}
-				else
+				else if (currentState == State.Jumping)
 				{
-					position.Y = Level.tiles[y, x].Position.Y + Level.tiles[y, x].Texture.Height + 2;
-					velocity.Y = -1f;
-					falling = true;
+					if (Level.tiles[y, x].TileRepresentation == 'S')
+					{
+						if (hasBeenLaunched == true)
+						{
+							//position.Y = Level.tiles[y, x].Position.Y;
+							position.X += 9f;
+						}
+						else
+						{
+							position.Y = Level.tiles[y, x].Position.Y + Level.tiles[y, x].Texture.Height + 2;
+						}
+						doSpring(State.Decending);
+					}
+					else if (Level.tiles[y, x].IsLauncher == true)
+					{
+						usingLauncher = true;
+						collY = y;
+						collX = x;
+					}
+					else
+					{
+						position.Y = Level.tiles[y, x].Position.Y + Level.tiles[y, x].Texture.Height + 2;
+						velocity.Y = -1f;
+						falling = true;
+						hasBeenLaunched = false;
+					}
 				}
-			}
-			else if (currentState == State.Decending)
-			{
-				if (Level.tiles[y, x].TileRepresentation == 'S')
+				else if (currentState == State.Decending)
 				{
-					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
-					doSpring(State.Decending);
-				}
-				else
-				{
-					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
-					spriteSpeed = 300f;
-					isJumping = false;
-					falling = false;
+					if (Level.tiles[y, x].TileRepresentation == 'S')
+					{
+						position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
+						doSpring(State.Decending);
+					}
+					else if (Level.tiles[y, x].IsLauncher == true)
+					{
+						usingLauncher = true;
+						collY = y;
+						collX = x;
+					}
+					else
+					{
+						position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
+						spriteSpeed = 300f;
+						isJumping = false;
+						falling = false;
+						hasBeenLaunched = false;
+					}
 				}
 			}
 		}
@@ -439,6 +533,18 @@ namespace customAnimation
 
 		private void doSpring(State currentState)
 		{
+			if (hasBeenLaunched == true)
+			{
+				//debug = "SPRINGS HERE";
+				hasBeenLaunched = false; // Guessing that the Spring logic needs to take over if the Shoes were launched, then hit a Spring.
+				delaySpringCollisionTimer.startTimer();
+				delaySpringCollision = true;
+				bouncingHorizontally = -1;
+				velocity.Y *= -1;       // Flips the velocity to the player bounces up.
+				velocity.Y *= 0.55f;    // Decrease the power of the next bounce.
+				position.Y += velocity.Y;
+			}
+
 			if (currentState == State.Decending || currentState == State.Jumping)
 			{
 				velocity.Y *= -1;       // Flips the velocity to the player bounces up.
@@ -499,6 +605,40 @@ namespace customAnimation
 			}
 
 			xSpeed *= delta;
+		}
+
+		private void doLauncher(GameTime gameTime, float power)
+		{
+			// Set the Guy at the top of the launcher.
+			position.Y = Level.tiles[collY, collX].Position.Y - 48;
+			position.Y += 32f;
+			position.X = Level.tiles[collY, collX].Position.X - 8;
+			updateRectangles(0, -1);
+			velocity = new Vector2(0f, 0f);
+			isJumping = false;
+
+			// NEED TO ACCOUNT FOR WHEN THE GUY AND SHOES ARE TOGETHER
+			
+			if (launcherTimer.TimerStarted == true)
+			{
+				if (launcherTimer.TimerCompleted == true)
+				{
+					// Prevent the Guy from using any other Launchers for a time period.
+					delayBetweenLaunchesTimer.startTimer();
+
+					// Launch the Guy.
+					launcherTimer.stopTimer();
+					launcherVelocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(Tile.getLauncherAngleInDegrees(Level.tiles[collY, collX]))) * power;
+					velocity = launcherVelocity;
+					velocity.Y *= -1;
+					usingLauncher = false;
+					hasBeenLaunched = true;
+				}
+			}
+			else
+			{
+				launcherTimer.startTimer();
+			}
 		}
 	}
 }
