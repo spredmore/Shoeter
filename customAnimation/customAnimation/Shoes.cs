@@ -34,9 +34,9 @@ namespace customAnimation
 
 		private ContentManager content;
 
-		private int bouncingHorizontally = 0;       // -1 represents left, 0 represents no bouncing, 1 represents right.
-		public bool delaySpringCollision = false;   // The Shoes can't use a Spring right after another Spring has already been used.
-		Timer delaySpringCollisionTimer;            // Delays movement of the Shoes from using a Spring too quickly.
+		private int bouncingHorizontally = 0;						// Represents which direction the Shoes will move after collision with a Spring. -1 represents left, 0 represents no bouncing, 1 represents right.
+		public bool delayMovementAfterSpringCollision = false;		// The player cannot move the Shoes themselves after a Spring has been used.
+		Timer delayMovementAfterSpringCollisionTimer;				// Delays movement of the Shoes from using a Spring too quickly.
 
 		bool turnOffFalling = false;
 
@@ -61,7 +61,7 @@ namespace customAnimation
 			debug = "";
 			debug2 = "";
 
-			this.delaySpringCollisionTimer = new Timer(0.3f);
+			this.delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
 		}
 
 		public void Update(GameTime gameTime, ref Guy guy)
@@ -75,131 +75,69 @@ namespace customAnimation
 
 		private void handleMovement(GameTime gameTime, ref Guy guy)
 		{
-			float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-			newKeyboardState = Keyboard.GetState(); // Get the new state of the keyboard.
+			debug = "position: " + position.ToString();
 
-			// ******************************************************
-			// Handles delaying the collision between the Guy and multiple launchers so he doesn't use another one too quickly.
-			// This comment isn't consitent with what's written.
-			// ******************************************************
-			if (delaySpringCollisionTimer.TimerCompleted == true)
-			{
-				delaySpringCollisionTimer.stopTimer();
-				delaySpringCollision = false;
-			}
+			float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;	// Represents the amount of time that has passed since the previous frame.
+			newKeyboardState = Keyboard.GetState();						// Get the new state of the keyboard.
 
-			// ******************************************************
-			// Set the velocity based on if the Shoes are on the ground or in the air.
-			// ******************************************************
-			if (isJumping == true)
+			// Handles delaying movement after the Shoes have collided with a Spring.
+			if (delayMovementAfterSpringCollisionTimer.TimerCompleted == true)
 			{
-				velocity.X = airMovementSpeed;
-			}
-			else
-			{
-				velocity.X = groundMovementSpeed;
+				delayMovementAfterSpringCollisionTimer.stopTimer();
+				delayMovementAfterSpringCollision = false;
 			}
 
-			// ******************************************************
-			// The player wants to jump.
-			// The velocity is set to a negative number so that the Shoes will move upwards.
-			// ******************************************************
-			if (isJumping == false 
-				&& ((newKeyboardState.IsKeyDown(up) && !oldKeyboardState.IsKeyDown(up)) || (newKeyboardState.IsKeyDown(Keys.Space) && !oldKeyboardState.IsKeyDown(Keys.Space))) 
-				&& standingOnGround() == true 
-				&& underTile() == false 
-				&& guy.tileAbove() == false)
-			{
-				isJumping = true;
-				velocity.Y = jumpImpulse * -1;
-			}
+			// Set the horizontal velocity based on if the Shoes are on the ground or in the air.
+			setHorizontalVelocity();
 
-			// ******************************************************
-			// Move if the player has pressed a key.
-			// ******************************************************
-			// Don't allow the Shoes to move while they are using a Launcher.
-			if (newKeyboardState.IsKeyDown(right) && delaySpringCollision == false)
-			{
-				bouncingHorizontally = 0;
-				position.X += velocity.X * delta;
+			// Check to see if the player wants to jump. If so, set the vertical velocity appropriately.
+			checkIfShoesWantToJump(guy);
 
-				// Create the rectangle for the player's future position.
-				// Draw a rectangle around the player's position after they move.
-				updateRectangles(1, 0);
-				handleCollisions(State.RunningRight);
-				changeState(State.RunningRight);
-			}
-			if (newKeyboardState.IsKeyDown(left) && delaySpringCollision == false)
-			{
-				bouncingHorizontally = 0;
-				position.X -= velocity.X * delta;
+			// Move the Shoes if the player has pressed the appropriate key.
+			moveShoesLeftOrRightIfPossible(delta);
 
-				updateRectangles(-1, 0);
-				handleCollisions(State.RunningLeft);
-				changeState(State.RunningLeft);
-			}
-			if (newKeyboardState.IsKeyDown(Keys.G))
-			{
-				if (turnOffFalling == false) turnOffFalling = true;
-				else turnOffFalling = false;
-			}
+			// Have the Shoes ascend from jumping if they haven't started falling yet.
+			haveShoesAscendFromJumpOrFallFromGravity(delta);
 
-			// ******************************************************
-			// Make the Shoes jump if the player has pressed the jump key, or the Shoes are in the middle of a jump.
-			// ******************************************************
-			if (isJumping == true)
-			{
-				doPlayerJump(delta);
-			}
-			else
-			{
-				handleFalling(delta); // Handles for when the player walks off the edge of a platform.
-			}
+			// If the Shoes have collided with a Spring, then apply movement from the Spring over time.
+			checkIfShoesCanBounceFromSpring(delta);
 
-			// ******************************************************
-			// Handle movement from springs over time.
-			// ******************************************************
-			if (bouncingHorizontally != 0 && standingOnGround() == false)   doHorizontalBounce(delta);
-			else                                                            bouncingHorizontally = 0; // Stop horizontal movement.
-
-			// ******************************************************
-			// The player has fallen to the bottom of the map. Reset to the beginning of the level.
-			// ******************************************************
-			if (Position.Y > 704)
-			{
-				Position = Level.playerStartingPosition;
-				guy.Position = Position;
-			}
+			// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
+			resetShoesAndGuyToLevelStartingPositionIfNecessary(guy);
 
 			// Update timers.
-			delaySpringCollisionTimer.Update(gameTime);
+			//updateTimers(gameTime);
+			delayMovementAfterSpringCollisionTimer.Update(gameTime);
 
 			// Get the old state of the keyboard.
 			//oldKeyboardState = newKeyboardState; // Commented out so the interface works.
 		}
 
-		// Update the jump is the player if jumping.
-		// Note: doPlayerJump handles its over gravity. That is, handleFalling does not come into play when the Shoes are jumping.
+		/// <summary>
+		/// Have the Shoes ascend if the Shoes are jumping over time.
+		/// </summary>
+		/// <remarks>This method only runs as the Shoes are jumping. That is, as they are ascending. Once the short hop is over, or the apex of the jump is reached, handleGravity takes over.</remarks>
+		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
 		private void doPlayerJump(float delta)
 		{
-			// W was down last update, but it's not down. Begin descent. This is for short hops.
+			// The jump key was down last frame, but in the current frame it's not down. Begin descent. This is for short hops.
 			if (!newKeyboardState.IsKeyDown(up) && oldKeyboardState.IsKeyDown(up) && falling == false && velocity.Y < 0f)
 			{
-				velocity.Y = 0f; // CHANGE TO SOME PARTICULAR RESET VALUE
+				velocity.Y = 0f;
 				falling = true;
 			}
 
-			position.Y += velocity.Y;       // Up   -            
-			velocity.Y += gravity * delta;  // Down +, gravity      
+			position.Y += velocity.Y;       // Ascend the Shoes due to jumping. The vertical velocity was set in checkIfShoesWantToJump. Up -            
+			velocity.Y += gravity * delta;  // Slow down the jump due to gravity. Down +   
 
-			// If the velocity begins to pull the player down, we're falling. 
+			// If the velocity begins to pull the player down, the Shoes are falling. 
 			if (velocity.Y > 0f)
 			{
 				falling = true;
 				isJumping = false;
 			}
 
-			// Depending on which direction the player is moving, we need to check the top or bottom.
+			// Depending on which direction the Shoes are moving, check the top or bottom.
 			if (falling == true)
 			{
 				updateRectangles(0, 1);
@@ -214,29 +152,36 @@ namespace customAnimation
 			}
 
 			// Different speed while in the air.
-			if (isJumping == true) spriteSpeed = airMovementSpeed;
-			else spriteSpeed = groundMovementSpeed;
+			if (isJumping == true)
+			{
+				spriteSpeed = airMovementSpeed;
+			}
+			else
+			{
+				spriteSpeed = groundMovementSpeed;
+			}
 		}
 
-		// Handles for when the player walks off the edge of a platform.
-		// ********************************** NOTE: handleFalling handles gravity at all times except for when the Shoes are jumping. doPlayerJump takes care of that.
-		// TO DO: Change method name to make actual sense.
-		private void handleFalling(float delta)
+		/// <summary>
+		/// Applies gravity over time.
+		/// </summary>
+		/// <remarks>This method applies gravity over time except when the Shoes are jumping. In that case, doPlayerJump handles gravity.</remarks>
+		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
+		private void doGravity(float delta)
 		{
 			position.Y += velocity.Y;
 			velocity.Y += fallFromTileRate * delta;
 
-			// If we're not standing on the ground, fall.
+			// If the Shoes are not standing on the ground, apply gravity.
 			if (!standingOnGround())
 			{
 				falling = true;
 			}
 			else
 			{
-				// Determine if the Shoes have fallen onto a spring.
-				// If so, allow the Shoes to bounce. Otherwise, stop falling.
-				setTileArrayCoordinates(this.position.X, this.position.Y);
-				if (Level.tiles[(int)this.TileArrayCoordinates.X, (int)this.TileArrayCoordinates.Y].TileRepresentation == 'S' && (velocity.Y > 4f/* || hasBeenLaunched == true*/))
+				// If the Shoes have fallen onto a Spring, have the Shoes bounce according to the Spring logic. Otherwise, stop falling.
+				setTileArrayCoordinates(position.X, position.Y); // Sets which Tile in the Level (based on the position of the Shoes) that the Shoes are colliding with.
+				if (Level.tiles[(int)TileArrayCoordinates.X, (int)TileArrayCoordinates.Y].TileRepresentation == 'S' && velocity.Y > 4f)
 				{
 					doSpring(State.Decending);
 				}
@@ -261,7 +206,13 @@ namespace customAnimation
 			}
 		}
 
-		// Only if there is an actual collision will any of these statments execute.
+		/// <summary>
+		/// Upon collision with a Tile, perform the appropriate action depending on the State of the Shoes and which Tile is being collided with.
+		/// </summary>
+		/// <remarks>Only if there is an actual collision will any of these statments execute.</remarks>
+		/// <param name="currentState">The current State of the Shoes.</param>
+		/// <param name="y">The Y coordinate of the Tile in the level being collided with.</param>
+		/// <param name="x">The X coordinate of the Tile in the level being collided with.</param>
 		protected override void specializedCollision(State currentState, int y, int x)
 		{
 			if (currentState == State.RunningRight)
@@ -269,7 +220,7 @@ namespace customAnimation
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					position.X = Level.tiles[y, x].Position.X - spriteWidth;
-					delaySpringCollision = true;
+					delayMovementAfterSpringCollision = true;
 					doSpring(currentState);
 				}
 				else
@@ -283,7 +234,7 @@ namespace customAnimation
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
-					delaySpringCollision = true;
+					delayMovementAfterSpringCollision = true;
 					doSpring(currentState);
 				}
 				else
@@ -420,7 +371,10 @@ namespace customAnimation
 			}
 		}
 
-		// Swaps the texture and dimensions of the Shoes. Used to switch between the Guy being shot and the Guy traveling with the Shoes.
+		/// <summary>
+		/// Swaps the texture and dimensions of the Shoes. Used to switch between the Guy being shot and the Guy traveling with the Shoes.
+		/// </summary>
+		/// <param name="currentLinkedState">Flag that says whether or not the Shoes and Guy are currently linked or not.</param>
 		public void swapTexture(bool currentLinkedState)
 		{
 			if (currentLinkedState == true)
@@ -437,32 +391,42 @@ namespace customAnimation
 			}
 		}
 
+		/// <summary>
+		/// Bounces the Shoes off a Spring. Does not happen over time, just when the Shoes collide with a Spring.
+		/// </summary>
+		/// <param name="currentState">The current State of the Shoes.</param>
 		private void doSpring(State currentState)
 		{
 			if (currentState == State.Decending || currentState == State.Jumping)
 			{
-				velocity.Y *= -1;       // Flips the velocity to the player bounces up.
+				velocity.Y *= -1;       // Flips the velocity to either bounce the Shoes up or down.
 				velocity.Y *= 0.55f;    // Decrease the power of the next bounce.
 				position.Y += velocity.Y;
 			}
 			else if (currentState == State.RunningRight)                
 			{
-				delaySpringCollisionTimer.startTimer();
-				delaySpringCollision = true;
+				delayMovementAfterSpringCollisionTimer.startTimer();
+				delayMovementAfterSpringCollision = true;
 				bouncingHorizontally = 1;
 			}
 			else if (currentState == State.RunningLeft)
 			{
-				delaySpringCollisionTimer.startTimer();
-				delaySpringCollision = true;
+				delayMovementAfterSpringCollisionTimer.startTimer();
+				delayMovementAfterSpringCollision = true;
 				bouncingHorizontally = -1;
 			}
 
-			// If the velocity begins to pull the player down, we're falling. 
-			if (velocity.Y > 0f) falling = true;
-			else falling = false;
+			// If the velocity begins to pull the player down, the Shoes are falling. 
+			if (velocity.Y > 0f)
+			{
+				falling = true;
+			}
+			else
+			{
+				falling = false;
+			}
 
-			// Depending on which direction the player is moving, we need to check the top or bottom.
+			// Depending on which direction the Shoes are moving, check the top or bottom.
 			if (falling == true)
 			{
 				updateRectangles(0, 1);
@@ -477,7 +441,11 @@ namespace customAnimation
 			}
 		}
 
-		private void doHorizontalBounce(float delta)
+		/// <summary>
+		/// Performs horizontal movement for the Shoes over time. 
+		/// </summary>
+		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
+		private void performHorizontalMovementFromSpring(float delta)
 		{
 			float xSpeed = 5f;
 
@@ -499,6 +467,131 @@ namespace customAnimation
 			}
 
 			xSpeed *= delta;
+		}
+
+		/// <summary>
+		/// Set the horizontal velocity based on if the Shoes are jumping or are on the ground.
+		/// </summary>
+		private void setHorizontalVelocity()
+		{
+			if (isJumping == true)
+			{
+				velocity.X = airMovementSpeed;
+			}
+			else
+			{
+				velocity.X = groundMovementSpeed;
+			}
+		}
+
+		/// <summary>
+		/// Check to see if the player wants to jump. If so, set the velocity to a negetive number so that the Shoes will move upwards.
+		/// </summary>
+		/// <param name="guy">A reference to the Guy. Needed so that a check can be done to ensure that there isn't a tile above the linked Guy/Shoes.</param>
+		private void checkIfShoesWantToJump(Guy guy)
+		{
+			if (isJumping == false
+				&& ((newKeyboardState.IsKeyDown(up) && !oldKeyboardState.IsKeyDown(up)) || (newKeyboardState.IsKeyDown(Keys.Space) && !oldKeyboardState.IsKeyDown(Keys.Space)))
+				&& standingOnGround() == true
+				&& underTile() == false
+				&& guy.tileAbove() == false)
+			{
+				isJumping = true;
+				velocity.Y = jumpImpulse * -1;
+			}
+		}
+
+		/// <summary>
+		/// Move the Shoes if the player has pressed the appropriate key.
+		/// </summary>
+		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
+		private void moveShoesLeftOrRightIfPossible(float delta)
+		{
+			if (newKeyboardState.IsKeyDown(right) && delayMovementAfterSpringCollision == false)
+			{
+				bouncingHorizontally = 0;
+				position.X += velocity.X * delta;
+
+				// Create the rectangle for the player's future position.
+				// Draw a rectangle around the player's position after they move.
+				updateRectangles(1, 0);
+				handleCollisions(State.RunningRight);
+				changeState(State.RunningRight);
+			}
+			if (newKeyboardState.IsKeyDown(left) && delayMovementAfterSpringCollision == false)
+			{
+				bouncingHorizontally = 0;
+				position.X -= velocity.X * delta;
+
+				updateRectangles(-1, 0);
+				handleCollisions(State.RunningLeft);
+				changeState(State.RunningLeft);
+			}
+			if (newKeyboardState.IsKeyDown(Keys.G))
+			{
+				if (turnOffFalling == false)
+				{
+					turnOffFalling = true;
+				}
+				else
+				{
+					turnOffFalling = false;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Have the Shoes ascend due to jumping, or fall due to gravity.
+		/// </summary>
+		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
+		private void haveShoesAscendFromJumpOrFallFromGravity(float delta)
+		{
+			if (isJumping == true)
+			{
+				doPlayerJump(delta);
+			}
+			else
+			{
+				doGravity(delta); // Handles for when the player walks off the edge of a platform.
+			}
+		}
+
+		/// <summary>
+		/// If the Shoes have collided with a Spring, then apply movement from the Spring over time.
+		/// </summary>
+		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
+		private void checkIfShoesCanBounceFromSpring(float delta)
+		{
+			if (bouncingHorizontally != 0 && !standingOnGround())
+			{
+				performHorizontalMovementFromSpring(delta);
+			}
+			else
+			{
+				bouncingHorizontally = 0; // Stop horizontal movement.
+			}
+		}
+
+		/// <summary>
+		/// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
+		/// </summary>
+		/// <param name="guy">A reference to the Guy. Needed so that a check can be done to ensure that there isn't a tile above the linked Guy/Shoes.</param>
+		private void resetShoesAndGuyToLevelStartingPositionIfNecessary(Guy guy)
+		{
+			if (Position.Y > 704)
+			{
+				Position = Level.playerStartingPosition;
+				guy.Position = Position;
+			}
+		}
+
+		/// <summary>
+		/// Updates the timers.
+		/// </summary>
+		/// <param name="gametime">Snapshot of the game timing state.</param>
+		private void updateTimers(ref GameTime gametime)
+		{
+			delayMovementAfterSpringCollisionTimer.Update(gameTime);
 		}
 	}
 }
