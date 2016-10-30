@@ -38,6 +38,8 @@ namespace customAnimation
 		public bool delayMovementAfterSpringCollision = false;		// The player cannot move the Shoes themselves after a Spring has been used.
 		Timer delayMovementAfterSpringCollisionTimer;				// Delays movement of the Shoes from using a Spring too quickly.
 
+		Timer delayLaunchAfterLauncherCollisionTimer;				// Delays launching the Shoes upon initial collision.
+
 		public Shoes(Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
@@ -59,7 +61,8 @@ namespace customAnimation
 			debug = "";
 			debug2 = "";
 
-			this.delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
+			delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
+			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
 		}
 
 		/// <summary>
@@ -83,8 +86,6 @@ namespace customAnimation
 		/// <param name="guy">A reference to the Guy.</param>
 		private void handleMovement(GameTime gameTime, ref Guy guy)
 		{
-			debug = "position: " + position.ToString();
-
 			float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;	// Represents the amount of time that has passed since the previous frame.
 			newKeyboardState = Keyboard.GetState();						// Get the new state of the keyboard.
 
@@ -105,6 +106,8 @@ namespace customAnimation
 
 			// If the Shoes have collided with a Spring, then apply movement from the Spring over time.
 			checkIfShoesCanBounceFromSpring(delta);
+
+			checkIfShoesCanLaunch();
 
 			// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
 			resetShoesAndGuyToLevelStartingPositionIfNecessary(guy);
@@ -186,7 +189,7 @@ namespace customAnimation
 				setTileArrayCoordinates(position.X, position.Y); // Sets which Tile in the Level (based on the position of the Shoes) that the Shoes are colliding with.
 				if (Level.tiles[(int)TileArrayCoordinates.X, (int)TileArrayCoordinates.Y].TileRepresentation == 'S' && velocity.Y > 4f)
 				{
-					doSpring(State.Decending);
+					prepareMovementDueToSpringCollision(State.Decending);
 				}
 				else
 				{
@@ -224,7 +227,11 @@ namespace customAnimation
 				{
 					position.X = Level.tiles[y, x].Position.X - spriteWidth;
 					delayMovementAfterSpringCollision = true;
-					doSpring(currentState);
+					prepareMovementDueToSpringCollision(currentState);
+				}
+				else if(Level.tiles[y, x].IsLauncher)
+				{
+					prepareMovementDueToLauncherCollision(currentState, x, y);
 				}
 				else
 				{
@@ -238,7 +245,11 @@ namespace customAnimation
 				{
 					position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
 					delayMovementAfterSpringCollision = true;
-					doSpring(currentState);
+					prepareMovementDueToSpringCollision(currentState);
+				}
+				else if (Level.tiles[y, x].IsLauncher)
+				{
+					prepareMovementDueToLauncherCollision(currentState, x, y);
 				}
 				else
 				{
@@ -250,7 +261,11 @@ namespace customAnimation
 			{
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
-					doSpring(State.Decending);
+					prepareMovementDueToSpringCollision(State.Decending); // Why is this passing in Decending?
+				}
+				else if (Level.tiles[y, x].IsLauncher)
+				{
+					prepareMovementDueToLauncherCollision(currentState, x, y);
 				}
 				else
 				{
@@ -264,7 +279,11 @@ namespace customAnimation
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
-					doSpring(State.Decending);
+					prepareMovementDueToSpringCollision(currentState);
+				}
+				else if (Level.tiles[y, x].IsLauncher)
+				{
+					prepareMovementDueToLauncherCollision(currentState, x, y);
 				}
 				else
 				{
@@ -402,7 +421,7 @@ namespace customAnimation
 		/// Bounces the Shoes off a Spring. Does not happen over time, just when the Shoes collide with a Spring.
 		/// </summary>
 		/// <param name="currentState">The current State of the Shoes.</param>
-		private void doSpring(State currentState)
+		private void prepareMovementDueToSpringCollision(State currentState)
 		{
 			if (currentState == State.Decending || currentState == State.Jumping)
 			{
@@ -600,6 +619,56 @@ namespace customAnimation
 		private void updateTimers(GameTime gameTime)
 		{
 			delayMovementAfterSpringCollisionTimer.Update(gameTime);
+			delayLaunchAfterLauncherCollisionTimer.Update(gameTime);
+		}
+
+		/// <summary>
+		/// Sets up the position of the Shoes for the Launcher, and prepares for launch.
+		/// </summary>
+		/// <param name="currentState">The current State of the Shoes.</param>
+		/// <param name="xTileCoordinateOfLauncher">The X coordinate of the Launcher that has been collided with. Coordinate is based off of the Level, not actual position.</param>
+		/// <param name="yTileCoordinateOfLauncher">The Y coordinate of the Launcher that has been collided with. Coordinate is based off of the Level, not actual position.</param>
+		private void prepareMovementDueToLauncherCollision(State currentState, int xTileCoordinateOfLauncher, int yTileCoordinateOfLauncher)
+		{
+			// Put the Shoes at the top of the Launcher.
+			position.Y = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.Y - 48;
+			position.Y += 32f;
+			position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X - 8;
+
+			// Stop any movement that was occuring.
+			velocity = new Vector2(0f, 0f);
+
+			// The Shoes are no longer jumping (if they were), since they will be snapped to the Launcher upon collision.
+			if (isJumping)
+			{
+				isJumping = false;
+			}
+
+			// If the timer hasn't started yet, start it. Otherwise, wait for it to complete.
+			if (!delayLaunchAfterLauncherCollisionTimer.TimerStarted)
+			{
+				delayLaunchAfterLauncherCollisionTimer.startTimer();
+			}
+		}
+
+		/// <summary>
+		/// Checks if the Shoes can be launched from a Launcher yet. If so, call the method to perform Launcher movement over time.
+		/// </summary>
+		private void checkIfShoesCanLaunch()
+		{
+			if (delayLaunchAfterLauncherCollisionTimer.TimerCompleted)
+			{
+				delayLaunchAfterLauncherCollisionTimer.stopTimer();
+				performHorizontalMovementFromLauncher();
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private void performHorizontalMovementFromLauncher()
+		{
+			
 		}
 	}
 }
