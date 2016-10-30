@@ -38,8 +38,6 @@ namespace customAnimation
 		public bool delayMovementAfterSpringCollision = false;		// The player cannot move the Shoes themselves after a Spring has been used.
 		Timer delayMovementAfterSpringCollisionTimer;				// Delays movement of the Shoes from using a Spring too quickly.
 
-		bool turnOffFalling = false;
-
 		public Shoes(Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
@@ -64,15 +62,25 @@ namespace customAnimation
 			this.delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
 		}
 
+		/// <summary>
+		/// Update method for the Shoes that's called once a frame.
+		/// </summary>
+		/// <param name="gameTime">Snapshot of the game timing state.</param>
+		/// <param name="guy">A reference to the Guy.</param>
 		public void Update(GameTime gameTime, ref Guy guy)
 		{
 			this.handleAnimation(gameTime);
 			handleMovement(gameTime, ref guy);
-			doInterface(guy.beingShot);
+			doInterface(guy.isGuyBeingShot);
 
 			oldKeyboardState = newKeyboardState; // In Update() so the interface works. Commented out at the bottom of handleMovement.
 		}
 
+		/// <summary>
+		/// Handles all of the movement for the Shoes.
+		/// </summary>
+		/// <param name="gameTime">Snapshot of the game timing state.</param>
+		/// <param name="guy">A reference to the Guy.</param>
 		private void handleMovement(GameTime gameTime, ref Guy guy)
 		{
 			debug = "position: " + position.ToString();
@@ -81,11 +89,7 @@ namespace customAnimation
 			newKeyboardState = Keyboard.GetState();						// Get the new state of the keyboard.
 
 			// Handles delaying movement after the Shoes have collided with a Spring.
-			if (delayMovementAfterSpringCollisionTimer.TimerCompleted == true)
-			{
-				delayMovementAfterSpringCollisionTimer.stopTimer();
-				delayMovementAfterSpringCollision = false;
-			}
+			stopDelayingMovementAfterSpringCollisionIfPossible();
 
 			// Set the horizontal velocity based on if the Shoes are on the ground or in the air.
 			setHorizontalVelocity();
@@ -106,8 +110,7 @@ namespace customAnimation
 			resetShoesAndGuyToLevelStartingPositionIfNecessary(guy);
 
 			// Update timers.
-			//updateTimers(gameTime);
-			delayMovementAfterSpringCollisionTimer.Update(gameTime);
+			updateTimers(gameTime);
 
 			// Get the old state of the keyboard.
 			//oldKeyboardState = newKeyboardState; // Commented out so the interface works.
@@ -121,10 +124,10 @@ namespace customAnimation
 		private void doPlayerJump(float delta)
 		{
 			// The jump key was down last frame, but in the current frame it's not down. Begin descent. This is for short hops.
-			if (!newKeyboardState.IsKeyDown(up) && oldKeyboardState.IsKeyDown(up) && falling == false && velocity.Y < 0f)
+			if (!newKeyboardState.IsKeyDown(up) && oldKeyboardState.IsKeyDown(up) && isFalling == false && velocity.Y < 0f)
 			{
 				velocity.Y = 0f;
-				falling = true;
+				isFalling = true;
 			}
 
 			position.Y += velocity.Y;       // Ascend the Shoes due to jumping. The vertical velocity was set in checkIfShoesWantToJump. Up -            
@@ -133,12 +136,12 @@ namespace customAnimation
 			// If the velocity begins to pull the player down, the Shoes are falling. 
 			if (velocity.Y > 0f)
 			{
-				falling = true;
+				isFalling = true;
 				isJumping = false;
 			}
 
 			// Depending on which direction the Shoes are moving, check the top or bottom.
-			if (falling == true)
+			if (isFalling == true)
 			{
 				updateRectangles(0, 1);
 				handleCollisions(State.Decending);
@@ -175,7 +178,7 @@ namespace customAnimation
 			// If the Shoes are not standing on the ground, apply gravity.
 			if (!standingOnGround())
 			{
-				falling = true;
+				isFalling = true;
 			}
 			else
 			{
@@ -188,11 +191,11 @@ namespace customAnimation
 				else
 				{
 					velocity.Y = 0f;
-					falling = false;
+					isFalling = false;
 				}
 			}
 
-			if (falling == true)
+			if (isFalling == true)
 			{
 				updateRectangles(0, 1);
 				handleCollisions(State.Decending);
@@ -253,7 +256,7 @@ namespace customAnimation
 				{
 					position.Y = Level.tiles[y, x].Position.Y + Level.tiles[y, x].Texture.Height + 2;
 					velocity.Y = -1f;
-					falling = true;
+					isFalling = true;
 				}
 			}
 			else if (currentState == State.Decending)
@@ -268,12 +271,16 @@ namespace customAnimation
 					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
 					spriteSpeed = 300f;
 					isJumping = false;
-					falling = false;
+					isFalling = false;
 				}
 			}
 		}
 
-		private void doInterface(bool beingShot)
+		/// <summary>
+		/// Displays information on the screen related to physics.
+		/// </summary>
+		/// <param name="beingShot">Flag that says whether or not the Guy is currently being shot or not.</param>
+		private void doInterface(bool isGuyBeingShot)
 		{
 			// Speed Interface
 			if (newKeyboardState.IsKeyDown(Keys.NumPad7) || newKeyboardState.IsKeyDown(Keys.D7)) if (airMovementSpeed > 0) airMovementSpeed -= 5f;
@@ -350,7 +357,7 @@ namespace customAnimation
 			if (interfaceLinked == true && interfaceEnabled == true)
 			{
 				// Shoes Movement
-				if (beingShot == true)
+				if (isGuyBeingShot == true)
 				{
 					preset = "Shoes - F4";
 					airMovementSpeed = 405f;
@@ -375,18 +382,18 @@ namespace customAnimation
 		/// Swaps the texture and dimensions of the Shoes. Used to switch between the Guy being shot and the Guy traveling with the Shoes.
 		/// </summary>
 		/// <param name="currentLinkedState">Flag that says whether or not the Shoes and Guy are currently linked or not.</param>
-		public void swapTexture(bool currentLinkedState)
+		public void swapTexture(bool areGuyAndShoesCurrentlyLinked)
 		{
-			if (currentLinkedState == true)
+			if (areGuyAndShoesCurrentlyLinked)
 			{
-				this.spriteHeight = 48;
-				this.Texture = content.Load<Texture2D>("Sprites/Shoes32x48"); // Bottom
+				spriteHeight = 48;
+				Texture = content.Load<Texture2D>("Sprites/Shoes32x48"); // Bottom
 				position.Y -= 32f;
 			}
 			else
 			{
-				this.spriteHeight = 16;
-				this.Texture = content.Load<Texture2D>("Sprites/Shoes32x48_Top");
+				spriteHeight = 16;
+				Texture = content.Load<Texture2D>("Sprites/Shoes32x48_Top");
 				position.Y += 32f;
 			}
 		}
@@ -419,15 +426,15 @@ namespace customAnimation
 			// If the velocity begins to pull the player down, the Shoes are falling. 
 			if (velocity.Y > 0f)
 			{
-				falling = true;
+				isFalling = true;
 			}
 			else
 			{
-				falling = false;
+				isFalling = false;
 			}
 
 			// Depending on which direction the Shoes are moving, check the top or bottom.
-			if (falling == true)
+			if (isFalling == true)
 			{
 				updateRectangles(0, 1);
 				handleCollisions(State.Decending);
@@ -447,11 +454,11 @@ namespace customAnimation
 		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
 		private void performHorizontalMovementFromSpring(float delta)
 		{
-			float xSpeed = 5f;
+			float horizontalSpeedFromSpring = 5f;
 
 			if (bouncingHorizontally == 1)
 			{
-				position.X -= xSpeed;
+				position.X -= horizontalSpeedFromSpring;
 
 				updateRectangles(-1, 0);
 				handleCollisions(State.RunningLeft);
@@ -459,14 +466,26 @@ namespace customAnimation
 			}
 			else
 			{
-				position.X += xSpeed;
+				position.X += horizontalSpeedFromSpring;
 
 				updateRectangles(1, 0);
 				handleCollisions(State.RunningRight);
 				changeState(State.RunningRight);
 			}
 
-			xSpeed *= delta;
+			horizontalSpeedFromSpring *= delta;
+		}
+
+		/// <summary>
+		/// Handles delaying movement after the Shoes have collided with a Spring.
+		/// </summary>
+		private void stopDelayingMovementAfterSpringCollisionIfPossible()
+		{
+			if (delayMovementAfterSpringCollisionTimer.TimerCompleted == true)
+			{
+				delayMovementAfterSpringCollisionTimer.stopTimer();
+				delayMovementAfterSpringCollision = false;
+			}
 		}
 
 		/// <summary>
@@ -527,17 +546,6 @@ namespace customAnimation
 				handleCollisions(State.RunningLeft);
 				changeState(State.RunningLeft);
 			}
-			if (newKeyboardState.IsKeyDown(Keys.G))
-			{
-				if (turnOffFalling == false)
-				{
-					turnOffFalling = true;
-				}
-				else
-				{
-					turnOffFalling = false;
-				}
-			}
 		}
 
 		/// <summary>
@@ -589,7 +597,7 @@ namespace customAnimation
 		/// Updates the timers.
 		/// </summary>
 		/// <param name="gametime">Snapshot of the game timing state.</param>
-		private void updateTimers(ref GameTime gametime)
+		private void updateTimers(GameTime gameTime)
 		{
 			delayMovementAfterSpringCollisionTimer.Update(gameTime);
 		}

@@ -31,8 +31,8 @@ namespace customAnimation
         public float power = 5f;
 
         bool useGravity;
-        public bool linked = true;
-        public bool beingShot = false;
+		public bool areGuyAndShoesCurrentlyLinked = true;
+        public bool isGuyBeingShot = false;
         
         float delta;
 
@@ -98,40 +98,40 @@ namespace customAnimation
             // ******************************************************
             // Set the position to the player's position so it follows him around.
             // ******************************************************
-            if (beingShot == false)
+			if (isGuyBeingShot == false)
             {
                 Position = new Vector2(shoes.Position.X, shoes.Position.Y);
-                linked = true;
+				areGuyAndShoesCurrentlyLinked = true;
             }
 
             // ******************************************************
             // The player clicks the mouse and wants to shoot the guy.
             // ******************************************************
-            if (newMouseState.LeftButton == ButtonState.Pressed && beingShot == false)
+			if (newMouseState.LeftButton == ButtonState.Pressed && isGuyBeingShot == false)
             {
                 if (delayCollisionTimer.TimerStarted == false)
                 {
                     delayCollisionTimer.startTimer();
                 }
 
-                beingShot = true;
+				isGuyBeingShot = true;
                 useGravity = true;
                 delayCollisionWithShoes = true;
                 velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(angleBetweenPlayer)) * power;
                 velocity *= -1;
-                linked = false;
-                shoes.swapTexture(linked); // Changes the texture/size of the shoes because the Guy is being shot.
+				areGuyAndShoesCurrentlyLinked = false;
+				shoes.swapTexture(areGuyAndShoesCurrentlyLinked); // Changes the texture/size of the shoes because the Guy is being shot.
             }
 
             // ******************************************************
             // Reset the Guy to the Shoes' position.
             // ******************************************************
-            if (!(newMouseState.RightButton == ButtonState.Pressed) && oldMouseState.RightButton == ButtonState.Pressed && linked == false)
+			if (!(newMouseState.RightButton == ButtonState.Pressed) && oldMouseState.RightButton == ButtonState.Pressed && areGuyAndShoesCurrentlyLinked == false)
             {                
                 velocity = new Vector2(0f, 0f);
-                beingShot = false;
-                linked = true;
-                shoes.swapTexture(linked);
+				isGuyBeingShot = false;
+				areGuyAndShoesCurrentlyLinked = true;
+				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
                 Position = new Vector2(shoes.Position.X, shoes.Position.Y);
                 usingLauncher = false;
                 launcherTimer.stopTimer();
@@ -141,7 +141,7 @@ namespace customAnimation
             // ******************************************************
             // Handle the Guy's movement when he is being shot.
             // ******************************************************
-            if (beingShot == true)
+			if (isGuyBeingShot == true)
             {
                 position.X += velocity.X; // SHOES MOVES EACH DIMENSION ONE AT A TIME
 
@@ -185,14 +185,14 @@ namespace customAnimation
                 // ******************************************************
                 // Set the Shoes' position to the Guys' upon collision.
                 // ******************************************************
-				if (PositionRect.Intersects(shoes.PositionRect) && delayCollisionWithShoes == false && linked == false)
+				if (PositionRect.Intersects(shoes.PositionRect) && delayCollisionWithShoes == false && areGuyAndShoesCurrentlyLinked == false)
                 {
                     shoes.Position = new Vector2(Position.X, Position.Y + 40);
                     velocity = new Vector2(0f, 0f);
                     delayCollisionWithShoes = true;
-                    beingShot = false;
-					linked = true;
-                    shoes.swapTexture(linked);
+					isGuyBeingShot = false;
+					areGuyAndShoesCurrentlyLinked = true;
+					shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
                 }
 
                 if (usingLauncher == true)
@@ -210,7 +210,7 @@ namespace customAnimation
                 // ******************************************************
                 // The player has reached the goal for the current level.
                 // ******************************************************
-                if (PositionRect.Intersects(currentLevel.goalRectangle) && linked == true)
+				if (PositionRect.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked == true)
                 {
                     currentLevel.LoadLevel();
                     shoes.Position = currentLevel.getPlayerStartingPosition();
@@ -382,11 +382,11 @@ namespace customAnimation
             }
 
             // If the velocity begins to pull the player down, we're falling. 
-            if (velocity.Y > 0f) falling = true;
-            else falling = false;
+			if (velocity.Y > 0f) isFalling = true;
+			else isFalling = false;
 
             // Depending on which direction the player is moving, we need to check the top or bottom.
-            if (falling == true)
+			if (isFalling == true)
             {
                 updateRectangles(0, 1);
                 handleCollisions(State.Decending);
