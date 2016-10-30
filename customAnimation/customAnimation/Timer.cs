@@ -10,8 +10,8 @@ namespace customAnimation
     {
         private float elapsedTime = 0f;         // Total time the timer has been running.
         public float timerEndTime;              // End time for the timer. Stop when elapsedTime is equal to timerEndTime.
-        private bool timerRunning = false;      // Stores if the timer is running or not.
-        private bool timerCompleted = false;    // Stores if the timer has completed or not.
+        private bool isTimerRunning = false;      // Stores if the timer is running or not.
+        private bool isTimerCompleted = false;    // Stores if the timer has completed or not.
 
         public float ElapsedTime
         {
@@ -20,42 +20,43 @@ namespace customAnimation
 
         public bool TimerStarted
         {
-            get { return timerRunning; }
+			get { return isTimerRunning; }
         }
 
         public bool TimerCompleted
         {
-            get { return timerCompleted; }
+			get { return isTimerCompleted; }
         }
 
         public Timer(float endTime)
         {
-            this.timerEndTime = endTime;
-            this.timerRunning = false;
-            this.timerCompleted = false;
+            timerEndTime = endTime;
+			isTimerRunning = false;
+			isTimerCompleted = false;
         }
 
         public void startTimer()
         {
-            timerRunning = true;
-            timerCompleted = false;
+			isTimerRunning = true;
+			isTimerCompleted = false;
         }
 
         public void stopTimer()
         {
-            timerRunning = false;
+			isTimerRunning = false;
             elapsedTime = 0;
         }
 
         public void Update(GameTime gameTime)
         {
-            if (timerRunning == true && elapsedTime < timerEndTime)
+			if (isTimerRunning && elapsedTime < timerEndTime)
             {
                 elapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
-            else
+			else if (isTimerRunning)
             {
-                timerCompleted = true;
+				isTimerRunning = false;
+				isTimerCompleted = true;
             }   
         }
     }
