@@ -114,7 +114,7 @@ namespace customAnimation
 
             // Draw the debug font.
             spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenPlayer.ToString(), new Vector2(0, 0), Color.Black);
-            spriteBatch.DrawString(debugFont, "Guy - Power (Scroll Wheel): " + guy.power.ToString(), new Vector2(0, 20), Color.Black);
+			spriteBatch.DrawString(debugFont, "Guy - Power (Scroll Wheel): " + guy.powerOfLauncherBeingUsed.ToString(), new Vector2(0, 20), Color.Black);
             spriteBatch.DrawString(debugFont, "Guy - Gravity (./3): " + guy.gravity.ToString(), new Vector2(0, 40), Color.Black);
             spriteBatch.DrawString(debugFont, "Shoes - Air Movement (7/8): " + shoes.airMovementSpeed.ToString(), new Vector2(0, 60), Color.Black);
             spriteBatch.DrawString(debugFont, "Shoes - Ground Movement (4/5): " + shoes.groundMovementSpeed.ToString(), new Vector2(0, 80), Color.Black);

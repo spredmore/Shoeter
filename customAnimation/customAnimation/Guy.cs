@@ -28,7 +28,7 @@ namespace customAnimation
 
         public float angle = 90;
         public float angleBetweenPlayer;
-        public float power = 5f;
+        public float powerOfLauncherBeingUsed = 5f;
 
         bool useGravity;
 		public bool areGuyAndShoesCurrentlyLinked = true;
@@ -117,7 +117,7 @@ namespace customAnimation
 				isGuyBeingShot = true;
                 useGravity = true;
                 delayCollisionWithShoes = true;
-                velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(angleBetweenPlayer)) * power;
+				velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(angleBetweenPlayer)) * powerOfLauncherBeingUsed;
                 velocity *= -1;
 				areGuyAndShoesCurrentlyLinked = false;
 				shoes.swapTexture(areGuyAndShoesCurrentlyLinked); // Changes the texture/size of the shoes because the Guy is being shot.
@@ -218,8 +218,8 @@ namespace customAnimation
             }
 
             // Change angle.
-            if (currentScrollValue < oldScrollValue/* && beingShot == false*/) if (power > 0) power--;
-            if (currentScrollValue > oldScrollValue/* && beingShot == false*/) if (power < 15f) power++;
+            if (currentScrollValue < oldScrollValue/* && beingShot == false*/) if (powerOfLauncherBeingUsed > 0) powerOfLauncherBeingUsed--;
+            if (currentScrollValue > oldScrollValue/* && beingShot == false*/) if (powerOfLauncherBeingUsed < 15f) powerOfLauncherBeingUsed++;
             if ((!newKeyboardState.IsKeyDown(Keys.Decimal) && oldKeyboardState.IsKeyDown(Keys.Decimal)) || (!newKeyboardState.IsKeyDown(Keys.Down) && oldKeyboardState.IsKeyDown(Keys.Down))) if (gravity > 0) gravity -= 1f;
             if (!newKeyboardState.IsKeyDown(Keys.NumPad3) && oldKeyboardState.IsKeyDown(Keys.NumPad3) || (!newKeyboardState.IsKeyDown(Keys.Up) && oldKeyboardState.IsKeyDown(Keys.Up))) gravity += 1f;
 
@@ -421,7 +421,7 @@ namespace customAnimation
 
                     // Launch the Guy.
                     launcherTimer.stopTimer();
-                    velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(Tile.getLauncherAngleInDegrees(Level.tiles[collY, collX]))) * power;
+					velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(Tile.getLauncherAngleInDegrees(Level.tiles[collY, collX]))) * powerOfLauncherBeingUsed;
                     velocity *= -1;
                     usingLauncher = false;
                     useGravity = true;

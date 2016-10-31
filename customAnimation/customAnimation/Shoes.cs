@@ -12,33 +12,36 @@ namespace customAnimation
 	class Shoes : Character
 	{
 		// The states of the keyboard.
-		KeyboardState oldKeyboardState;
-		KeyboardState newKeyboardState;
+		private KeyboardState oldKeyboardState;
+		private KeyboardState newKeyboardState;
 
-		Keys right;
-		Keys left;
-		Keys up;
-		Keys down;
+		private Keys right;
+		private Keys left;
+		private Keys up;
+		private Keys down;
 
+		// These are public so that Game1.draw can see them for debugging.
 		public float airMovementSpeed = 600f;
 		public float groundMovementSpeed = 300f;
 		public float jumpImpulse = 20f;
 		public float fallFromTileRate = 25f;
 
+		// These are public so that Game1.draw can see them for debugging.
 		public string preset;
 		public string debug;
 		public string debug2;
 
-		public bool interfaceLinked = true;
+		public bool interfaceLinked = true; // Public so that Game1.draw can see them for debugging.
 		private bool interfaceEnabled = true;
 
 		private ContentManager content;
 
 		private int bouncingHorizontally = 0;						// Represents which direction the Shoes will move after collision with a Spring. -1 represents left, 0 represents no bouncing, 1 represents right.
-		public bool delayMovementAfterSpringCollision = false;		// The player cannot move the Shoes themselves after a Spring has been used.
-		Timer delayMovementAfterSpringCollisionTimer;				// Delays movement of the Shoes from using a Spring too quickly.
+		private bool delayMovementAfterSpringCollision = false;		// The player cannot move the Shoes themselves after a Spring has been used.
+		private Timer delayMovementAfterSpringCollisionTimer;				// Delays movement of the Shoes from using a Spring too quickly.
 
-		Timer delayLaunchAfterLauncherCollisionTimer;				// Delays launching the Shoes upon initial collision.
+		private Timer delayLaunchAfterLauncherCollisionTimer;				// Delays launching the Shoes upon initial collision.
+		private int angleInDegreesOfLauncherShoesIsUsing;				// Stores the coordinates of the Launcher Tile from the level. Used to launch the Shoes at the correct angle.
 
 		public Shoes(Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
@@ -62,7 +65,8 @@ namespace customAnimation
 			debug2 = "";
 
 			delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
-			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
+			delayLaunchAfterLauncherCollisionTimer = new Timer(1f);
+			angleInDegreesOfLauncherShoesIsUsing = 0;
 		}
 
 		/// <summary>
@@ -107,7 +111,7 @@ namespace customAnimation
 			// If the Shoes have collided with a Spring, then apply movement from the Spring over time.
 			checkIfShoesCanBounceFromSpring(delta);
 
-			checkIfShoesCanLaunch();
+			checkIfShoesCanLaunch(guy.powerOfLauncherBeingUsed);
 
 			// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
 			resetShoesAndGuyToLevelStartingPositionIfNecessary(guy);
@@ -418,6 +422,29 @@ namespace customAnimation
 		}
 
 		/// <summary>
+		/// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
+		/// </summary>
+		/// <param name="guy">A reference to the Guy. Needed so that a check can be done to ensure that there isn't a tile above the linked Guy/Shoes.</param>
+		private void resetShoesAndGuyToLevelStartingPositionIfNecessary(Guy guy)
+		{
+			if (Position.Y > 704)
+			{
+				Position = Level.playerStartingPosition;
+				guy.Position = Position;
+			}
+		}
+
+		/// <summary>
+		/// Updates the timers.
+		/// </summary>
+		/// <param name="gametime">Snapshot of the game timing state.</param>
+		private void updateTimers(GameTime gameTime)
+		{
+			delayMovementAfterSpringCollisionTimer.Update(gameTime);
+			delayLaunchAfterLauncherCollisionTimer.Update(gameTime);
+		}
+
+		/// <summary>
 		/// Bounces the Shoes off a Spring. Does not happen over time, just when the Shoes collide with a Spring.
 		/// </summary>
 		/// <param name="currentState">The current State of the Shoes.</param>
@@ -508,6 +535,22 @@ namespace customAnimation
 		}
 
 		/// <summary>
+		/// If the Shoes have collided with a Spring, then apply movement from the Spring over time.
+		/// </summary>
+		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
+		private void checkIfShoesCanBounceFromSpring(float delta)
+		{
+			if (bouncingHorizontally != 0 && !standingOnGround())
+			{
+				performHorizontalMovementFromSpring(delta);
+			}
+			else
+			{
+				bouncingHorizontally = 0; // Stop horizontal movement.
+			}
+		}
+
+		/// <summary>
 		/// Set the horizontal velocity based on if the Shoes are jumping or are on the ground.
 		/// </summary>
 		private void setHorizontalVelocity()
@@ -584,45 +627,6 @@ namespace customAnimation
 		}
 
 		/// <summary>
-		/// If the Shoes have collided with a Spring, then apply movement from the Spring over time.
-		/// </summary>
-		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
-		private void checkIfShoesCanBounceFromSpring(float delta)
-		{
-			if (bouncingHorizontally != 0 && !standingOnGround())
-			{
-				performHorizontalMovementFromSpring(delta);
-			}
-			else
-			{
-				bouncingHorizontally = 0; // Stop horizontal movement.
-			}
-		}
-
-		/// <summary>
-		/// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
-		/// </summary>
-		/// <param name="guy">A reference to the Guy. Needed so that a check can be done to ensure that there isn't a tile above the linked Guy/Shoes.</param>
-		private void resetShoesAndGuyToLevelStartingPositionIfNecessary(Guy guy)
-		{
-			if (Position.Y > 704)
-			{
-				Position = Level.playerStartingPosition;
-				guy.Position = Position;
-			}
-		}
-
-		/// <summary>
-		/// Updates the timers.
-		/// </summary>
-		/// <param name="gametime">Snapshot of the game timing state.</param>
-		private void updateTimers(GameTime gameTime)
-		{
-			delayMovementAfterSpringCollisionTimer.Update(gameTime);
-			delayLaunchAfterLauncherCollisionTimer.Update(gameTime);
-		}
-
-		/// <summary>
 		/// Sets up the position of the Shoes for the Launcher, and prepares for launch.
 		/// </summary>
 		/// <param name="currentState">The current State of the Shoes.</param>
@@ -634,6 +638,9 @@ namespace customAnimation
 			position.Y = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.Y - 48;
 			position.Y += 32f;
 			position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X - 8;
+
+			// Store the angle of the Launcher so the Shoes can be launched at the correct angle. Can't pass the angle back through the call stack to the Launcher movement logic without being messy.
+			angleInDegreesOfLauncherShoesIsUsing = Tile.getLauncherAngleInDegrees(Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher]);
 
 			// Stop any movement that was occuring.
 			velocity = new Vector2(0f, 0f);
@@ -654,19 +661,20 @@ namespace customAnimation
 		/// <summary>
 		/// Checks if the Shoes can be launched from a Launcher yet. If so, call the method to perform Launcher movement over time.
 		/// </summary>
-		private void checkIfShoesCanLaunch()
+		private void checkIfShoesCanLaunch(float power)
 		{
 			if (delayLaunchAfterLauncherCollisionTimer.TimerCompleted)
 			{
 				delayLaunchAfterLauncherCollisionTimer.stopTimer();
-				performHorizontalMovementFromLauncher();
+				performHorizontalMovementFromLauncher(power);
+			}
 			}
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		private void performHorizontalMovementFromLauncher()
+		private void performHorizontalMovementFromLauncher(float power)
 		{
 			
 		}
