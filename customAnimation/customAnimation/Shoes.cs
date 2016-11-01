@@ -38,10 +38,11 @@ namespace customAnimation
 
 		private int bouncingHorizontally = 0;						// Represents which direction the Shoes will move after collision with a Spring. -1 represents left, 0 represents no bouncing, 1 represents right.
 		private bool delayMovementAfterSpringCollision = false;		// The player cannot move the Shoes themselves after a Spring has been used.
-		private Timer delayMovementAfterSpringCollisionTimer;				// Delays movement of the Shoes from using a Spring too quickly.
+		private Timer delayMovementAfterSpringCollisionTimer;		// Delays movement of the Shoes from using a Spring too quickly.
 
-		private Timer delayLaunchAfterLauncherCollisionTimer;				// Delays launching the Shoes upon initial collision.
-		private int angleInDegreesOfLauncherShoesIsUsing;				// Stores the coordinates of the Launcher Tile from the level. Used to launch the Shoes at the correct angle.
+		private Timer delayLaunchAfterLauncherCollisionTimer;		// Delays launching the Shoes upon initial collision.
+		private int angleInDegreesOfLauncherShoesIsUsing;			// Stores the coordinates of the Launcher Tile from the level. Used to launch the Shoes at the correct angle.
+		private bool shoesAreCurrentlyMovingDueToLauncher = false;	// Says whether or not the Shoes are moving due to being launched from a Launcher. 
 
 		public Shoes(Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
@@ -111,7 +112,12 @@ namespace customAnimation
 			// If the Shoes have collided with a Spring, then apply movement from the Spring over time.
 			checkIfShoesCanBounceFromSpring(delta);
 
-			checkIfShoesCanLaunch(guy.powerOfLauncherBeingUsed);
+			checkIfShoesCanLaunch();
+
+			if(shoesAreCurrentlyMovingDueToLauncher) 
+			{
+				performHorizontalMovementFromLauncher(guy.powerOfLauncherBeingUsed);
+			}
 
 			// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
 			resetShoesAndGuyToLevelStartingPositionIfNecessary(guy);
@@ -199,6 +205,7 @@ namespace customAnimation
 				{
 					velocity.Y = 0f;
 					isFalling = false;
+					shoesAreCurrentlyMovingDueToLauncher = false;
 				}
 			}
 
@@ -240,6 +247,7 @@ namespace customAnimation
 				else
 				{
 					position.X = Level.tiles[y, x].Position.X - spriteWidth;
+					shoesAreCurrentlyMovingDueToLauncher = false;
 				}
 
 			}
@@ -258,8 +266,8 @@ namespace customAnimation
 				else
 				{
 					position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
+					shoesAreCurrentlyMovingDueToLauncher = false;
 				}
-
 			}
 			else if (currentState == State.Jumping)
 			{
@@ -661,22 +669,35 @@ namespace customAnimation
 		/// <summary>
 		/// Checks if the Shoes can be launched from a Launcher yet. If so, call the method to perform Launcher movement over time.
 		/// </summary>
-		private void checkIfShoesCanLaunch(float power)
+		private void checkIfShoesCanLaunch()
 		{
 			if (delayLaunchAfterLauncherCollisionTimer.TimerCompleted)
 			{
-				delayLaunchAfterLauncherCollisionTimer.stopTimer();
-				performHorizontalMovementFromLauncher(power);
-			}
+				delayLaunchAfterLauncherCollisionTimer.resetTimer();
+				shoesAreCurrentlyMovingDueToLauncher = true;
 			}
 		}
 
 		/// <summary>
-		/// 
+		/// Handles moving the Shoes over time due to being launched from a Launcher.
 		/// </summary>
+		/// <param name="power">The power at which the Shoes will be launched from the Launcher.</param>
 		private void performHorizontalMovementFromLauncher(float power)
 		{
-			
+			position -= (Utilities.Vector2FromAngle(MathHelper.ToRadians(angleInDegreesOfLauncherShoesIsUsing)) * power);
+
+			if (angleInDegreesOfLauncherShoesIsUsing >= 90 && angleInDegreesOfLauncherShoesIsUsing <= 180)
+			{
+				updateRectangles(1, 0);
+				handleCollisions(State.RunningRight);
+				changeState(State.RunningRight);
+			}
+			else
+			{
+				updateRectangles(-1, 0);
+				handleCollisions(State.RunningLeft);
+				changeState(State.RunningLeft);
+			}
 		}
 	}
 }
