@@ -111,8 +111,14 @@ namespace customAnimation
                         impassableTilePos.Add(tiles[column, row].Position);
                     }
 
-                    if (tiles[column, row].TileRepresentation == 'G') goalRectangle = tiles[column, row].SourceRect;
-                    if (tiles[column, row].TileRepresentation == 'P') playerStartingPosition = tiles[column, row].Position;
+					if (tiles[column, row].TileRepresentation == 'G')
+					{
+						goalRectangle = tiles[column, row].SourceRect;
+					}
+					if (tiles[column, row].TileRepresentation == 'P')
+					{
+						playerStartingPosition = tiles[column, row].Position;
+					}
                 }
             }   
         }
@@ -151,8 +157,10 @@ namespace customAnimation
             {
                 for (int row = 0; row < numberOfTileColumns; row++)
                 {
-                    if (Level.tiles[column, row].Position == tilePosition)
-                        arrayPosition = new Vector2(row, column);
+					if (Level.tiles[column, row].Position == tilePosition)
+					{
+						arrayPosition = new Vector2(row, column);
+					}
                 }
             }
 
