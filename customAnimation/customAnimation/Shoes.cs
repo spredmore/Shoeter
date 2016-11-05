@@ -101,7 +101,7 @@ namespace customAnimation
 			setHorizontalVelocity();
 
 			// Check to see if the player wants to jump. If so, set the vertical velocity appropriately.
-			checkIfShoesWantToJump(guy);
+			checkIfShoesWantToJump(guy.tileAbove());
 
 			// Move the Shoes if the player has pressed the appropriate key.
 			moveShoesLeftOrRightIfPossible(delta);
@@ -112,12 +112,8 @@ namespace customAnimation
 			// If the Shoes have collided with a Spring, then apply movement from the Spring over time.
 			checkIfShoesCanBounceFromSpring(delta);
 
-			checkIfShoesCanLaunch();
-
-			if(shoesAreCurrentlyMovingDueToLauncher) 
-			{
-				performHorizontalMovementFromLauncher(guy.powerOfLauncherBeingUsed);
-			}
+			// If the Shoes have collided with a Launcher and are ready to be launched, then apply movement from the Launcher over time.
+			checkIfShoesCanLaunch(guy.powerOfLauncherBeingUsed);
 
 			// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
 			resetShoesAndGuyToLevelStartingPositionIfNecessary(guy);
@@ -247,9 +243,14 @@ namespace customAnimation
 				else
 				{
 					position.X = Level.tiles[y, x].Position.X - spriteWidth;
-					shoesAreCurrentlyMovingDueToLauncher = false;
-				}
 
+					// The Shoes have collided with a tile from being launched from a Launcher.
+					if (shoesAreCurrentlyMovingDueToLauncher)
+					{
+						velocity = new Vector2(0f, 0f);
+						shoesAreCurrentlyMovingDueToLauncher = false;
+					}
+				}
 			}
 			else if (currentState == State.RunningLeft)
 			{
@@ -266,7 +267,12 @@ namespace customAnimation
 				else
 				{
 					position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
-					shoesAreCurrentlyMovingDueToLauncher = false;
+
+					if (shoesAreCurrentlyMovingDueToLauncher)
+					{
+						velocity = new Vector2(0f, 0f);
+						shoesAreCurrentlyMovingDueToLauncher = false;
+					}
 				}
 			}
 			else if (currentState == State.Jumping)
@@ -284,6 +290,12 @@ namespace customAnimation
 					position.Y = Level.tiles[y, x].Position.Y + Level.tiles[y, x].Texture.Height + 2;
 					velocity.Y = -1f;
 					isFalling = true;
+
+					if (shoesAreCurrentlyMovingDueToLauncher)
+					{
+						velocity = new Vector2(0f, 0f);
+						shoesAreCurrentlyMovingDueToLauncher = false;
+					}
 				}
 			}
 			else if (currentState == State.Decending)
@@ -576,14 +588,14 @@ namespace customAnimation
 		/// <summary>
 		/// Check to see if the player wants to jump. If so, set the velocity to a negetive number so that the Shoes will move upwards.
 		/// </summary>
-		/// <param name="guy">A reference to the Guy. Needed so that a check can be done to ensure that there isn't a tile above the linked Guy/Shoes.</param>
-		private void checkIfShoesWantToJump(Guy guy)
+		/// <param name="isThereATileAboveTheGuy">Flag that says whether or not there is a tile above the linked Guy/Shoes.</param>
+		private void checkIfShoesWantToJump(bool isThereATileAboveTheGuy)
 		{
-			if (isJumping == false
+			if (!isJumping
 				&& ((newKeyboardState.IsKeyDown(up) && !oldKeyboardState.IsKeyDown(up)) || (newKeyboardState.IsKeyDown(Keys.Space) && !oldKeyboardState.IsKeyDown(Keys.Space)))
-				&& standingOnGround() == true
-				&& underTile() == false
-				&& guy.tileAbove() == false)
+				&& standingOnGround()
+				&& !underTile()
+				&& !isThereATileAboveTheGuy)
 			{
 				isJumping = true;
 				velocity.Y = jumpImpulse * -1;
@@ -669,12 +681,25 @@ namespace customAnimation
 		/// <summary>
 		/// Checks if the Shoes can be launched from a Launcher yet. If so, call the method to perform Launcher movement over time.
 		/// </summary>
-		private void checkIfShoesCanLaunch()
+		/// <param name="power">The power at which the Shoes will be launched from the Launcher.</param>
+		private void checkIfShoesCanLaunch(float power)
 		{
 			if (delayLaunchAfterLauncherCollisionTimer.TimerCompleted)
 			{
 				delayLaunchAfterLauncherCollisionTimer.resetTimer();
 				shoesAreCurrentlyMovingDueToLauncher = true;
+			}
+
+			if (shoesAreCurrentlyMovingDueToLauncher)
+			{
+				performHorizontalMovementFromLauncher(power);
+
+				// Handle collisions with the borders of the screen.
+				if (didCharacterCollideWithTopBorderOfScreen)
+				{
+					shoesAreCurrentlyMovingDueToLauncher = false;
+					setFlagsForBorderCollision(false);
+				}
 			}
 		}
 
@@ -691,12 +716,20 @@ namespace customAnimation
 				updateRectangles(1, 0);
 				handleCollisions(State.RunningRight);
 				changeState(State.RunningRight);
+
+				updateRectangles(0, -1);
+				handleCollisions(State.Jumping);
+				changeState(State.Jumping);
 			}
 			else
 			{
 				updateRectangles(-1, 0);
 				handleCollisions(State.RunningLeft);
 				changeState(State.RunningLeft);
+
+				updateRectangles(0, -1);
+				handleCollisions(State.Jumping);
+				changeState(State.Jumping);
 			}
 		}
 	}

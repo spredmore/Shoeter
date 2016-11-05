@@ -47,6 +47,13 @@ namespace customAnimation
 		Rectangle tileCollRect;         // The current tile's position the player is colliding with.
 		Vector2 tileArrayCoordinates;   // The current tile's coordinates into the level array.
 
+		// Important: Be sure to reset the appropriate border collision variable to false after it has been found that is has been set to true.
+		// Flag that says whether or not the Character has collided with that particular border of the screen.
+		protected bool didCharacterCollideWithLeftBorderOfScreen = false;
+		protected bool didCharacterCollideWithRightBorderOfScreen = false;
+		protected bool didCharacterCollideWithTopBorderOfScreen = false;
+		protected bool didCharacterCollideWithBottomBorderOfScreen = false;
+
 		// Window Information
 		protected int screenHeight;
 		protected int screenWidth;
@@ -151,7 +158,10 @@ namespace customAnimation
 			set { totalFrames = value; }
 		}
 
-		public Character() { charDebug = ""; }
+		public Character() 
+		{ 
+			charDebug = ""; 
+		}
 
 		// Animates the character.
 		protected void handleAnimation(GameTime gameTime)
@@ -199,8 +209,6 @@ namespace customAnimation
 					updateRectangles(0, -1);
 					tileCollRect = Level.impassableTileRecs[i];
 					setTileArrayCoordinates(Level.impassableTilePos[i].X, Level.impassableTilePos[i].Y);
-
-					charDebug = TileArrayCoordinates.ToString();
 
 					return true;
 				}
@@ -306,22 +314,25 @@ namespace customAnimation
 			for (int y = topTile; y <= bottomTile; ++y)
 			{
 				for (int x = leftTile; x <= rightTile; ++x)
-				{   
+				{
 					// Keeps the player in bounds of the screen.
-					if (x < 0) 
+					if (x < 0)
 					{
 						velocity.X = 0.0f;
 						position.X = 0f;
+						didCharacterCollideWithLeftBorderOfScreen = true;
 					}
 					else if (x > 79)
 					{
 						position.X = screenWidth - spriteWidth;
 						velocity.X = 0f;
+						didCharacterCollideWithRightBorderOfScreen = true;
 					}
 					else if (y < 0)
 					{
 						position.Y = 0f;
 						velocity.Y = 0f;
+						didCharacterCollideWithTopBorderOfScreen = true;
 					}
 					else if (y > 44)
 					{
@@ -329,6 +340,7 @@ namespace customAnimation
 					}
 					else if (futurePositionRec.Intersects(Level.tiles[y, x].SourceRect) && Level.tiles[y, x].CollProperties == Tile.CollisionProperty.Impassable)
 					{
+						setFlagsForBorderCollision(false);
 						if (potentialState == State.RunningRight)
 						{
 							specializedCollision(potentialState, y, x);
@@ -367,5 +379,27 @@ namespace customAnimation
 		// This function contains specialized collision code for a particular Character.
 		// Says what to do in the event of a particular collision.
 		protected abstract void specializedCollision(State currentState, int y, int x);
+
+		/// <summary>
+		/// Sets the flags for collisions with the border of the screen to true or false.
+		/// </summary>
+		/// <param name="setToTrue">Flag that says to set the border flags to true or false.</param>
+		protected void setFlagsForBorderCollision(bool setToTrue)
+		{
+			if (setToTrue)
+			{
+				didCharacterCollideWithLeftBorderOfScreen = true;
+				didCharacterCollideWithRightBorderOfScreen = true;
+				didCharacterCollideWithTopBorderOfScreen = true;
+				didCharacterCollideWithBottomBorderOfScreen = true;
+			}
+			else
+			{
+				didCharacterCollideWithLeftBorderOfScreen = false;
+				didCharacterCollideWithRightBorderOfScreen = false;
+				didCharacterCollideWithTopBorderOfScreen = false;
+				didCharacterCollideWithBottomBorderOfScreen = false;
+			}
+		}
 	}
 }
