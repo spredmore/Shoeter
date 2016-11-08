@@ -192,7 +192,6 @@ namespace customAnimation
 			else
 			{
 				// If the Shoes have fallen onto a Spring, have the Shoes bounce according to the Spring logic. Otherwise, stop falling.
-				setTileArrayCoordinates(position.X, position.Y); // Sets which Tile in the Level (based on the position of the Shoes) that the Shoes are colliding with.
 				if (Level.tiles[(int)TileArrayCoordinates.X, (int)TileArrayCoordinates.Y].TileRepresentation == 'S' && velocity.Y > 4f)
 				{
 					prepareMovementDueToSpringCollision(State.Decending);
@@ -538,6 +537,7 @@ namespace customAnimation
 		{
 			if (currentState == State.Decending || currentState == State.Jumping)
 			{
+				// If the Shoes collided with a Spring (via falling down or raising upwards) due to being launched, let the Spring movement logic take over.
 				if (!shoesAreCurrentlyMovingDueToLauncher)
 				{
 					velocity.Y *= -1;	// Flips the velocity to either bounce the Shoes up or down.
@@ -578,31 +578,23 @@ namespace customAnimation
 			// If the Shoes collided with a Spring due to being launched from a Launcher, let the Spring movement logic take over.
 			if ((currentState == State.RunningRight || currentState == State.RunningLeft) && shoesAreCurrentlyMovingDueToLauncher)
 			{
-				velocity.Y *= -1;       // Flips the velocity to either bounce the Shoes up or down.
-				velocity.Y *= 0.55f;    // Decrease the power of the next bounce.
+				velocity.Y *= -1;
+				velocity.Y *= 0.55f;
 				position.Y += velocity.Y;
 				shoesAreCurrentlyMovingDueToLauncher = false;
 			}
 
-			// If the velocity begins to pull the player down, the Shoes are falling. 
+			// If the velocity begins to pull the player down, the Shoes are falling. Depending on which direction the Shoes are moving, check the top or bottom.
 			if (velocity.Y > 0f)
 			{
 				isFalling = true;
-			}
-			else
-			{
-				isFalling = false;
-			}
-
-			// Depending on which direction the Shoes are moving, check the top or bottom.
-			if (isFalling == true)
-			{
 				updateRectangles(0, 1);
 				handleCollisions(State.Decending);
 				changeState(State.Decending);
 			}
 			else
 			{
+				isFalling = false;
 				updateRectangles(0, -1);
 				handleCollisions(State.Jumping);
 				changeState(State.Jumping);
