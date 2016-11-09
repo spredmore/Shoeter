@@ -385,7 +385,7 @@ namespace customAnimation
 			if (interfaceLinked == true && interfaceEnabled == true)
 			{
 				// Shoes Movement
-				if (isGuyBeingShot == true)
+				if (isGuyBeingShot || shoesAreCurrentlyMovingDueToLauncher)
 				{
 					preset = "Shoes - F4";
 					airMovementSpeed = 405f;
@@ -487,10 +487,18 @@ namespace customAnimation
 		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
 		private void moveShoesLeftOrRightIfPossible(float delta)
 		{
-			if (newKeyboardState.IsKeyDown(right) && delayMovementAfterSpringCollision == false)
+			// Allow movement if the player has pressed the correct key to move the Shoes, and the Shoes are allowed to move after colliding with a Spring, and the Shoes aren't locked into a Launcher.
+			if (newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted))
 			{
 				bouncingHorizontally = 0;
 				position.X += velocity.X * delta;
+
+				// Allow the player to take over movement of the Shoes if the Shoes are currently being moved due to a Launcher.
+				if(shoesAreCurrentlyMovingDueToLauncher) 
+				{
+					shoesAreCurrentlyMovingDueToLauncher = false;
+					velocity.Y = 0f;
+				}
 
 				// Create the rectangle for the player's future position.
 				// Draw a rectangle around the player's position after they move.
@@ -498,10 +506,16 @@ namespace customAnimation
 				handleCollisions(State.RunningRight);
 				changeState(State.RunningRight);
 			}
-			if (newKeyboardState.IsKeyDown(left) && delayMovementAfterSpringCollision == false)
+			if (newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted))
 			{
 				bouncingHorizontally = 0;
 				position.X -= velocity.X * delta;
+
+				if (shoesAreCurrentlyMovingDueToLauncher)
+				{
+					shoesAreCurrentlyMovingDueToLauncher = false;
+					velocity.Y = 0f;
+				}
 
 				updateRectangles(-1, 0);
 				handleCollisions(State.RunningLeft);
