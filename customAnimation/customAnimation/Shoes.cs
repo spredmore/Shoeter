@@ -196,6 +196,11 @@ namespace customAnimation
 				{
 					prepareMovementDueToSpringCollision(State.Decending);
 				}
+				else if (Level.tiles[(int)TileArrayCoordinates.X, (int)TileArrayCoordinates.Y].IsLauncher)
+				{
+					isFalling = false;
+					prepareMovementDueToLauncherCollision(State.Decending, (int)TileArrayCoordinates.Y, (int)TileArrayCoordinates.X, true); // I pass the coordinates in backwards because I screwed up when I originally made did Level/Tile creation.
+				}
 				else
 				{
 					velocity.Y = 0f;
@@ -237,7 +242,7 @@ namespace customAnimation
 				}
 				else if(Level.tiles[y, x].IsLauncher)
 				{
-					prepareMovementDueToLauncherCollision(currentState, x, y);
+					prepareMovementDueToLauncherCollision(currentState, x, y, false);
 				}
 				else
 				{
@@ -256,7 +261,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsLauncher)
 				{
-					prepareMovementDueToLauncherCollision(currentState, x, y);
+					prepareMovementDueToLauncherCollision(currentState, x, y, false);
 				}
 				else
 				{
@@ -273,7 +278,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsLauncher)
 				{
-					prepareMovementDueToLauncherCollision(currentState, x, y);
+					prepareMovementDueToLauncherCollision(currentState, x, y, false);
 				}
 				else
 				{
@@ -292,7 +297,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsLauncher)
 				{
-					prepareMovementDueToLauncherCollision(currentState, x, y);
+					prepareMovementDueToLauncherCollision(currentState, x, y, false);
 				}
 				else
 				{
@@ -474,7 +479,8 @@ namespace customAnimation
 				&& ((newKeyboardState.IsKeyDown(up) && !oldKeyboardState.IsKeyDown(up)) || (newKeyboardState.IsKeyDown(Keys.Space) && !oldKeyboardState.IsKeyDown(Keys.Space)))
 				&& standingOnGround()
 				&& !underTile()
-				&& !isThereATileAboveTheGuy)
+				&& !isThereATileAboveTheGuy
+				&& (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted))
 			{
 				isJumping = true;
 				velocity.Y = jumpImpulse * -1;
@@ -697,12 +703,15 @@ namespace customAnimation
 		/// <param name="currentState">The current State of the Shoes.</param>
 		/// <param name="xTileCoordinateOfLauncher">The X coordinate of the Launcher that has been collided with. Coordinate is based off of the Level, not actual position.</param>
 		/// <param name="yTileCoordinateOfLauncher">The Y coordinate of the Launcher that has been collided with. Coordinate is based off of the Level, not actual position.</param>
-		private void prepareMovementDueToLauncherCollision(State currentState, int xTileCoordinateOfLauncher, int yTileCoordinateOfLauncher)
+		private void prepareMovementDueToLauncherCollision(State currentState, int xTileCoordinateOfLauncher, int yTileCoordinateOfLauncher, bool shoesFellOntoLauncher)
 		{
 			// Put the Shoes at the top of the Launcher.
-			position.Y = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.Y - 48;
-			position.Y += 32f;
-			position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X - 8;
+			if (!shoesFellOntoLauncher)
+			{
+				position.Y = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.Y - 48;
+				position.Y += 32f;
+				position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X - 8;
+			}
 
 			// Store the angle of the Launcher so the Shoes can be launched at the correct angle. Can't pass the angle back through the call stack to the Launcher movement logic without being messy.
 			angleInDegreesOfLauncherShoesIsUsing = Tile.getLauncherAngleInDegrees(Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher]);
