@@ -713,6 +713,12 @@ namespace customAnimation
 				position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X - 8;
 			}
 
+			// If the Shoes collided with a Launcher due to being launched, stop Launcher movement so that the Shoes can be locked onto the current Launcher to await being launched.
+			if (shoesAreCurrentlyMovingDueToLauncher)
+			{
+				shoesAreCurrentlyMovingDueToLauncher = false;
+			}
+
 			// Store the angle of the Launcher so the Shoes can be launched at the correct angle. Can't pass the angle back through the call stack to the Launcher movement logic without being messy.
 			angleInDegreesOfLauncherShoesIsUsing = Tile.getLauncherAngleInDegrees(Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher]);
 
