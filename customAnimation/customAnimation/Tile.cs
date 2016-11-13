@@ -177,14 +177,14 @@ namespace customAnimation
         // Returns the angle at which the launcher should shoot the player, depending on which launcher is passed in.
         public static int getLauncherAngleInDegrees(Tile tile)
         {
-            if (tile.TileRepresentation == '1' || tile.TileRepresentation == '!') return 315;
-            else if(tile.TileRepresentation == '2' || tile.TileRepresentation == '@') return 270;
-            else if (tile.TileRepresentation == '3' || tile.TileRepresentation == '#') return 225;
-            else if (tile.TileRepresentation == '4' || tile.TileRepresentation == '$') return 0;
-            else if (tile.TileRepresentation == '6' || tile.TileRepresentation == '^') return 180;
-            else if (tile.TileRepresentation == '7' || tile.TileRepresentation == '&') return 45;
-            else if (tile.TileRepresentation == '8' || tile.TileRepresentation == '*') return 90;
-            else if (tile.TileRepresentation == '9' || tile.TileRepresentation == '(') return 135;
+            if (tile.TileRepresentation == '1' || tile.TileRepresentation == '!') return 315;		// Down Left
+            else if(tile.TileRepresentation == '2' || tile.TileRepresentation == '@') return 270;	// Down
+            else if (tile.TileRepresentation == '3' || tile.TileRepresentation == '#') return 225;	// Down Right
+            else if (tile.TileRepresentation == '4' || tile.TileRepresentation == '$') return 0;	// Left
+            else if (tile.TileRepresentation == '6' || tile.TileRepresentation == '^') return 180;	// Right
+            else if (tile.TileRepresentation == '7' || tile.TileRepresentation == '&') return 45;	// Up Left
+            else if (tile.TileRepresentation == '8' || tile.TileRepresentation == '*') return 90;	// Up
+            else if (tile.TileRepresentation == '9' || tile.TileRepresentation == '(') return 135;	// Up Right
             else return -1;
         }        
     }
