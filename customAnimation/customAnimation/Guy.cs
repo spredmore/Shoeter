@@ -11,34 +11,34 @@ namespace customAnimation
 {
 	class Guy : Character
 	{
-		KeyboardState currentKeyboardState;
-		KeyboardState previousKeyboardState;
-		MouseState currentMouseState;
-		MouseState previousMouseState;
+		private KeyboardState currentKeyboardState;
+		private KeyboardState previousKeyboardState;
+		private MouseState currentMouseState;
+		private MouseState previousMouseState;
 
-		public Vector2 currentMousePosition;
-		Vector2 previousPosition;	// Used to determine direction of travel.
-		int currentScrollWheelValue;
-		int previousScrollWheelValue;
+		private Vector2 currentMousePosition;
+		private Vector2 previousPosition;	// Used to determine direction of travel.
+		private int currentScrollWheelValue;
+		private int previousScrollWheelValue;
 
-		public bool delayCollisionWithShoesAndGuy = true;	// We need to let the Guy travel a little bit before Shoes can catch him.
-		Timer delayCollisionWithGuyAndShoesTimer;	// Delay so that the Guy and Shoes don't link back together too quickly.
-		Timer launcherTimer;						// Delay before the Guy is launched.
-		Timer delayBetweenLaunchesTimer;			// Delay so the Guy doesn't use another launcher too quickly.
+		private bool delayCollisionWithShoesAndGuy = true;			// We need to let the Guy travel a little bit before Shoes can catch him.
+		private Timer delayCollisionWithGuyAndShoesTimer;			// Delay so that the Guy and Shoes don't link back together too quickly.
+		private Timer delayLaunchAfterLauncherCollisionTimer;		// Delays launching the Guy upon initial collision.
+		private Timer delayBetweenLaunchesTimer;					// Delay so the Guy doesn't use another launcher too quickly.
 
 		public float angleBetweenGuyAndMouseCursor;
 		public float powerOfLauncherBeingUsed = 5f;
 
-		bool useGravity;
-		public bool areGuyAndShoesCurrentlyLinked = true;
+		private bool useGravity;
+		private bool areGuyAndShoesCurrentlyLinked = true;
 		public bool isGuyBeingShot = false;
 		
-		float delta;
+		private float delta;
 
 		public string debug;
 		public string debug2;
 
-		Level currentLevel;
+		private Level currentLevel;
 		private int collX;
 		private int collY;
 
@@ -64,7 +64,7 @@ namespace customAnimation
 			PlayerMode = Mode.Guy;
 
 			delayCollisionWithGuyAndShoesTimer = new Timer(0.5f);
-			launcherTimer = new Timer(2f);
+			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
 			delayBetweenLaunchesTimer = new Timer(0.1f);
 		}
 
@@ -79,145 +79,6 @@ namespace customAnimation
 			currentLevel = level;
 			handleAnimation(gameTime);
 			handleMovement(gameTime, ref shoes);
-		}
-
-		/// <summary>
-		/// Handles all of the movement for the Guy.
-		/// </summary>
-		/// <param name="gameTime">Snapshot of the game timing state.</param>
-		/// <param name="shoes">A reference to the Shoes.</param>
-		private void handleMovement(GameTime gameTime, ref Shoes shoes)
-		{
-			currentKeyboardState = Keyboard.GetState();
-			currentMouseState = Mouse.GetState();
-			currentMousePosition.X = currentMouseState.X;
-			currentMousePosition.Y = currentMouseState.Y;
-			currentScrollWheelValue = currentMouseState.ScrollWheelValue;
-			delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-			angleBetweenGuyAndMouseCursor = MathHelper.ToDegrees((float)(Math.Atan2(shoes.Position.Y - currentMousePosition.Y, shoes.Position.X + 26 - currentMousePosition.X)));
-
-			// Handles delaying the collision between the guy and shoes so that they don't link back together too quickly.
-			stopDelayingCollisionWithGuyAndShoesIfPossible();
-
-			// Set the position to the player's position so it follows him around.
-			setPositionOfGuyToPositionOfShoesIfPossible(shoes.Position);
-
-			// Shoot the Guy if the player clicks the left mouse button.
-			shootGuyIfPossible(shoes);
-
-			// ******************************************************
-			// Reset the Guy to the Shoes' position.
-			// ******************************************************
-			if (!(currentMouseState.RightButton == ButtonState.Pressed) && previousMouseState.RightButton == ButtonState.Pressed && !areGuyAndShoesCurrentlyLinked)
-			{                
-				velocity = new Vector2(0f, 0f);
-				isGuyBeingShot = false;
-				areGuyAndShoesCurrentlyLinked = true;
-				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
-				Position = new Vector2(shoes.Position.X, shoes.Position.Y);
-				usingLauncher = false;
-				launcherTimer.stopTimer();
-				delayBetweenLaunchesTimer.stopTimer();
-			}
-
-			// ******************************************************
-			// Handle the Guy's movement when he is being shot.
-			// ******************************************************
-			if (isGuyBeingShot)
-			{
-				position.X += velocity.X; // SHOES MOVES EACH DIMENSION ONE AT A TIME
-
-				if (useGravity)
-				{
-					velocity.Y += gravity * delta; // Gravity
-				}
-
-				// ******************************************************
-				// Determine which direction we're traveling, and check for collisions. 
-				// ******************************************************
-				if (position.X > previousPosition.X)
-				{
-					// Traveling right
-					updateRectangles(1, 0);
-					handleCollisions(State.RunningRight);
-					changeState(State.RunningRight);
-				}
-				if (position.X < previousPosition.X)
-				{
-					// Traveling left
-					updateRectangles(-1, 0);
-					handleCollisions(State.RunningLeft);
-					changeState(State.RunningLeft);
-				}
-
-				position.Y += velocity.Y; // SHOES MOVES EACH DIMENSION ONE AT A TIME
-
-				if (position.Y > previousPosition.Y)
-				{
-					// Traveling Down
-					updateRectangles(0, 1);
-					handleCollisions(State.Decending);
-					changeState(State.Decending);
-				}
-				if (position.Y < previousPosition.Y)
-				{
-					// Traveling Up
-					updateRectangles(0, -1);
-					handleCollisions(State.Jumping);
-					changeState(State.Jumping);
-				}
-
-				// ******************************************************
-				// Set the Shoes' position to the Guys' upon collision.
-				// ******************************************************
-				if (PositionRect.Intersects(shoes.PositionRect) && !delayCollisionWithShoesAndGuy && !areGuyAndShoesCurrentlyLinked)
-				{
-					shoes.Position = new Vector2(Position.X, Position.Y + 40);
-					velocity = new Vector2(0f, 0f);
-					delayCollisionWithShoesAndGuy = true;
-					isGuyBeingShot = false;
-					areGuyAndShoesCurrentlyLinked = true;
-					shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
-				}
-
-				if (usingLauncher)
-				{
-					prepareMovementDueToLauncherCollision(gameTime);
-				}
-
-				if (delayBetweenLaunchesTimer.TimerCompleted)
-				{
-					delayBetweenLaunchesTimer.stopTimer();
-				}
-			}
-			else
-			{
-				// ******************************************************
-				// The player has reached the goal for the current level.
-				// ******************************************************
-				if (PositionRect.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
-				{
-					currentLevel.LoadLevel();
-					shoes.Position = currentLevel.getPlayerStartingPosition();
-				}
-			}
-
-			// Change angle.
-			if (currentScrollWheelValue < previousScrollWheelValue/* && beingShot == false*/) if (powerOfLauncherBeingUsed > 0) powerOfLauncherBeingUsed--;
-			if (currentScrollWheelValue > previousScrollWheelValue/* && beingShot == false*/) if (powerOfLauncherBeingUsed < 15f) powerOfLauncherBeingUsed++;
-			if ((!currentKeyboardState.IsKeyDown(Keys.Decimal) && previousKeyboardState.IsKeyDown(Keys.Decimal)) || (!currentKeyboardState.IsKeyDown(Keys.Down) && previousKeyboardState.IsKeyDown(Keys.Down))) if (gravity > 0) gravity -= 1f;
-			if (!currentKeyboardState.IsKeyDown(Keys.NumPad3) && previousKeyboardState.IsKeyDown(Keys.NumPad3) || (!currentKeyboardState.IsKeyDown(Keys.Up) && previousKeyboardState.IsKeyDown(Keys.Up))) gravity += 1f;
-
-			previousKeyboardState = currentKeyboardState;
-			previousMouseState = currentMouseState;
-			previousPosition = Position;
-			previousScrollWheelValue = currentMouseState.ScrollWheelValue;
-			updateRectangles(0, 0);
-
-			// Update timers.
-			delayCollisionWithGuyAndShoesTimer.Update(gameTime);
-			launcherTimer.Update(gameTime);
-			delayBetweenLaunchesTimer.Update(gameTime);
 		}
 
 		/// <summary>
@@ -314,7 +175,109 @@ namespace customAnimation
 		}
 
 		/// <summary>
-		/// Returns true if there is a tile above the Guy.
+		/// Load the next level if the player has reached the end of the level and the Guy and Shoes are linked.
+		/// </summary>
+		/// <param name="shoes">A reference to the Shoes.</param>
+		private void loadNextLevelIfPossible(Shoes shoes)
+		{
+			if (PositionRect.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
+			{
+				currentLevel.LoadLevel();
+				shoes.Position = currentLevel.getPlayerStartingPosition();
+			}
+		}
+
+		/// <summary>
+		/// Changes the power of shooting the Guy and of Launchers, based on how much the player scrolls the mouse wheel.
+		/// </summary>
+		private void changePowerOfShootingAndLaunching()
+		{
+			if (currentScrollWheelValue < previousScrollWheelValue)
+			{
+				if (powerOfLauncherBeingUsed > 0)
+				{
+					powerOfLauncherBeingUsed--;
+				}
+			}
+			if (currentScrollWheelValue > previousScrollWheelValue)
+			{
+				if (powerOfLauncherBeingUsed < 15f)
+				{
+					powerOfLauncherBeingUsed++;
+				}
+			}
+		}
+
+		/// <summary>
+		/// If the interface is not linked, allows the player to modify the value of gravity.
+		/// </summary>
+		private void changeGravity()
+		{
+			if ((!currentKeyboardState.IsKeyDown(Keys.Decimal) && previousKeyboardState.IsKeyDown(Keys.Decimal)) || 
+				(!currentKeyboardState.IsKeyDown(Keys.Down) && previousKeyboardState.IsKeyDown(Keys.Down)))
+			{
+				if (gravity > 0) gravity -= 1f;
+			}
+			if (!currentKeyboardState.IsKeyDown(Keys.NumPad3) && previousKeyboardState.IsKeyDown(Keys.NumPad3) ||
+				(!currentKeyboardState.IsKeyDown(Keys.Up) && previousKeyboardState.IsKeyDown(Keys.Up)))
+			{
+				gravity += 1f;
+			} 
+		}
+
+		/// <summary>
+		/// Updates a variety of variables used for knowing information about the current frame
+		/// </summary>
+		/// <remarks>This method name and method summary are terrible. Update them at some point.</remarks>
+		private void updateCurrentFrameVariables(GameTime gameTime, Vector2 shoesPosition)
+		{
+			currentKeyboardState = Keyboard.GetState();
+			currentMouseState = Mouse.GetState();
+			currentMousePosition.X = currentMouseState.X;
+			currentMousePosition.Y = currentMouseState.Y;
+			currentScrollWheelValue = currentMouseState.ScrollWheelValue;
+			delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+			angleBetweenGuyAndMouseCursor = MathHelper.ToDegrees((float)(Math.Atan2(shoesPosition.Y - currentMousePosition.Y, shoesPosition.X + 26 - currentMousePosition.X)));
+		}
+
+		/// <summary>
+		/// Updates the variables that are used for storing previous values of frame variables.
+		/// </summary>
+		/// <remarks>This method name and method summary are terrible. Update them at some point.</remarks>
+		private void updatePreviousFrameVariables()
+		{
+			previousKeyboardState = currentKeyboardState;
+			previousMouseState = currentMouseState;
+			previousPosition = Position;
+			previousScrollWheelValue = currentMouseState.ScrollWheelValue;
+			updateRectangles(0, 0);
+		}
+
+		/// <summary>
+		/// Handles delaying the collision between the guy and shoes so that they don't link back together too quickly.
+		/// </summary>
+		private void stopDelayingCollisionWithGuyAndShoesIfPossible()
+		{
+			if (delayCollisionWithGuyAndShoesTimer.TimerCompleted)
+			{
+				delayCollisionWithGuyAndShoesTimer.stopTimer();
+				delayCollisionWithShoesAndGuy = false;
+			}
+		}
+
+		/// <summary>
+		/// Updates the timers.
+		/// </summary>
+		/// <param name="gameTime">Snapshot of the game timing state.</param>
+		private void updateTimers(GameTime gameTime)
+		{
+			delayCollisionWithGuyAndShoesTimer.Update(gameTime);
+			delayLaunchAfterLauncherCollisionTimer.Update(gameTime);
+			delayBetweenLaunchesTimer.Update(gameTime);
+		}
+
+		/// <summary>
+		/// Returns true if there is a tile above the Guy. Called from Shoes.cs.
 		/// </summary>
 		/// <returns>Returns true or false depending on if there is a Tile above the Guy or not.</returns>
 		public bool tileAbove()
@@ -332,6 +295,140 @@ namespace customAnimation
 
 			return false;
 		}
+
+		// ******************
+		// * START MOVEMENT *
+		// ******************
+
+		/// <summary>
+		/// Handles all of the movement for the Guy.
+		/// </summary>
+		/// <param name="gameTime">Snapshot of the game timing state.</param>
+		/// <param name="shoes">A reference to the Shoes.</param>
+		private void handleMovement(GameTime gameTime, ref Shoes shoes)
+		{
+			// Updates a variety of variables used for knowing information about the current frame.
+			updateCurrentFrameVariables(gameTime, shoes.Position);
+
+			// Handles delaying the collision between the guy and shoes so that they don't link back together too quickly.
+			stopDelayingCollisionWithGuyAndShoesIfPossible();
+
+			// Set the position to the player's position so it follows him around.
+			setPositionOfGuyToPositionOfShoesIfPossible(shoes.Position);
+
+			// Shoot the Guy if the player clicks the left mouse button.
+			shootGuyIfPossible(shoes);
+
+			// Reset the Guy to the Shoes' position if the player clicks the right mouse button.
+			resetGuyToShoesCurrentPositionIfPossible(shoes);
+
+			if (isGuyBeingShot)
+			{
+				// Takes care of movement for the Guy while he's being shot.
+				handleGuyMovementWhenBeingShot();
+
+				// Set the Shoes' position to the Guys' upon collision.
+				setShoesPositionToGuyUponCollisionIfPossible(shoes);
+
+				// Checks to see if the Guy is using a Launcher. If so, then launch the Guy if possible.
+				checkIfGuyCanLaunch(gameTime);
+
+				// Stops delaying collisions with the Guy and other Launchers once he's been launched.
+				stopDelayingCollisionWithGuyAndLaunchersIfPossible();
+			}
+			else
+			{
+				// Load the next level if the player has reached the end of the level and the Guy and Shoes are linked.
+				loadNextLevelIfPossible(shoes);
+			}
+
+			// Change power of shooting the Guy and of Launchers if the player scrolls the mouse wheel.
+			changePowerOfShootingAndLaunching();
+
+			// If the interface is not linked, allows the player to modify the value of gravity.
+			changeGravity();
+
+			// Updates the variables that are used for storing the previous values of the current values.
+			updatePreviousFrameVariables();
+
+			// Update timers.
+			updateTimers(gameTime);
+		}
+
+		/// <summary>
+		/// Shoot the Guy if the player clicks the left mouse button.
+		/// </summary>
+		/// <param name="shoes">A reference to the Shoes.</param>
+		private void shootGuyIfPossible(Shoes shoes)
+		{
+			if (currentMouseState.LeftButton == ButtonState.Pressed && !isGuyBeingShot)
+			{
+				if (!delayCollisionWithGuyAndShoesTimer.TimerStarted)
+				{
+					delayCollisionWithGuyAndShoesTimer.startTimer();
+				}
+
+				isGuyBeingShot = true;
+				useGravity = true;
+				delayCollisionWithShoesAndGuy = true;
+				velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(angleBetweenGuyAndMouseCursor)) * powerOfLauncherBeingUsed;
+				velocity *= -1;
+				areGuyAndShoesCurrentlyLinked = false;
+				shoes.swapTexture(areGuyAndShoesCurrentlyLinked); // Changes the texture/size of the shoes because the Guy is being shot.
+			}
+		}
+
+		/// <summary>
+		/// Handles modifying the Guy's movement while he's being shot.
+		/// </summary>
+		private void handleGuyMovementWhenBeingShot()
+		{
+			// Modify the Guy's position by the velocity it's traveling, then check for collisions appropriately.
+			position.X += velocity.X;
+
+			// If gravity is active, use it.
+			if (useGravity)
+			{
+				velocity.Y += gravity * delta;
+			}
+
+			// Determine which direction the Guy is traveling, then check for collisions. 
+			if (position.X > previousPosition.X)
+			{
+				updateRectangles(1, 0);
+				handleCollisions(State.RunningRight);
+				changeState(State.RunningRight);
+			}
+			if (position.X < previousPosition.X)
+			{
+				updateRectangles(-1, 0);
+				handleCollisions(State.RunningLeft);
+				changeState(State.RunningLeft);
+			}
+
+			position.Y += velocity.Y;
+
+			if (position.Y > previousPosition.Y)
+			{
+				updateRectangles(0, 1);
+				handleCollisions(State.Decending);
+				changeState(State.Decending);
+			}
+			if (position.Y < previousPosition.Y)
+			{
+				updateRectangles(0, -1);
+				handleCollisions(State.Jumping);
+				changeState(State.Jumping);
+			}
+		}
+		
+		// ****************
+		// * END MOVEMENT *
+		// ****************
+
+		// ****************
+		// * START SPRING *
+		// ****************
 
 		/// <summary>
 		/// Sets the Guy's Velocity and Position such that it is bounced off of a Spring.
@@ -377,6 +474,26 @@ namespace customAnimation
 			}
 		}
 
+		// ****************
+		// *  END SPRING  *
+		// ****************
+
+		// ******************
+		// * START LAUNCHER *
+		// ******************
+
+		/// <summary>
+		/// Checks to see if the Guy can Launch or not.
+		/// </summary>
+		/// <param name="gameTime">Snapshot of the game timing state.</param>
+		private void checkIfGuyCanLaunch(GameTime gameTime)
+		{
+			if (usingLauncher)
+			{
+				prepareMovementDueToLauncherCollision(gameTime);
+			}
+		}
+
 		/// <summary>
 		/// Handles setting up the Guy to use a Launcher.
 		/// </summary>
@@ -391,15 +508,15 @@ namespace customAnimation
 			velocity = new Vector2(0f, 0f);
 			useGravity = false;
 
-			if (launcherTimer.TimerStarted)
+			if (delayLaunchAfterLauncherCollisionTimer.TimerStarted)
 			{
-				if (launcherTimer.TimerCompleted)
+				if (delayLaunchAfterLauncherCollisionTimer.TimerCompleted)
 				{
 					// Prevent the Guy from using any other Launchers for a time period.
 					delayBetweenLaunchesTimer.startTimer();
 
 					// Launch the Guy.
-					launcherTimer.stopTimer();
+					delayLaunchAfterLauncherCollisionTimer.stopTimer();
 					velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(Tile.getLauncherAngleInDegrees(Level.tiles[collY, collX]))) * powerOfLauncherBeingUsed;
 					velocity *= -1;
 					usingLauncher = false;
@@ -408,21 +525,28 @@ namespace customAnimation
 			}
 			else
 			{
-				launcherTimer.startTimer();
+				delayLaunchAfterLauncherCollisionTimer.startTimer();
 			}
 		}
 
 		/// <summary>
-		/// Handles delaying the collision between the guy and shoes so that they don't link back together too quickly.
+		/// Stops delaying collisions with the Guy and other Launchers once he's been launched.
 		/// </summary>
-		private void stopDelayingCollisionWithGuyAndShoesIfPossible()
+		private void stopDelayingCollisionWithGuyAndLaunchersIfPossible()
 		{
-			if (delayCollisionWithGuyAndShoesTimer.TimerCompleted)
+			if (delayBetweenLaunchesTimer.TimerCompleted)
 			{
-				delayCollisionWithGuyAndShoesTimer.stopTimer();
-				delayCollisionWithShoesAndGuy = false;
+				delayBetweenLaunchesTimer.stopTimer();
 			}
 		}
+
+		// ******************
+		// *  END LAUNCHER  *
+		// ******************
+
+		// **************************
+		// * START POSITION SETTING *
+		// **************************
 
 		/// <summary>
 		/// Set the position to the player's position so it follows him around.
@@ -438,26 +562,43 @@ namespace customAnimation
 		}
 
 		/// <summary>
-		/// Shoot the Guy if the player clicks the left mouse button.
+		/// Reset the Guy to the Shoes' position if the player has clicked the right mouse button.
 		/// </summary>
 		/// <param name="shoes">A reference to the Shoes.</param>
-		private void shootGuyIfPossible(Shoes shoes)
+		private void resetGuyToShoesCurrentPositionIfPossible(Shoes shoes)
 		{
-			if (currentMouseState.LeftButton == ButtonState.Pressed && !isGuyBeingShot)
+			if (!(currentMouseState.RightButton == ButtonState.Pressed) && previousMouseState.RightButton == ButtonState.Pressed && !areGuyAndShoesCurrentlyLinked)
 			{
-				if (!delayCollisionWithGuyAndShoesTimer.TimerStarted)
-				{
-					delayCollisionWithGuyAndShoesTimer.startTimer();
-				}
-
-				isGuyBeingShot = true;
-				useGravity = true;
-				delayCollisionWithShoesAndGuy = true;
-				velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(angleBetweenGuyAndMouseCursor)) * powerOfLauncherBeingUsed;
-				velocity *= -1;
-				areGuyAndShoesCurrentlyLinked = false;
-				shoes.swapTexture(areGuyAndShoesCurrentlyLinked); // Changes the texture/size of the shoes because the Guy is being shot.
+				velocity = new Vector2(0f, 0f);
+				isGuyBeingShot = false;
+				areGuyAndShoesCurrentlyLinked = true;
+				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
+				Position = new Vector2(shoes.Position.X, shoes.Position.Y);
+				usingLauncher = false;
+				delayLaunchAfterLauncherCollisionTimer.stopTimer();
+				delayBetweenLaunchesTimer.stopTimer();
 			}
 		}
+
+		/// <summary>
+		/// Set the Shoes's position to the position of the Guy if the collision delay timer is completed and the Guy and Shoes are not currently linked.
+		/// </summary>
+		/// <param name="shoes">A reference to the Shoes.</param>
+		private void setShoesPositionToGuyUponCollisionIfPossible(Shoes shoes)
+		{
+			if (PositionRect.Intersects(shoes.PositionRect) && !delayCollisionWithShoesAndGuy && !areGuyAndShoesCurrentlyLinked)
+			{
+				shoes.Position = new Vector2(Position.X, Position.Y + 40);
+				velocity = new Vector2(0f, 0f);
+				delayCollisionWithShoesAndGuy = true;
+				isGuyBeingShot = false;
+				areGuyAndShoesCurrentlyLinked = true;
+				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
+			}
+		}
+
+		// ************************
+		// * END POSITION SETTING *
+		// ************************
 	}
 }
