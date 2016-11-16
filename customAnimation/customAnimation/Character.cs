@@ -60,60 +60,81 @@ namespace customAnimation
 
 		public static string charDebug;
 
-		// The position of the animated sprite.
+		/// <summary>
+		/// Property for the position of the Character.
+		/// </summary>
 		public Vector2 Position
 		{
 			get { return position; }
 			set { position = value; }
 		}
 
-		// The center of the sprite.
+		/// <summary>
+		/// Property for the center of the sprite.
+		/// </summary>
 		public Vector2 Center
 		{
 			get { return center; }
 			set { center = value; }
 		}
 
-		// The image (sprite sheet) of the animated sprite.
+		/// <summary>
+		/// Property for the Texture of the Character.
+		/// </summary>
 		public Texture2D Texture
 		{
 			get { return spriteTexture; }
 			set { spriteTexture = value; }
 		}
 
-		// The rectangle we'll draw around the sprite.
+		/// <summary>
+		/// Property for the Rectangle that is drawn around the Character.
+		/// </summary>
 		public Rectangle SourceRect
 		{
 			get { return sourceRect; }
 			set { sourceRect = value; }
 		}
 
+		/// <summary>
+		/// Property for the Rectangle that represents the position of the Character.
+		/// </summary>
 		public Rectangle PositionRect
 		{
 			get { return positionRect; }
 			set { positionRect = value; }
 		}
 
+		/// <summary>
+		/// Property for the TIle that the Character has collided with.
+		/// </summary>
 		public Rectangle TileCollisionRectangle
 		{
 			get { return tileCollRect; }
 			set { tileCollRect = value; }
 		}
 
+		/// <summary>
+		/// Property for the Future Rectangle position of the Chracter.
+		/// </summary>
 		public Rectangle FutureRectangleRect
 		{
 			get { return futurePositionRec; }
 			set { futurePositionRec = value; }
 		}
 
+		/// <summary>
+		/// Property for the coodinates of the Tile in the Level that the Character has collided with.
+		/// </summary>
 		public Vector2 TileArrayCoordinates
 		{
 			get { return tileArrayCoordinates; }
 			set { tileArrayCoordinates = value; }
 		}
 
-		// These are the states the player can be in. 
-		// Possible states: Idle, RunningRight, RunningLeft, Jumping
+		/// <summary>
+		/// The possible states a Character can be in.
+		/// </summary>
 		public enum State
 		{
 			Idle = 0,
@@ -123,47 +144,63 @@ namespace customAnimation
 			Decending = 4,
 		}
 
+		/// <summary>
+		/// Property for the State of the Character.
+		/// </summary>
 		public State PlayerState
 		{
 			get { return state; }
 			set { state = value; }
 		}
 
-		// These are the modes the player can be in.
-		// The guy moves slow, and can't jump high.
-		// Boots can move fast, and can jump high.
+		/// <summary>
+		/// These are the modes the player can be in.
+		/// </summary>
 		public enum Mode
 		{
 			Guy = 0,
 			Shoes = 1,
 		}
 
+		/// <summary>
+		/// Property for the Mode of the Character.
+		/// </summary>
 		public Mode PlayerMode
 		{
 			get { return currentMode; }
 			set { currentMode = value; }
 		}
 
-		// Stores if the sprite is facing right or not.
+		/// <summary>
+		/// Stores if the sprite is facing right or not.
+		/// </summary>
 		public SpriteEffects FacingRight
 		{
 			get { return facingRight; }
 			set { facingRight = value; }
 		}
 
-		// Stores the total amount of frames in the current sprite sheet.
+		/// <summary>
+		/// Stores the total amount of frames in the current sprite sheet.
+		/// </summary>
 		public int TotalFrames
 		{
 			get { return totalFrames; }
 			set { totalFrames = value; }
 		}
 
+		/// <summary>
+		/// Constructor for the Character class.
+		/// </summary>
 		public Character() 
 		{ 
 			charDebug = ""; 
 		}
 
-		// Animates the character.
+		/// <summary>
+		/// Animates the character.
+		/// </summary>
+		/// <param name="gameTime">Snapshot of the game timing state.</param>
 		protected void handleAnimation(GameTime gameTime)
 		{
 			// Get a rectangle around the current frame we're on.
@@ -196,7 +233,10 @@ namespace customAnimation
 			center = new Vector2(sourceRect.Width / 2, sourceRect.Height / 2);
 		}
 
-		// Returns true if there is a tile below us.
+		/// <summary>
+		/// Determines if there is a Tile below the Character.
+		/// </summary>
+		/// <returns>A boolean saying whether or not there is a Tile below the Character.</returns>
 		protected bool standingOnGround()
 		{
 			updateRectangles(0, 1);
@@ -217,8 +257,11 @@ namespace customAnimation
 			return false;
 		}
 
-		// xPosition & yPosition are the coordinates of the tile in the level. 
-		// Sets the tile coordinates (between (0-45, 0-80)) of the tile at (xPosition, yPosition)
+		/// <summary>
+		/// Sets the tile coordinates (between (0-45, 0-80)) of the tile at (xPosition, yPosition)
+		/// </summary>
+		/// <param name="xPosition">X coordinate of the tile in the level.</param>
+		/// <param name="yPosition">Y coordinate of the tile in the level.</param>
 		protected void setTileArrayCoordinates(float xPosition, float yPosition)
 		{
 			for (int x = 0; x < Level.numberOfTileColumns; x++)
@@ -233,7 +276,10 @@ namespace customAnimation
 			}
 		}
 
-		// Returns true if we are under a tile.
+		/// <summary>
+		/// Determines if there is a Tile above the Chracter.
+		/// </summary>
+		/// <returns>A boolean saying whether or not there is a Tile above the Character.</returns>
 		protected bool underTile()
 		{
 			updateRectangles(0, -1);
@@ -250,7 +296,10 @@ namespace customAnimation
 			return false;
 		}
 
-		// Returns true if there is a tile to the right.
+		/// <summary>
+		/// Determines if there is a Tile to the right of the Chracter.
+		/// </summary>
+		/// <returns>A boolean saying whether or not there is a Tile to the right the Character.</returns>
 		public bool tileToTheRight()
 		{
 			updateRectangles(1, 0);
@@ -267,7 +316,10 @@ namespace customAnimation
 			return false;
 		}
 
-		// Returns true if there is a tile to the left.
+		/// <summary>
+		/// Determines if there is a Tile to the left the Chracter.
+		/// </summary>
+		/// <returns>A boolean saying whether or not there is a Tile to the left of the Character.</returns>
 		public bool tileToTheLeft()
 		{
 			updateRectangles(-1, 0);
@@ -284,26 +336,37 @@ namespace customAnimation
 			return false;
 		}
 
-		// Update the player's rectangles depending on where we want to look
+		/// <summary>
+		/// Updates the Characters bounding Rectangles, depending on where the parameters specify the Rectangles to be shifted to.
+		/// </summary>
+		/// <param name="xOffset">Offset to modify the X coordinate of the future Rectangle.</param>
+		/// <param name="yOffset">Offset to modify the Y coordinate of the future Rectangle.</param>
+		/// <remarks>The offsets are used so that it is always known what's "in front" of the Character. Used for collision detection.</remarks>
 		protected void updateRectangles(int xOffset, int yOffset)
 		{
 			positionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
 			futurePositionRec = new Rectangle((int)position.X + xOffset, (int)position.Y + yOffset, spriteWidth, spriteHeight);
 		}
 
-		// Change the state of the player if the state has changed.
+		/// <summary>
+		/// Changes the State of the Character.
+		/// </summary>
+		/// <param name="newState">The new State of the Character.</param>
 		protected void changeState(State newState)
 		{
 			// Only change the state if it's a new state.
-			if (newState != this.state)
+			if (newState != state)
 			{
-				oldState = this.state;
-				this.state = newState;
+				oldState = state;
+				state = newState;
 			}
 		}
 
-		// This function checks to see if a future move will collide with a tile.
-		// Supplies the state, and the coordinates of the collided tile.
+		/// <summary>
+		/// Checks to see if a future position change will result in a collision with a Tile.
+		/// </summary>
+		/// <param name="potentialState">The State that the Character is in.</param>
+		/// <remarks>When a collision is detected, execution is shifted to specializedCollision. This is an overloaded method for a derived class.</remarks>
 		protected void handleCollisions(State potentialState)
 		{
 			int leftTile = (int)Math.Floor((float)positionRect.Left / Level.impassableTileRecs[0].Width);
@@ -370,14 +433,20 @@ namespace customAnimation
 			}
 		}
 		
-		// Draw the sprite.
+		/// <summary>
+		/// Draws the Character.
+		/// </summary>
 		public void Draw()
 		{
 			spriteBatch.Draw(Texture, Position, SourceRect, Color.White, 0f, new Vector2(0, 0), 1.0f, FacingRight, 0);
 		}
 
-		// This function contains specialized collision code for a particular Character.
-		// Says what to do in the event of a particular collision.
+		/// <summary>
+		/// This method is overloaded for derived classes. Used to handle collisions on a class by class basis (i.e. for the Shoes and Guy).
+		/// </summary>
+		/// <param name="currentState">The current State of the Character.</param>
+		/// <param name="y">The Y coordinate of the tile in the Level that the Character has collided with.</param>
+		/// <param name="x">The X coordinate of the tile in the Level that the Character has collided with.</param>
 		protected abstract void specializedCollision(State currentState, int y, int x);
 
 		/// <summary>

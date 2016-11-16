@@ -13,21 +13,34 @@ namespace customAnimation
 		private bool isTimerRunning = false;		// Stores if the timer is running or not.
 		private bool isTimerCompleted = false;		// Stores if the timer has completed or not.
 
+		/// <summary>
+		/// Property for the elapsed time of the Timer.
+		/// </summary>
 		public float ElapsedTime
 		{
 			get { return elapsedTime; }
 		}
 
+		/// <summary>
+		/// Property for if the Timer is running or not.
+		/// </summary>
 		public bool TimerStarted
 		{
 			get { return isTimerRunning; }
 		}
 
+		/// <summary>
+		/// Property for if the Timer is completed or not.
+		/// </summary>
 		public bool TimerCompleted
 		{
 			get { return isTimerCompleted; }
 		}
 
+		/// <summary>
+		/// Constructor for the Timer class.
+		/// </summary>
+		/// <param name="endTime"></param>
 		public Timer(float endTime)
 		{
 			timerEndTime = endTime;
@@ -35,18 +48,27 @@ namespace customAnimation
 			isTimerCompleted = false;
 		}
 
+		/// <summary>
+		/// Starts the Timer.
+		/// </summary>
 		public void startTimer()
 		{
 			isTimerRunning = true;
 			isTimerCompleted = false;
 		}
 
+		/// <summary>
+		/// Stops the Timer.
+		/// </summary>
 		public void stopTimer()
 		{
 			isTimerRunning = false;
 			elapsedTime = 0;
 		}
 
+		/// <summary>
+		/// Resets the Timer.
+		/// </summary>
 		public void resetTimer()
 		{
 			isTimerRunning = false;
@@ -54,6 +76,10 @@ namespace customAnimation
 			elapsedTime = 0;
 		}
 
+		/// <summary>
+		/// Updates the Timer.
+		/// </summary>
+		/// <param name="gameTime">Snapshot of the game timing state.</param>
 		public void Update(GameTime gameTime)
 		{
 			if (isTimerRunning)

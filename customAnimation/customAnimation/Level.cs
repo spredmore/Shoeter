@@ -11,8 +11,7 @@ namespace customAnimation
 {
 	class Level
 	{
-		//SpriteBatch spriteBatch;
-		ContentManager content;
+		ContentManager contentManager;
 		
 		// This stores our level that is read from the text file.
 		List<string> level = new List<string>();
@@ -41,19 +40,31 @@ namespace customAnimation
 
 		public string debug;
 
+		/// <summary>
+		/// Constructor for the Level class.
+		/// </summary>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
 		public Level(ContentManager content)
 		{
-			this.content = content;
-			//lines = new string[numberOfTileColumns];
+			contentManager = content;
 		}
 
+		/// <summary>
+		/// Loads the next Level.
+		/// </summary>
 		public void LoadLevel()
 		{
 			impassableTileRecs = new List<Rectangle>();
 			impassableTilePos = new List<Vector2>();
 
-			if (currentLevel + 1 <= totalLevels) currentLevel++;
-			else currentLevel = 1;
+			if (currentLevel + 1 <= totalLevels)
+			{
+				currentLevel++;
+			}
+			else
+			{
+				currentLevel = 1;
+			}
 
 			// This array will store a level. Each element in the array will be
 			//  a line of tiles.
@@ -76,32 +87,30 @@ namespace customAnimation
 				// The inner loop goes through the rows.
 				for (int row = 0; row < numberOfTilesInRow; row++)
 				{
-					// Create a new tile in each position of the grid. We give Tile() the character in the string 'lines'.
-					tiles[column, row] = new Tile(lines[column][row], ref content);
-
-					// Set the position of a new tile.
 					// The first position of the block is (0, 0), followed by (64, 0), (128, 0), etc.
 					// Going up the y axis works the same way. (0, 0), (0, 64), (0, 128), etc.
-					//tiles[column, row].Position = new Vector2((row * 16), (column * 16));
+
+					// Create a new tile in each position of the grid. We give Tile() the character in the string 'lines'.
+					tiles[column, row] = new Tile(lines[column][row], ref contentManager);
 
 					// Set the position of the tile in the Level array.
 					tiles[column, row].PositionInArray = new Vector2(column, row);
 
-					// Draw a rectangle around the tile. We need this for collision detection.
+					// Set the position of a new tile.
 					tiles[column, row].Position = new Vector2((row * 16), (column * 16));
+
+					// Draw a rectangle around the tile. We need this for collision detection.
 					tiles[column, row].SourceRect = new Rectangle((int)tiles[column, row].Position.X, (int)tiles[column, row].Position.Y, 16, 16);
 
 					// Set the rotation and center for the tile.
 					if (tiles[column, row].IsLauncher == true)
 					{
 						tiles[column, row].Center = new Vector2(16 / 2, 16 / 2);
-						//tiles[column, row].Center = new Vector2(0, 0);
 						tiles[column, row].Rotation = Tile.getRotationInRadians(tiles[column, row]);
 					}
 					else
 					{
 						tiles[column, row].Center = new Vector2(0, 0);
-						//tiles[column, row].Rotation = MathHelper.ToRadians(90); // Set the tile to face straight up (90 degrees).
 					}
 					
 					// We are going to store all the impassable tiles rectangles in a list. We will use this for collision detection.
@@ -123,6 +132,10 @@ namespace customAnimation
 			}   
 		}
 
+		/// <summary>
+		/// Draws the level.
+		/// </summary>
+		/// <param name="sb">Enables a group of sprites to be drawn using the same settings.</param>
 		public void Draw(SpriteBatch sb)
 		{   
 			// The outer loop goes through the columns.
@@ -131,23 +144,26 @@ namespace customAnimation
 				// The inner loop goes through the rows.
 				for (int row = 0; row < numberOfTilesInRow; row++)
 				{
-					//sb.Draw(tiles[column, row].Texture, tiles[column, row].Position, Color.White);
-					//sb.Draw(tiles[column, row].Texture, tiles[column, row].Position, tiles[column, row].SourceRect, Color.White);
 					sb.Draw(tiles[column, row].Texture, tiles[column, row].Position, null, Color.White, tiles[column, row].Rotation, tiles[column, row].Center, 1f, SpriteEffects.None, 0);
 				}
 			}
 		}
 
-		public void debugFunc(SpriteBatch sb)
-		{
-			sb.DrawString(Game1.debugFont, numberOfTileColumns.ToString(), new Vector2(0, 80), Color.White);
-		}
-
+		/// <summary>
+		/// Gets the starting position of the Guy/Shoes in the Level.
+		/// </summary>
+		/// <returns>A Vector2 representing the coordinates of the starting position in the level.</returns>
 		public Vector2 getPlayerStartingPosition()
 		{
 			return playerStartingPosition;
 		}
 
+		/// <summary>
+		/// Gets the position in the Level array of the Tile that corresponds to the position parameters.
+		/// </summary>
+		/// <param name="positionX">The X coordinate of the Tile being searched for.</param>
+		/// <param name="positionY">The Y coordinate of the Tile being searched for.</param>
+		/// <returns></returns>
 		public static Vector2 getTilePositionInArray(int positionX, int positionY)
 		{
 			Vector2 arrayPosition = new Vector2();
