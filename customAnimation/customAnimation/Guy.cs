@@ -517,7 +517,7 @@ namespace customAnimation
 
 					// Launch the Guy.
 					delayLaunchAfterLauncherCollisionTimer.stopTimer();
-					velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(Tile.getLauncherAngleInDegrees(Level.tiles[collY, collX]))) * powerOfLauncherBeingUsed;
+					velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(Tile.getAngleInDegrees(Level.tiles[collY, collX]))) * powerOfLauncherBeingUsed;
 					velocity *= -1;
 					usingLauncher = false;
 					useGravity = true;

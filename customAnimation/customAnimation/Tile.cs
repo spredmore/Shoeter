@@ -28,6 +28,7 @@ namespace customAnimation
 		Single rotation;			// Stores the current rotation for the tile.
 		Vector2 center;             // Stores the center of the tile.
 		Boolean isLauncher = false;
+		Boolean isAirCannon = false;
 		Vector2 positionInArray;
 
 		public static string debug;
@@ -121,6 +122,15 @@ namespace customAnimation
 		}
 
 		/// <summary>
+		/// Property representing if the Tile is an Air Cannon or not.
+		/// </summary>
+		public Boolean IsAirCannon
+		{
+			get { return isAirCannon; }
+			set { isAirCannon = value; }
+		}
+
+		/// <summary>
 		/// Property representing the Position of the Tile in the Level array.
 		/// </summary>
 		public Vector2 PositionInArray
@@ -195,6 +205,12 @@ namespace customAnimation
 				collisionProperty = CollisionProperty.Impassable;
 				isLauncher = true;
 			}
+			else if (tileRepresentation == 'z' || tileRepresentation == 'x' || tileRepresentation == 'c' || tileRepresentation == 'a' || tileRepresentation == 'd' || tileRepresentation == 'q' || tileRepresentation == 'w' || tileRepresentation == 'e')
+			{
+				texture = content.Load<Texture2D>("Tiles/AirCannon");
+				collisionProperty = CollisionProperty.Passable;
+				isAirCannon = true;
+			}
 		}
 
 		/// <summary>
@@ -205,7 +221,7 @@ namespace customAnimation
 		public static Single getRotationInRadians(Tile tile)
 		{
 			Single rotationInRadians;
-			float rotationInDegrees = getLauncherAngleInDegrees(tile) - 90; // It's negative so it points the correct direction.    
+			float rotationInDegrees = getAngleInDegrees(tile) - 90; // It's negative so it points the correct direction.    
 
 			// Now that the center point has been set, set the Tile's rotation to the angle specified by its representation.
 			rotationInRadians = MathHelper.ToRadians(rotationInDegrees);
@@ -214,20 +230,20 @@ namespace customAnimation
 		}
 
 		/// <summary>
-		/// Gets the angle of a Launcher in degrees.
+		/// Gets the angle of a Tile in degrees.
 		/// </summary>
 		/// <param name="tile"></param>
 		/// <returns>The angle at which the Launcher should launch the Guy/Shoes, depending on which Launcher is passed in.</returns>
-		public static int getLauncherAngleInDegrees(Tile tile)
+		public static int getAngleInDegrees(Tile tile)
 		{
-			if (tile.TileRepresentation == '1' || tile.TileRepresentation == '!') return 315;		// Down Left
-			else if(tile.TileRepresentation == '2' || tile.TileRepresentation == '@') return 270;	// Down
-			else if (tile.TileRepresentation == '3' || tile.TileRepresentation == '#') return 225;	// Down Right
-			else if (tile.TileRepresentation == '4' || tile.TileRepresentation == '$') return 0;	// Left
-			else if (tile.TileRepresentation == '6' || tile.TileRepresentation == '^') return 180;	// Right
-			else if (tile.TileRepresentation == '7' || tile.TileRepresentation == '&') return 45;	// Up Left
-			else if (tile.TileRepresentation == '8' || tile.TileRepresentation == '*') return 90;	// Up
-			else if (tile.TileRepresentation == '9' || tile.TileRepresentation == '(') return 135;	// Up Right
+			if (tile.TileRepresentation == '1' || tile.TileRepresentation == '!' || tile.TileRepresentation == 'z') return 315;			// Down Left
+			else if (tile.TileRepresentation == '2' || tile.TileRepresentation == '@' || tile.TileRepresentation == 'x') return 270;	// Down
+			else if (tile.TileRepresentation == '3' || tile.TileRepresentation == '#' || tile.TileRepresentation == 'c') return 225;	// Down Right
+			else if (tile.TileRepresentation == '4' || tile.TileRepresentation == '$' || tile.TileRepresentation == 'a') return 0;		// Left
+			else if (tile.TileRepresentation == '6' || tile.TileRepresentation == '^' || tile.TileRepresentation == 'd') return 180;	// Right
+			else if (tile.TileRepresentation == '7' || tile.TileRepresentation == '&' || tile.TileRepresentation == 'q') return 45;		// Up Left
+			else if (tile.TileRepresentation == '8' || tile.TileRepresentation == '*' || tile.TileRepresentation == 'w') return 90;		// Up
+			else if (tile.TileRepresentation == '9' || tile.TileRepresentation == '(' || tile.TileRepresentation == 'e') return 135;	// Up Right
 			else return -1;
 		}        
 	}

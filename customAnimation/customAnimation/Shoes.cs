@@ -722,7 +722,7 @@ namespace customAnimation
 		private void prepareMovementDueToLauncherCollision(int xTileCoordinateOfLauncher, int yTileCoordinateOfLauncher, bool shoesFellOntoLauncher)
 		{
 			// Store the angle of the Launcher so the Shoes can be launched at the correct angle. Can't pass the angle back through the call stack to the Launcher movement logic without being messy.
-			angleInDegreesOfLauncherShoesIsUsing = Tile.getLauncherAngleInDegrees(Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher]);
+			angleInDegreesOfLauncherShoesIsUsing = Tile.getAngleInDegrees(Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher]);
 
 			// If a Launcher is going to shoot the Shoes down, put them at the bottom of the Launcher. Needed so that the Shoes don't have to be launched through a Launcher.
 			if (angleInDegreesOfLauncherShoesIsUsing == 315)
