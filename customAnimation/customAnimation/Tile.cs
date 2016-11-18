@@ -29,6 +29,7 @@ namespace customAnimation
 		Vector2 center;             // Stores the center of the tile.
 		Boolean isLauncher = false;
 		Boolean isAirCannon = false;
+		Boolean isAirCannonSwitch = false;
 		Vector2 positionInArray;
 
 		public static string debug;
@@ -131,6 +132,15 @@ namespace customAnimation
 		}
 
 		/// <summary>
+		/// Property representing if the Tile is an Air Cannon Switch or not.
+		/// </summary>
+		public Boolean IsAirCannonSwitch
+		{
+			get { return isAirCannonSwitch; }
+			set { isAirCannonSwitch = value; }
+		}
+
+		/// <summary>
 		/// Property representing the Position of the Tile in the Level array.
 		/// </summary>
 		public Vector2 PositionInArray
@@ -211,6 +221,12 @@ namespace customAnimation
 				collisionProperty = CollisionProperty.Passable;
 				isAirCannon = true;
 			}
+			else if (tileRepresentation == 'Z' || tileRepresentation == 'X' || tileRepresentation == 'C' || tileRepresentation == 'A' || tileRepresentation == 'D' || tileRepresentation == 'Q' || tileRepresentation == 'W' || tileRepresentation == 'E')
+			{
+				texture = content.Load<Texture2D>("Tiles/AirCannonSwitch");
+				collisionProperty = CollisionProperty.Passable;
+				isAirCannonSwitch = true;
+			}
 		}
 
 		/// <summary>
@@ -236,14 +252,14 @@ namespace customAnimation
 		/// <returns>The angle at which the Launcher should launch the Guy/Shoes, depending on which Launcher is passed in.</returns>
 		public static int getAngleInDegrees(Tile tile)
 		{
-			if (tile.TileRepresentation == '1' || tile.TileRepresentation == '!' || tile.TileRepresentation == 'z') return 315;			// Down Left
-			else if (tile.TileRepresentation == '2' || tile.TileRepresentation == '@' || tile.TileRepresentation == 'x') return 270;	// Down
-			else if (tile.TileRepresentation == '3' || tile.TileRepresentation == '#' || tile.TileRepresentation == 'c') return 225;	// Down Right
-			else if (tile.TileRepresentation == '4' || tile.TileRepresentation == '$' || tile.TileRepresentation == 'a') return 0;		// Left
-			else if (tile.TileRepresentation == '6' || tile.TileRepresentation == '^' || tile.TileRepresentation == 'd') return 180;	// Right
-			else if (tile.TileRepresentation == '7' || tile.TileRepresentation == '&' || tile.TileRepresentation == 'q') return 45;		// Up Left
-			else if (tile.TileRepresentation == '8' || tile.TileRepresentation == '*' || tile.TileRepresentation == 'w') return 90;		// Up
-			else if (tile.TileRepresentation == '9' || tile.TileRepresentation == '(' || tile.TileRepresentation == 'e') return 135;	// Up Right
+			if (tile.TileRepresentation == '1' || tile.TileRepresentation == '!' || tile.TileRepresentation == 'z' || tile.TileRepresentation == 'Z') return 315;			// Down Left
+			else if (tile.TileRepresentation == '2' || tile.TileRepresentation == '@' || tile.TileRepresentation == 'x' || tile.TileRepresentation == 'X') return 270;	// Down
+			else if (tile.TileRepresentation == '3' || tile.TileRepresentation == '#' || tile.TileRepresentation == 'c' || tile.TileRepresentation == 'C') return 225;	// Down Right
+			else if (tile.TileRepresentation == '4' || tile.TileRepresentation == '$' || tile.TileRepresentation == 'a' || tile.TileRepresentation == 'A') return 0;		// Left
+			else if (tile.TileRepresentation == '6' || tile.TileRepresentation == '^' || tile.TileRepresentation == 'd' || tile.TileRepresentation == 'D') return 180;	// Right
+			else if (tile.TileRepresentation == '7' || tile.TileRepresentation == '&' || tile.TileRepresentation == 'q' || tile.TileRepresentation == 'Q') return 45;		// Up Left
+			else if (tile.TileRepresentation == '8' || tile.TileRepresentation == '*' || tile.TileRepresentation == 'w' || tile.TileRepresentation == 'W') return 90;		// Up
+			else if (tile.TileRepresentation == '9' || tile.TileRepresentation == '(' || tile.TileRepresentation == 'e' || tile.TileRepresentation == 'E') return 135;	// Up Right
 			else return -1;
 		}        
 	}

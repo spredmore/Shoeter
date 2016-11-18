@@ -401,7 +401,7 @@ namespace customAnimation
 					{
 						//velocity.Y = 0f;
 					}
-					else if (futurePositionRec.Intersects(Level.tiles[y, x].SourceRect) && Level.tiles[y, x].CollProperties == Tile.CollisionProperty.Impassable)
+					else if (futurePositionRec.Intersects(Level.tiles[y, x].SourceRect) && (Level.tiles[y, x].CollProperties == Tile.CollisionProperty.Impassable || (Level.tiles[y, x].CollProperties == Tile.CollisionProperty.Passable && Level.tiles[y, x].IsAirCannonSwitch)))
 					{
 						setFlagsForBorderCollision(false);
 						if (potentialState == State.RunningRight)

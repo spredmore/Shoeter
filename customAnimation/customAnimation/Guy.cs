@@ -94,7 +94,11 @@ namespace customAnimation
 			{
 				if (currentState == State.RunningRight)  
 				{
-					position.X = Level.tiles[y, x].Position.X - spriteWidth;
+					// Allow the Guy to pass through an Air Switch Cannon.
+					if (!Level.tiles[y, x].IsAirCannonSwitch)
+					{
+						position.X = Level.tiles[y, x].Position.X - spriteWidth;
+					}
 
 					if (Level.tiles[y, x].TileRepresentation == 'S')
 					{
@@ -105,6 +109,10 @@ namespace customAnimation
 						usingLauncher = true;
 						collY = y;
 						collX = x;
+					}
+					else if (Level.tiles[y, x].IsAirCannonSwitch)
+					{
+
 					}
 					else
 					{
@@ -114,7 +122,10 @@ namespace customAnimation
 				}
 				else if (currentState == State.RunningLeft)
 				{
-					position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width + 1;
+					if (!Level.tiles[y, x].IsAirCannonSwitch)
+					{
+						position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width + 1;
+					}
 
 					if (Level.tiles[y, x].TileRepresentation == 'S')
 					{
@@ -125,6 +136,10 @@ namespace customAnimation
 						usingLauncher = true;
 						collX = x;
 						collY = y;
+					}
+					else if (Level.tiles[y, x].IsAirCannonSwitch)
+					{
+
 					}
 					else
 					{
@@ -134,7 +149,10 @@ namespace customAnimation
 				}
 				else if (currentState == State.Jumping)
 				{
-					position.Y = Level.tiles[y, x].Position.Y + Level.tiles[y, x].Texture.Height + 2;
+					if (!Level.tiles[y, x].IsAirCannonSwitch)
+					{
+						position.Y = Level.tiles[y, x].Position.Y + Level.tiles[y, x].Texture.Height + 2;
+					}
 
 					if (Level.tiles[y, x].TileRepresentation == 'S')
 					{
@@ -146,6 +164,10 @@ namespace customAnimation
 						collX = x;
 						collY = y;
 					}
+					else if (Level.tiles[y, x].IsAirCannonSwitch)
+					{
+
+					}
 					else
 					{
 						velocity.Y = 0f;
@@ -153,7 +175,10 @@ namespace customAnimation
 				}
 				else if (currentState == State.Decending)
 				{
-					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
+					if (!Level.tiles[y, x].IsAirCannonSwitch)
+					{
+						position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
+					}
 
 					if (Level.tiles[y, x].TileRepresentation == 'S' && velocity.Y > 1f)
 					{
@@ -164,6 +189,10 @@ namespace customAnimation
 						usingLauncher = true;
 						collX = x;
 						collY = y;
+					}
+					else if (Level.tiles[y, x].IsAirCannonSwitch)
+					{
+
 					}
 					else
 					{

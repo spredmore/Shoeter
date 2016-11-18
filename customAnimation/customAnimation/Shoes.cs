@@ -68,7 +68,7 @@ namespace customAnimation
 			debug2 = "";
 
 			delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
-			delayLaunchAfterLauncherCollisionTimer = new Timer(1f);
+			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
 			angleInDegreesOfLauncherShoesIsUsing = 0;
 		}
 
@@ -107,6 +107,10 @@ namespace customAnimation
 				{
 					prepareMovementDueToLauncherCollision(x, y, false);
 				}
+				else if (Level.tiles[y, x].IsAirCannonSwitch)
+				{
+
+				}
 				else
 				{
 					position.X = Level.tiles[y, x].Position.X - spriteWidth;
@@ -126,6 +130,10 @@ namespace customAnimation
 				{
 					prepareMovementDueToLauncherCollision(x, y, false);
 				}
+				else if (Level.tiles[y, x].IsAirCannonSwitch)
+				{
+
+				}
 				else
 				{
 					position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
@@ -142,6 +150,10 @@ namespace customAnimation
 				else if (Level.tiles[y, x].IsLauncher)
 				{
 					prepareMovementDueToLauncherCollision(x, y, false);
+				}
+				else if (Level.tiles[y, x].IsAirCannonSwitch)
+				{
+
 				}
 				else
 				{
@@ -161,6 +173,10 @@ namespace customAnimation
 				else if (Level.tiles[y, x].IsLauncher)
 				{
 					prepareMovementDueToLauncherCollision(x, y, false);
+				}
+				else if (Level.tiles[y, x].IsAirCannonSwitch)
+				{
+
 				}
 				else
 				{

@@ -103,7 +103,7 @@ namespace customAnimation
 					tiles[column, row].SourceRect = new Rectangle((int)tiles[column, row].Position.X, (int)tiles[column, row].Position.Y, 16, 16);
 
 					// Set the rotation and center for the tile.
-					if (tiles[column, row].IsLauncher || tiles[column, row].IsAirCannon)
+					if (tiles[column, row].IsLauncher || tiles[column, row].IsAirCannon || tiles[column, row].IsAirCannonSwitch)
 					{
 						tiles[column, row].Center = new Vector2(16 / 2, 16 / 2);
 						tiles[column, row].Rotation = Tile.getRotationInRadians(tiles[column, row]);
