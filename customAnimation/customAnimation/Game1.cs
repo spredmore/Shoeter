@@ -29,6 +29,9 @@ namespace customAnimation
 		// The level.
 		Level level;
 
+		// Test AnimatedSprite for an Air sprite.
+		//AnimatedSprite testAir;
+
 		// The debugging font.
 		public static SpriteFont debugFont;
 
@@ -71,6 +74,10 @@ namespace customAnimation
 			// Create the Guy.
 			guy = new Guy(Content.Load<Texture2D>("Sprites/Guy32x48"), spriteBatch, 0, 0, 32, 48, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth);
 
+			//testAir = new AnimatedSprite(Content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch);
+			//testAir.Position = new Vector2(465, 415);
+			//testAir.Position = new Vector2(1000, 100);
+
 			// Load the debug font. We use this for debugging purposes.
 			debugFont = Content.Load<SpriteFont>("debugFont"); 
 		}
@@ -84,11 +91,19 @@ namespace customAnimation
 		{
 			// Allows the game to exit
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+			{
 				this.Exit();
+			}	
 
 			// Animate (update) the sprite every frame.
 			shoes.Update(gameTime, ref guy);
 			guy.Update(gameTime, ref shoes, ref level);
+			//testAir.Animate(gameTime);
+
+			foreach(Air air in Air.allAirs)
+			{
+				air.Animate(gameTime);
+			}
 
 			base.Update(gameTime);
 		}
@@ -99,8 +114,13 @@ namespace customAnimation
 
 			spriteBatch.Begin();
 
+			foreach (Air air in Air.allAirs)
+			{
+				air.Draw();
+			}
+
 			// Draw the level.
-			level.Draw(spriteBatch);
+			level.Draw(spriteBatch);			
 
 			guy.Draw();
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox"), guy.Position, Color.White);
@@ -130,6 +150,7 @@ namespace customAnimation
 			spriteBatch.DrawString(debugFont, "Character Debug: " + Character.charDebug, new Vector2(0, 280), Color.Black);
 			spriteBatch.DrawString(debugFont, "Shoes State: " + shoes.PlayerState.ToString(), new Vector2(0, 300), Color.Black);
 			spriteBatch.DrawString(debugFont, "Guy State: " + guy.PlayerState.ToString(), new Vector2(0, 320), Color.Black);
+			spriteBatch.DrawString(debugFont, "AnimatedSprite debug: " + AnimatedSprite.debug, new Vector2(0, 340), Color.Black);
 			
 			spriteBatch.End();
 

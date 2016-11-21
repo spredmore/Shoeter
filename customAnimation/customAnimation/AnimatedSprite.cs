@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace customAnimation
 {
-	class AnimatedSprite
+	public class AnimatedSprite
 	{
 		SpriteBatch spriteBatch;
 		Texture2D spriteTexture;    // The image of our animated sprite.
@@ -24,8 +24,10 @@ namespace customAnimation
 		int spriteHeight = 64;      // The height of the individual sprite.
 		int totalFrames = 0;        // The total amount of frames in the sprite sheet.
 		Rectangle sourceRect;       // The rectangle in which the animated sprite will be drawn.
-		Vector2 position;           // The position of the animated sprite.
+		public Vector2 position;    // The position of the animated sprite.
 		Vector2 center;             // The center of the animated sprite.
+
+		public static String debug;
 
 		/// <summary>
 		/// Property for the Position of the AnimatedSprite. 
@@ -39,7 +41,7 @@ namespace customAnimation
 		/// <summary>
 		/// Property for the Center of the AnimatedSprite.
 		/// </summary>
-		public Vector2 Center
+		protected Vector2 Center
 		{
 			get { return center; }
 			set { center = value; }
@@ -48,7 +50,7 @@ namespace customAnimation
 		/// <summary>
 		/// Property for the Texture of the AnimatedSprite.
 		/// </summary>
-		public Texture2D Texture
+		protected Texture2D Texture
 		{
 			get { return spriteTexture; }
 			set { spriteTexture = value; }
@@ -66,10 +68,38 @@ namespace customAnimation
 		/// <summary>
 		/// Property for the total amount of frames in the sprite sheet for the AnimatedSprite.
 		/// </summary>
-		public int TotalFrames
+		protected int TotalFrames
 		{
 			get { return totalFrames; }
 			set { totalFrames = value; }
+		}
+
+		protected int CurrentFrame
+		{
+			get { return currentFrame; }
+			set { currentFrame = value; }
+		}
+	
+		protected SpriteBatch SpriteBatch
+		{
+			get { return spriteBatch; }
+			set { spriteBatch = value; }
+		}
+
+		protected int SpriteWidth
+		{
+			get { return spriteWidth; }
+			set { spriteWidth = value; }
+		}
+
+		protected int SpriteHeight
+		{
+			get { return spriteHeight; }
+			set { spriteHeight = value; }
+		}
+
+		public AnimatedSprite()
+		{
 		}
 
 		/// <summary>
@@ -133,7 +163,7 @@ namespace customAnimation
 		/// </summary>
 		public void Draw()
 		{
-			spriteBatch.Draw(Texture, Position, SourceRect, Color.White, 0f, Center, 1.0f, SpriteEffects.None, 0); 
+			spriteBatch.Draw(Texture, Position, SourceRect, Color.White, 0f, Center, 1.0f, SpriteEffects.None, 0);
 		}
 	}
 }

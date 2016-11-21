@@ -46,6 +46,8 @@ namespace customAnimation
 
 		private bool isGravityOn = true;							// Flag to use gravity or not.
 
+		int increment = 0;
+
 		public Shoes(Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
@@ -109,7 +111,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-
+					activateAirCannon(Level.tiles[y, x], x, y);
 				}
 				else
 				{
@@ -132,7 +134,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-
+					activateAirCannon(Level.tiles[y, x], x, y);
 				}
 				else
 				{
@@ -153,7 +155,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-
+					activateAirCannon(Level.tiles[y, x], x, y);
 				}
 				else
 				{
@@ -176,7 +178,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-
+					activateAirCannon(Level.tiles[y, x], x, y);
 				}
 				else
 				{
@@ -889,6 +891,35 @@ namespace customAnimation
 
 		// ******************
 		// *  END LAUNCHER  *
+		// ******************
+
+		// ********************
+		// * START AIR CANNON *
+		// ********************
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private void activateAirCannon(Tile airCannonTileSwitch, int xCoordinateInArray, int yCoordinateInArray)
+		{
+			airCannonTileSwitch.IsAirCannonSwitchOn = true;
+
+			if (increment < 1)
+			{
+				Air sprite = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch);
+				//sprite.position.X = 32 * increment;
+				//sprite.position.X = 0f;
+				sprite.position = airCannonTileSwitch.Position;
+				sprite.position.Y -= 32f;
+				increment++;
+
+				Air.allAirs.Add(sprite);
+			}
+			
+		}
+
+		// ******************
+		// * END AIR CANNON *
 		// ******************
 	}
 }

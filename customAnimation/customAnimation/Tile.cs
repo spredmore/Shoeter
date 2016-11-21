@@ -30,6 +30,7 @@ namespace customAnimation
 		Boolean isLauncher = false;
 		Boolean isAirCannon = false;
 		Boolean isAirCannonSwitch = false;
+		Boolean isAirCannonSwitchOn = false;
 		Vector2 positionInArray;
 
 		public static string debug;
@@ -138,6 +139,15 @@ namespace customAnimation
 		{
 			get { return isAirCannonSwitch; }
 			set { isAirCannonSwitch = value; }
+		}
+
+		/// <summary>
+		/// Property representing if a Tile Switch is on or not.
+		/// </summary>
+		public Boolean IsAirCannonSwitchOn
+		{
+			get { return isAirCannonSwitchOn; }
+			set { isAirCannonSwitchOn = value; }
 		}
 
 		/// <summary>
