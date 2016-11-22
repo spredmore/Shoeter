@@ -25,6 +25,7 @@ namespace customAnimation
 		int totalFrames = 0;        // The total amount of frames in the sprite sheet.
 		Rectangle sourceRect;       // The rectangle in which the animated sprite will be drawn.
 		public Vector2 position;    // The position of the animated sprite.
+		Rectangle positionRect;
 		Vector2 center;             // The center of the animated sprite.
 
 		public static String debug;
@@ -36,6 +37,15 @@ namespace customAnimation
 		{
 			get { return position; }
 			set { position = value; }
+		}
+
+		/// <summary>
+		/// Property for the Position Rectangle of the Animated Sprite.
+		/// </summary>
+		public Rectangle PositionRect
+		{
+			get { return positionRect; }
+			set { positionRect = value; }
 		}
 
 		/// <summary>
@@ -74,30 +84,45 @@ namespace customAnimation
 			set { totalFrames = value; }
 		}
 
+		/// <summary>
+		/// Property for the current frame in the sprite sheet.
+		/// </summary>
 		protected int CurrentFrame
 		{
 			get { return currentFrame; }
 			set { currentFrame = value; }
 		}
 	
+		/// <summary>
+		/// Property for the SpriteBatch for this class, which enabled a group of sprites to be drawn to the screen using the same settings.
+		/// </summary>
 		protected SpriteBatch SpriteBatch
 		{
 			get { return spriteBatch; }
 			set { spriteBatch = value; }
 		}
-
+		
+		/// <summary>
+		/// Property for the sprite width of the AnimatedSprite.
+		/// </summary>
 		protected int SpriteWidth
 		{
 			get { return spriteWidth; }
 			set { spriteWidth = value; }
 		}
 
+		/// <summary>
+		/// Property for the sprite height of the AnimatedSprite.
+		/// </summary>
 		protected int SpriteHeight
 		{
 			get { return spriteHeight; }
 			set { spriteHeight = value; }
 		}
 
+		/// <summary>
+		/// Default constructor for the AnimatedSprite.
+		/// </summary>
 		public AnimatedSprite()
 		{
 		}
@@ -153,9 +178,6 @@ namespace customAnimation
 				// Reset the timer.
 				timer = 0f;
 			}
-
-			// Get the center of the current frame.
-			center = new Vector2(sourceRect.Width / 2, sourceRect.Height / 2);
 		}
 
 		/// <summary>

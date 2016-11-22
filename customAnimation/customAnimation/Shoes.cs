@@ -111,7 +111,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					activateAirCannon(Level.tiles[y, x], x, y);
+					activateAirCannon(Level.tiles[y, x]);
 				}
 				else
 				{
@@ -134,7 +134,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					activateAirCannon(Level.tiles[y, x], x, y);
+					activateAirCannon(Level.tiles[y, x]);
 				}
 				else
 				{
@@ -155,7 +155,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					activateAirCannon(Level.tiles[y, x], x, y);
+					activateAirCannon(Level.tiles[y, x]);
 				}
 				else
 				{
@@ -178,7 +178,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					activateAirCannon(Level.tiles[y, x], x, y);
+					activateAirCannon(Level.tiles[y, x]);
 				}
 				else
 				{
@@ -898,24 +898,22 @@ namespace customAnimation
 		// ********************
 
 		/// <summary>
-		/// 
+		/// Activates all Air Cannons for the Switch that the Shoes collided with.
 		/// </summary>
-		private void activateAirCannon(Tile airCannonTileSwitch, int xCoordinateInArray, int yCoordinateInArray)
+		/// <param name="airCannonTileSwitch">The Air Cannon Switch that the Shoes has collided with.</param>
+		private void activateAirCannon(Tile airCannonTileSwitch)
 		{
 			airCannonTileSwitch.IsAirCannonSwitchOn = true;
 
+			// Increment is temporarily in here to prevent too many Airs from being launched. Need to add logic around only adding on Air per Air Cannon upon collision.
 			if (increment < 1)
 			{
-				Air sprite = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch);
-				//sprite.position.X = 32 * increment;
-				//sprite.position.X = 0f;
-				sprite.position = airCannonTileSwitch.Position;
-				sprite.position.Y -= 32f;
+				Vector2 newAirPosition = new Vector2(airCannonTileSwitch.Position.X - 16, airCannonTileSwitch.Position.Y - 56f);
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, newAirPosition);
 				increment++;
 
-				Air.allAirs.Add(sprite);
+				Air.allAirs.Add(newAir);
 			}
-			
 		}
 
 		// ******************

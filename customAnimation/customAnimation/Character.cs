@@ -25,7 +25,7 @@ namespace customAnimation
 		protected Texture2D spriteTexture;      // The image of our animated sprite.
 		protected Vector2 position;             // The position of the animated sprite.
 		Vector2 center;                         // The center of the animated sprite.
-		protected Vector2 velocity;             // The velocity that changes the player's position.
+		public Vector2 velocity;             // The velocity that changes the player's position.
 		SpriteEffects facingRight;              // Stores if the player is facing right or not.
 		protected bool isFalling = false;       // Stores if the player is falling or not.
 		protected bool isJumping = false;       // Stores if we're jumping or not.
