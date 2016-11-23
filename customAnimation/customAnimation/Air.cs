@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace customAnimation
@@ -10,6 +11,23 @@ namespace customAnimation
 	class Air : AnimatedSprite
 	{
 		public static List<Air> allAirs = new List<Air>();
+		public static List<Tile> allQCannons = new List<Tile>();
+		public static List<Tile> allWCannons = new List<Tile>();
+		public static List<Tile> allECannons = new List<Tile>();
+		public static List<Tile> allACannons = new List<Tile>();
+		public static List<Tile> allDCannons = new List<Tile>();
+		public static List<Tile> allZCannons = new List<Tile>();
+		public static List<Tile> allXCannons = new List<Tile>();
+		public static List<Tile> allCCannons = new List<Tile>();
+
+		public static Boolean areQCannonsOn = false;
+		public static Boolean areWCannonsOn = false;
+		public static Boolean areECannonsOn = false;
+		public static Boolean areACannonsOn = false;
+		public static Boolean areDCannonsOn = false;
+		public static Boolean areZCannonsOn = false;
+		public static Boolean areXCannonsOn = false;
+		public static Boolean areCCannonsOn = false;
 
 		public static string debug;
 
@@ -46,9 +64,23 @@ namespace customAnimation
 		{
 			Animate(gameTime);
 
-			if (PositionRect.Intersects(shoes.PositionRect))
+			foreach(Air air in Air.allAirs)
 			{
-				debug = "it works";
+				if (PositionRect.Intersects(shoes.PositionRect))
+				{
+					// This works. Set position to new (0, 0) to confirm/see again.
+				}
+			}
+
+		}
+
+		public static void turnOnAllWCannons(ContentManager content, SpriteBatch spriteBatch)
+		{
+			foreach(Tile cannon in allWCannons)
+			{
+				cannon.IsAirCannonSwitchOn = true;
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56f));
+				Air.allAirs.Add(newAir);
 			}
 		}
 	}

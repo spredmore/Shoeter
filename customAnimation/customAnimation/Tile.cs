@@ -230,6 +230,7 @@ namespace customAnimation
 				texture = content.Load<Texture2D>("Tiles/AirCannon");
 				collisionProperty = CollisionProperty.Passable;
 				isAirCannon = true;
+				putCannonIntoCorrectList(this);
 			}
 			else if (tileRepresentation == 'Z' || tileRepresentation == 'X' || tileRepresentation == 'C' || tileRepresentation == 'A' || tileRepresentation == 'D' || tileRepresentation == 'Q' || tileRepresentation == 'W' || tileRepresentation == 'E')
 			{
@@ -271,6 +272,42 @@ namespace customAnimation
 			else if (tile.TileRepresentation == '8' || tile.TileRepresentation == '*' || tile.TileRepresentation == 'w' || tile.TileRepresentation == 'W') return 90;		// Up
 			else if (tile.TileRepresentation == '9' || tile.TileRepresentation == '(' || tile.TileRepresentation == 'e' || tile.TileRepresentation == 'E') return 135;	// Up Right
 			else return -1;
-		}        
+		}
+
+		private static void putCannonIntoCorrectList(Tile cannon)
+		{
+			if (cannon.TileRepresentation == 'q')
+			{
+				Air.allQCannons.Add(cannon);
+			}
+			else if (cannon.TileRepresentation == 'w')
+			{
+				Air.allWCannons.Add(cannon);
+			}
+			else if (cannon.TileRepresentation == 'e')
+			{
+				Air.allECannons.Add(cannon);
+			}
+			else if (cannon.TileRepresentation == 'a')
+			{
+				Air.allACannons.Add(cannon);
+			}
+			else if (cannon.TileRepresentation == 'd')
+			{
+				Air.allDCannons.Add(cannon);
+			}
+			else if (cannon.TileRepresentation == 'z')
+			{
+				Air.allZCannons.Add(cannon);
+			}
+			else if (cannon.TileRepresentation == 'x')
+			{
+				Air.allXCannons.Add(cannon);
+			}
+			else if (cannon.TileRepresentation == 'c')
+			{
+				Air.allCCannons.Add(cannon);
+			}
+		}
 	}
 }

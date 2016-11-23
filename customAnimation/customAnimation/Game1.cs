@@ -33,6 +33,8 @@ namespace customAnimation
 		// Stores if we are facing right or not.
 		SpriteEffects facingRight;
 
+		String debug;
+
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -142,6 +144,7 @@ namespace customAnimation
 			spriteBatch.DrawString(debugFont, "Guy State: " + guy.PlayerState.ToString(), new Vector2(0, 320), Color.Black);
 			spriteBatch.DrawString(debugFont, "AnimatedSprite debug: " + AnimatedSprite.debug, new Vector2(0, 340), Color.Black);
 			spriteBatch.DrawString(debugFont, "Air debug: " + Air.debug, new Vector2(0, 360), Color.Black);
+			spriteBatch.DrawString(debugFont, "Game1 debug: " + debug, new Vector2(0, 380), Color.Black);
 			
 			spriteBatch.End();
 

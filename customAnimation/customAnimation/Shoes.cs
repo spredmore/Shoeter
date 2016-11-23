@@ -900,19 +900,25 @@ namespace customAnimation
 		/// <summary>
 		/// Activates all Air Cannons for the Switch that the Shoes collided with.
 		/// </summary>
-		/// <param name="airCannonTileSwitch">The Air Cannon Switch that the Shoes has collided with.</param>
-		private void activateAirCannon(Tile airCannonTileSwitch)
+		/// <param name="airCannonSwitch">The Air Cannon Switch that the Shoes has collided with.</param>
+		private void activateAirCannon(Tile airCannonSwitch)
 		{
-			airCannonTileSwitch.IsAirCannonSwitchOn = true;
-
-			// Increment is temporarily in here to prevent too many Airs from being launched. Need to add logic around only adding on Air per Air Cannon upon collision.
 			if (increment < 1)
 			{
-				Vector2 newAirPosition = new Vector2(airCannonTileSwitch.Position.X - 16, airCannonTileSwitch.Position.Y - 56f);
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, newAirPosition);
-				increment++;
-
-				Air.allAirs.Add(newAir);
+				if (airCannonSwitch.TileRepresentation == 'W')
+				{
+					if (!Air.areWCannonsOn)
+					{
+						Air.areWCannonsOn = true;
+						Air.turnOnAllWCannons(content, spriteBatch);
+					}
+					else
+					{
+						//Air.areWCannonsOn = false;
+						//Air.turnOffAllWCannons();
+					}
+					increment++;
+				}
 			}
 		}
 
