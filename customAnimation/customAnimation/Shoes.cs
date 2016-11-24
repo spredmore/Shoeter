@@ -903,9 +903,22 @@ namespace customAnimation
 		/// <param name="airCannonSwitch">The Air Cannon Switch that the Shoes has collided with.</param>
 		private void activateAirCannon(Tile airCannonSwitch)
 		{
-			if (increment < 1)
-			{
-				if (airCannonSwitch.TileRepresentation == 'W')
+			//if (increment < 1)
+			//{
+				if (airCannonSwitch.TileRepresentation == 'Q')
+				{
+					if (!Air.areQCannonsOn)
+					{
+						Air.areQCannonsOn = true;
+						Air.turnOnAllQCannons(content, spriteBatch);
+					}
+					else
+					{
+						//Air.areQCannonsOn = false;
+						//Air.turnOffAllQCannons();
+					}
+				}
+				else if (airCannonSwitch.TileRepresentation == 'W')
 				{
 					if (!Air.areWCannonsOn)
 					{
@@ -917,9 +930,87 @@ namespace customAnimation
 						//Air.areWCannonsOn = false;
 						//Air.turnOffAllWCannons();
 					}
-					increment++;
 				}
-			}
+				else if (airCannonSwitch.TileRepresentation == 'E')
+				{
+					if (!Air.areECannonsOn)
+					{
+						Air.areECannonsOn = true;
+						Air.turnOnAllECannons(content, spriteBatch);
+					}
+					else
+					{
+						//Air.areECannonsOn = false;
+						//Air.turnOffAllECannons();
+					}
+				}
+				else if (airCannonSwitch.TileRepresentation == 'A')
+				{
+					if (!Air.areACannonsOn)
+					{
+						Air.areACannonsOn = true;
+						Air.turnOnAllACannons(content, spriteBatch);
+					}
+					else
+					{
+						//Air.areACannonsOn = false;
+						//Air.turnOffAllACannons();
+					}
+				}
+				else if (airCannonSwitch.TileRepresentation == 'D')
+				{
+					if (!Air.areDCannonsOn)
+					{
+						Air.areDCannonsOn = true;
+						Air.turnOnAllDCannons(content, spriteBatch);
+					}
+					else
+					{
+						//Air.areDCannonsOn = false;
+						//Air.turnOffAllDCannons();
+					}
+				}
+				else if (airCannonSwitch.TileRepresentation == 'Z')
+				{
+					if (!Air.areZCannonsOn)
+					{
+						Air.areZCannonsOn = true;
+						Air.turnOnAllZCannons(content, spriteBatch);
+					}
+					else
+					{
+						//Air.areZCannonsOn = false;
+						//Air.turnOffAllZCannons();
+					}
+				}
+				else if (airCannonSwitch.TileRepresentation == 'X')
+				{
+					if (!Air.areXCannonsOn)
+					{
+						Air.areXCannonsOn = true;
+						Air.turnOnAllXCannons(content, spriteBatch);
+					}
+					else
+					{
+						//Air.areXCannonsOn = false;
+						//Air.turnOffAllXCannons();
+					}
+				}
+				else if (airCannonSwitch.TileRepresentation == 'C')
+				{
+					if (!Air.areCCannonsOn)
+					{
+						Air.areCCannonsOn = true;
+						Air.turnOnAllCCannons(content, spriteBatch);
+					}
+					else
+					{
+						//Air.areCCannonsOn = false;
+						//Air.turnOffAllCCannons();
+					}
+				}
+				//increment++;
+			//}
 		}
 
 		// ******************

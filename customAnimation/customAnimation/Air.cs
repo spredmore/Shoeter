@@ -41,7 +41,7 @@ namespace customAnimation
 		/// <param name="totalFrames"></param>
 		/// <param name="spriteBatch"></param>
 		/// <param name="position"></param>
-		public Air(Texture2D texture, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, Vector2 position)
+		public Air(Texture2D texture, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, Vector2 position, Single rotation)
 		{
 		    this.Texture = texture;
 		    this.CurrentFrame = currentFrame;
@@ -51,6 +51,7 @@ namespace customAnimation
 		    this.SpriteBatch = spriteBatch;
 			this.Position = position;
 			this.PositionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
+			this.Rotation = rotation;
 
 			debug = "";
 		}
@@ -74,12 +75,122 @@ namespace customAnimation
 
 		}
 
-		public static void turnOnAllWCannons(ContentManager content, SpriteBatch spriteBatch)
+		/// <summary>
+		/// Turns on all Q Cannons.
+		/// </summary>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
+		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
+		public static void turnOnAllQCannons(ContentManager content, SpriteBatch spriteBatch)
 		{
-			foreach(Tile cannon in allWCannons)
+			foreach(Tile cannon in allQCannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56f));
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56), cannon.Rotation);
+				Air.allAirs.Add(newAir);
+			}
+		}
+
+		/// <summary>
+		/// Turns on all W Cannons.
+		/// </summary>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
+		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
+		public static void turnOnAllWCannons(ContentManager content, SpriteBatch spriteBatch)
+		{
+			foreach (Tile cannon in allWCannons)
+			{
+				cannon.IsAirCannonSwitchOn = true;
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56), cannon.Rotation);
+				Air.allAirs.Add(newAir);
+			}
+		}
+
+		/// <summary>
+		/// Turns on all E Cannons.
+		/// </summary>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
+		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
+		public static void turnOnAllECannons(ContentManager content, SpriteBatch spriteBatch)
+		{
+			foreach (Tile cannon in allECannons)
+			{
+				cannon.IsAirCannonSwitchOn = true;
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56), cannon.Rotation);
+				Air.allAirs.Add(newAir);
+			}
+		}
+
+		/// <summary>
+		/// Turns on all A Cannons.
+		/// </summary>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
+		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
+		public static void turnOnAllACannons(ContentManager content, SpriteBatch spriteBatch)
+		{
+			foreach (Tile cannon in allACannons)
+			{
+				cannon.IsAirCannonSwitchOn = true;
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56), cannon.Rotation);
+				Air.allAirs.Add(newAir);
+			}
+		}
+
+		/// <summary>
+		/// Turns on all D Cannons.
+		/// </summary>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
+		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
+		public static void turnOnAllDCannons(ContentManager content, SpriteBatch spriteBatch)
+		{
+			foreach (Tile cannon in allDCannons)
+			{
+				cannon.IsAirCannonSwitchOn = true;
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56), cannon.Rotation);
+				Air.allAirs.Add(newAir);
+			}
+		}
+
+		/// <summary>
+		/// Turns on all Z Cannons.
+		/// </summary>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
+		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
+		public static void turnOnAllZCannons(ContentManager content, SpriteBatch spriteBatch)
+		{
+			foreach (Tile cannon in allZCannons)
+			{
+				cannon.IsAirCannonSwitchOn = true;
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56), cannon.Rotation);
+				Air.allAirs.Add(newAir);
+			}
+		}
+
+		/// <summary>
+		/// Turns on all X Cannons.
+		/// </summary>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
+		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
+		public static void turnOnAllXCannons(ContentManager content, SpriteBatch spriteBatch)
+		{
+			foreach (Tile cannon in allXCannons)
+			{
+				cannon.IsAirCannonSwitchOn = true;
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56), cannon.Rotation);
+				Air.allAirs.Add(newAir);
+			}
+		}
+
+		/// <summary>
+		/// Turns on all C Cannons.
+		/// </summary>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
+		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
+		public static void turnOnAllCCannons(ContentManager content, SpriteBatch spriteBatch)
+		{
+			foreach (Tile cannon in allCCannons)
+			{
+				cannon.IsAirCannonSwitchOn = true;
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56), cannon.Rotation);
 				Air.allAirs.Add(newAir);
 			}
 		}

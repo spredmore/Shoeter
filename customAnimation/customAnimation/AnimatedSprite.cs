@@ -16,17 +16,18 @@ namespace customAnimation
 	public class AnimatedSprite
 	{
 		SpriteBatch spriteBatch;
-		Texture2D spriteTexture;    // The image of our animated sprite.
+		Texture2D spriteTexture;    // The image of our AnimatedSprite.
 		float timer = 0f;           // The amount of time it takes before the sprite moves to the next frame.
 		float interval = 100f;      // The amount of time a frame is shown on screen.
 		int currentFrame = 0;       // The current frame we are drawing.
 		int spriteWidth = 64;       // The width of the individual sprite.
 		int spriteHeight = 64;      // The height of the individual sprite.
 		int totalFrames = 0;        // The total amount of frames in the sprite sheet.
-		Rectangle sourceRect;       // The rectangle in which the animated sprite will be drawn.
-		public Vector2 position;    // The position of the animated sprite.
+		Rectangle sourceRect;       // The rectangle in which the AnimatedSprite will be drawn.
+		public Vector2 position;    // The position of the AnimatedSprite.
 		Rectangle positionRect;
-		Vector2 center;             // The center of the animated sprite.
+		Vector2 center;             // The center of the AnimatedSprite.
+		Single rotation;			// The rotation of the AnimatedSprite.
 
 		public static String debug;
 
@@ -121,6 +122,15 @@ namespace customAnimation
 		}
 
 		/// <summary>
+		/// Property for the rotatio of the AnimatedSprite.
+		/// </summary>
+		protected Single Rotation
+		{
+			get { return rotation; }
+			set { rotation = value; }
+		}
+
+		/// <summary>
 		/// Default constructor for the AnimatedSprite.
 		/// </summary>
 		public AnimatedSprite()
@@ -185,7 +195,7 @@ namespace customAnimation
 		/// </summary>
 		public void Draw()
 		{
-			spriteBatch.Draw(Texture, Position, SourceRect, Color.White, 0f, Center, 1.0f, SpriteEffects.None, 0);
+			spriteBatch.Draw(Texture, Position, SourceRect, Color.White, Rotation, Center, 1.0f, SpriteEffects.None, 0);
 		}
 	}
 }

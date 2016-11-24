@@ -274,6 +274,10 @@ namespace customAnimation
 			else return -1;
 		}
 
+		/// <summary>
+		/// When a Cannon is loaded into the game, put it into the correct list so that only the active Cannons need checked against.
+		/// </summary>
+		/// <param name="cannon">A cannon.</param>
 		private static void putCannonIntoCorrectList(Tile cannon)
 		{
 			if (cannon.TileRepresentation == 'q')
