@@ -58,6 +58,8 @@ namespace customAnimation
 		protected int screenHeight;
 		protected int screenWidth;
 
+		public RotatedRectangle rotatedRect;
+
 		public static string charDebug;
 
 		/// <summary>
@@ -103,6 +105,12 @@ namespace customAnimation
 		{
 			get { return positionRect; }
 			set { positionRect = value; }
+		}
+
+		public RotatedRectangle RotatedRect
+		{
+			get { return RotatedRect; }
+			set { RotatedRect = value; }
 		}
 
 		/// <summary>

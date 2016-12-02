@@ -29,6 +29,8 @@ namespace customAnimation
 		Vector2 center;             // The center of the AnimatedSprite.
 		Single rotation;			// The rotation of the AnimatedSprite.
 
+		RotatedRectangle rotatedRect;
+
 		public static String debug;
 
 		/// <summary>
@@ -49,10 +51,16 @@ namespace customAnimation
 			set { positionRect = value; }
 		}
 
+		public RotatedRectangle RotatedRect
+		{
+			get { return rotatedRect; }
+			set { rotatedRect = value; }
+		}
+
 		/// <summary>
 		/// Property for the Center of the AnimatedSprite.
 		/// </summary>
-		protected Vector2 Center
+		public Vector2 Center
 		{
 			get { return center; }
 			set { center = value; }
@@ -124,7 +132,7 @@ namespace customAnimation
 		/// <summary>
 		/// Property for the rotatio of the AnimatedSprite.
 		/// </summary>
-		protected Single Rotation
+		public Single Rotation
 		{
 			get { return rotation; }
 			set { rotation = value; }
@@ -195,7 +203,8 @@ namespace customAnimation
 		/// </summary>
 		public void Draw()
 		{
-			spriteBatch.Draw(Texture, Position, SourceRect, Color.White, Rotation, Center, 1.0f, SpriteEffects.None, 0);
+			Rectangle aPositionAdjusted = new Rectangle(rotatedRect.X + (rotatedRect.Width / 2), rotatedRect.Y + (rotatedRect.Height / 2), rotatedRect.Width, rotatedRect.Height);
+			spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, Rotation, Center, SpriteEffects.None, 0);
 		}
 	}
 }

@@ -108,7 +108,6 @@ namespace customAnimation
 			foreach (Air air in Air.allAirs)
 			{
 				air.Draw();
-				spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox"), air.PositionRect, Color.White);
 			}
 
 			// Draw the level.

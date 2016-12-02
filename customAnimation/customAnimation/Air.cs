@@ -52,6 +52,7 @@ namespace customAnimation
 			this.Position = position;
 			this.PositionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
 			this.Rotation = rotation;
+			this.RotatedRect = new RotatedRectangle(this.PositionRect, rotation);
 
 			debug = "";
 		}
@@ -67,9 +68,15 @@ namespace customAnimation
 
 			foreach(Air air in Air.allAirs)
 			{
-				if (PositionRect.Intersects(shoes.PositionRect))
+				if (this.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)))
 				{
-					// This works. Set position to new (0, 0) to confirm/see again.
+					//shoes.Position = new Vector2(0, 0);
+					// Top Left, Top Right, Bottom Left, Bottom Right
+					debug = this.RotatedRect.UpperLeftCorner().ToString() + " | " + this.RotatedRect.UpperRightCorner().ToString() + " | " + this.RotatedRect.LowerLeftCorner().ToString() + " | " + this.RotatedRect.LowerRightCorner().ToString();
+				}
+				else
+				{
+					debug = "NO AIR COLLISION";
 				}
 			}
 
@@ -115,7 +122,7 @@ namespace customAnimation
 			foreach (Tile cannon in allECannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56), cannon.Rotation);
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X + 12, cannon.Position.Y - 75), cannon.Rotation);
 				Air.allAirs.Add(newAir);
 			}
 		}
