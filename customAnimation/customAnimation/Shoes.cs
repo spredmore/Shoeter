@@ -46,8 +46,6 @@ namespace customAnimation
 
 		private bool isGravityOn = true;							// Flag to use gravity or not.
 
-		int increment = 0;
-
 		public Shoes(Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
@@ -903,114 +901,110 @@ namespace customAnimation
 		/// <param name="airCannonSwitch">The Air Cannon Switch that the Shoes has collided with.</param>
 		private void activateAirCannon(Tile airCannonSwitch)
 		{
-			//if (increment < 1)
-			//{
-				if (airCannonSwitch.TileRepresentation == 'Q')
+			if (airCannonSwitch.TileRepresentation == 'Q')
+			{
+				if (!Air.areQCannonsOn)
 				{
-					if (!Air.areQCannonsOn)
-					{
-						Air.areQCannonsOn = true;
-						Air.turnOnAllQCannons(content, spriteBatch);
-					}
-					else
-					{
-						//Air.areQCannonsOn = false;
-						//Air.turnOffAllQCannons();
-					}
+					Air.areQCannonsOn = true;
+					Air.turnOnAllQCannons(content, spriteBatch);
 				}
-				else if (airCannonSwitch.TileRepresentation == 'W')
+				else
 				{
-					if (!Air.areWCannonsOn)
-					{
-						Air.areWCannonsOn = true;
-						Air.turnOnAllWCannons(content, spriteBatch);
-					}
-					else
-					{
-						//Air.areWCannonsOn = false;
-						//Air.turnOffAllWCannons();
-					}
+					//Air.areQCannonsOn = false;
+					//Air.turnOffAllQCannons();
 				}
-				else if (airCannonSwitch.TileRepresentation == 'E')
+			}
+			else if (airCannonSwitch.TileRepresentation == 'W')
+			{
+				if (!Air.areWCannonsOn)
 				{
-					if (!Air.areECannonsOn)
-					{
-						Air.areECannonsOn = true;
-						Air.turnOnAllECannons(content, spriteBatch);
-					}
-					else
-					{
-						//Air.areECannonsOn = false;
-						//Air.turnOffAllECannons();
-					}
+					Air.areWCannonsOn = true;
+					Air.turnOnAllWCannons(content, spriteBatch);
 				}
-				else if (airCannonSwitch.TileRepresentation == 'A')
+				else
 				{
-					if (!Air.areACannonsOn)
-					{
-						Air.areACannonsOn = true;
-						Air.turnOnAllACannons(content, spriteBatch);
-					}
-					else
-					{
-						//Air.areACannonsOn = false;
-						//Air.turnOffAllACannons();
-					}
+					//Air.areWCannonsOn = false;
+					//Air.turnOffAllWCannons();
 				}
-				else if (airCannonSwitch.TileRepresentation == 'D')
+			}
+			else if (airCannonSwitch.TileRepresentation == 'E')
+			{
+				if (!Air.areECannonsOn)
 				{
-					if (!Air.areDCannonsOn)
-					{
-						Air.areDCannonsOn = true;
-						Air.turnOnAllDCannons(content, spriteBatch);
-					}
-					else
-					{
-						//Air.areDCannonsOn = false;
-						//Air.turnOffAllDCannons();
-					}
+					Air.areECannonsOn = true;
+					Air.turnOnAllECannons(content, spriteBatch);
 				}
-				else if (airCannonSwitch.TileRepresentation == 'Z')
+				else
 				{
-					if (!Air.areZCannonsOn)
-					{
-						Air.areZCannonsOn = true;
-						Air.turnOnAllZCannons(content, spriteBatch);
-					}
-					else
-					{
-						//Air.areZCannonsOn = false;
-						//Air.turnOffAllZCannons();
-					}
+					//Air.areECannonsOn = false;
+					//Air.turnOffAllECannons();
 				}
-				else if (airCannonSwitch.TileRepresentation == 'X')
+			}
+			else if (airCannonSwitch.TileRepresentation == 'A')
+			{
+				if (!Air.areACannonsOn)
 				{
-					if (!Air.areXCannonsOn)
-					{
-						Air.areXCannonsOn = true;
-						Air.turnOnAllXCannons(content, spriteBatch);
-					}
-					else
-					{
-						//Air.areXCannonsOn = false;
-						//Air.turnOffAllXCannons();
-					}
+					Air.areACannonsOn = true;
+					Air.turnOnAllACannons(content, spriteBatch);
 				}
-				else if (airCannonSwitch.TileRepresentation == 'C')
+				else
 				{
-					if (!Air.areCCannonsOn)
-					{
-						Air.areCCannonsOn = true;
-						Air.turnOnAllCCannons(content, spriteBatch);
-					}
-					else
-					{
-						//Air.areCCannonsOn = false;
-						//Air.turnOffAllCCannons();
-					}
+					//Air.areACannonsOn = false;
+					//Air.turnOffAllACannons();
 				}
-				//increment++;
-			//}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'D')
+			{
+				if (!Air.areDCannonsOn)
+				{
+					Air.areDCannonsOn = true;
+					Air.turnOnAllDCannons(content, spriteBatch);
+				}
+				else
+				{
+					//Air.areDCannonsOn = false;
+					//Air.turnOffAllDCannons();
+				}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'Z')
+			{
+				if (!Air.areZCannonsOn)
+				{
+					Air.areZCannonsOn = true;
+					Air.turnOnAllZCannons(content, spriteBatch);
+				}
+				else
+				{
+					//Air.areZCannonsOn = false;
+					//Air.turnOffAllZCannons();
+				}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'X')
+			{
+				if (!Air.areXCannonsOn)
+				{
+					Air.areXCannonsOn = true;
+					Air.turnOnAllXCannons(content, spriteBatch);
+				}
+				else
+				{
+					//Air.areXCannonsOn = false;
+					//Air.turnOffAllXCannons();
+				}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'C')
+			{
+				if (!Air.areCCannonsOn)
+				{
+					Air.areCCannonsOn = true;
+					Air.turnOnAllCCannons(content, spriteBatch);
+				}
+				else
+				{
+					//Air.areCCannonsOn = false;
+					//Air.turnOffAllCCannons();
+				}
+			}
 		}
 
 		// ******************
