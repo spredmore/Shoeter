@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace customAnimation
 {
-	class Tile
+	public class Tile
 	{
 		// What we need to do:
 		// Load a tile from a .txt file into an element of an array

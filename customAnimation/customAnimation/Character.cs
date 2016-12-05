@@ -46,6 +46,8 @@ namespace customAnimation
 		Rectangle positionRect;         // The rectangle around the player.
 		Rectangle tileCollRect;         // The current tile's position the player is colliding with.
 		Vector2 tileArrayCoordinates;   // The current tile's coordinates into the level array.
+		Tile currentTileCollidingWith;	// The current tile that the Character is currently colliding with.
+		Tile previousTileCollidingWith;	// The previous tile that the Character collided with.
 
 		// Important: Be sure to reset the appropriate border collision variable to false after it has been found that is has been set to true.
 		// Flag that says whether or not the Character has collided with that particular border of the screen.
@@ -107,6 +109,9 @@ namespace customAnimation
 			set { positionRect = value; }
 		}
 
+		/// <summary>
+		/// The property for a Rotated Rectangle that represents the Position Rectangle.
+		/// </summary>
 		public RotatedRectangle RotatedRect
 		{
 			get { return RotatedRect; }
@@ -114,12 +119,30 @@ namespace customAnimation
 		}
 
 		/// <summary>
-		/// Property for the TIle that the Character has collided with.
+		/// Property for the Tile Source Rectangle that the Character has collided with.
 		/// </summary>
 		public Rectangle TileCollisionRectangle
 		{
 			get { return tileCollRect; }
 			set { tileCollRect = value; }
+		}
+
+		/// <summary>
+		/// Property for the Tile that the Character is currently colliding with.
+		/// </summary>
+		public Tile CurrentCollidingTile
+		{
+			get { return currentTileCollidingWith; }
+			set { currentTileCollidingWith = value; }
+		}
+
+		/// <summary>
+		/// Property for the Tile that the Character was previously colliding with.
+		/// </summary>
+		public Tile PreviousCollidingTile
+		{
+			get { return previousTileCollidingWith; }
+			set { previousTileCollidingWith = value; }
 		}
 
 		/// <summary>
@@ -202,7 +225,7 @@ namespace customAnimation
 		/// </summary>
 		public Character() 
 		{ 
-			charDebug = ""; 
+			charDebug = "";
 		}
 
 		/// <summary>
@@ -409,7 +432,7 @@ namespace customAnimation
 					{
 						//velocity.Y = 0f;
 					}
-					else if (futurePositionRec.Intersects(Level.tiles[y, x].SourceRect) && (Level.tiles[y, x].CollProperties == Tile.CollisionProperty.Impassable || (Level.tiles[y, x].CollProperties == Tile.CollisionProperty.Passable && Level.tiles[y, x].IsAirCannonSwitch)))
+					else if (futurePositionRec.Intersects(Level.tiles[y, x].SourceRect) && (Level.tiles[y, x].CollProperties == Tile.CollisionProperty.Impassable || Level.tiles[y, x].IsAirCannonSwitch))
 					{
 						setFlagsForBorderCollision(false);
 						if (potentialState == State.RunningRight)
@@ -476,6 +499,31 @@ namespace customAnimation
 				didCharacterCollideWithRightBorderOfScreen = false;
 				didCharacterCollideWithTopBorderOfScreen = false;
 				didCharacterCollideWithBottomBorderOfScreen = false;
+			}
+		}
+
+		/// <summary>
+		/// Sets the current and previous Tile that the Character is colliding with.
+		/// </summary>
+		protected void setCurrentAndPreviousCollisionTiles()
+		{
+			PreviousCollidingTile = CurrentCollidingTile;
+
+			int leftTile = (int)Math.Floor((float)positionRect.Left / Level.impassableTileRecs[0].Width);
+			int rightTile = (int)Math.Ceiling(((float)positionRect.Right / Level.impassableTileRecs[0].Width)) - 1;
+			int topTile = (int)Math.Floor((float)positionRect.Top / Level.impassableTileRecs[0].Height);
+			int bottomTile = (int)Math.Ceiling(((float)positionRect.Bottom / Level.impassableTileRecs[0].Height)) - 1;
+
+			for (int y = topTile; y <= bottomTile; ++y)
+			{
+				for (int x = leftTile; x <= rightTile; ++x)
+				{
+					if (PositionRect.Intersects(Level.tiles[y, x].SourceRect))
+					{
+						currentTileCollidingWith = Level.tiles[y, x];
+						tileCollRect = Level.tiles[y, x].SourceRect;
+					}
+				}
 			}
 		}
 	}

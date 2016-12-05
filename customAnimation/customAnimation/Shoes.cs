@@ -79,7 +79,8 @@ namespace customAnimation
 		/// <param name="guy">A reference to the Guy.</param>
 		public void Update(GameTime gameTime, ref Guy guy)
 		{
-			this.handleAnimation(gameTime);
+			handleAnimation(gameTime);
+			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref guy);
 			doInterface(guy.isGuyBeingShot);
 
@@ -109,7 +110,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					activateAirCannon(Level.tiles[y, x]);
+					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 				}
 				else
 				{
@@ -132,7 +133,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					activateAirCannon(Level.tiles[y, x]);
+					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 				}
 				else
 				{
@@ -153,7 +154,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					activateAirCannon(Level.tiles[y, x]);
+					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 				}
 				else
 				{
@@ -176,7 +177,7 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					activateAirCannon(Level.tiles[y, x]);
+					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 				}
 				else
 				{
@@ -376,6 +377,9 @@ namespace customAnimation
 
 			// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
 			resetShoesAndGuyToLevelStartingPositionIfNecessary(guy);
+
+			// If the Shoes have turned on a particular set of Air Cannons and have now left that switch, turn the corresponding Air Cannons off.
+			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile);
 
 			// Update timers.
 			updateTimers(gameTime);
@@ -895,117 +899,7 @@ namespace customAnimation
 		// * START AIR CANNON *
 		// ********************
 
-		/// <summary>
-		/// Activates all Air Cannons for the Switch that the Shoes collided with.
-		/// </summary>
-		/// <param name="airCannonSwitch">The Air Cannon Switch that the Shoes has collided with.</param>
-		private void activateAirCannon(Tile airCannonSwitch)
-		{
-			if (airCannonSwitch.TileRepresentation == 'Q')
-			{
-				if (!Air.areQCannonsOn)
-				{
-					Air.areQCannonsOn = true;
-					Air.turnOnAllQCannons(content, spriteBatch);
-				}
-				else
-				{
-					//Air.areQCannonsOn = false;
-					//Air.turnOffAllQCannons();
-				}
-			}
-			else if (airCannonSwitch.TileRepresentation == 'W')
-			{
-				if (!Air.areWCannonsOn)
-				{
-					Air.areWCannonsOn = true;
-					Air.turnOnAllWCannons(content, spriteBatch);
-				}
-				else
-				{
-					//Air.areWCannonsOn = false;
-					//Air.turnOffAllWCannons();
-				}
-			}
-			else if (airCannonSwitch.TileRepresentation == 'E')
-			{
-				if (!Air.areECannonsOn)
-				{
-					Air.areECannonsOn = true;
-					Air.turnOnAllECannons(content, spriteBatch);
-				}
-				else
-				{
-					//Air.areECannonsOn = false;
-					//Air.turnOffAllECannons();
-				}
-			}
-			else if (airCannonSwitch.TileRepresentation == 'A')
-			{
-				if (!Air.areACannonsOn)
-				{
-					Air.areACannonsOn = true;
-					Air.turnOnAllACannons(content, spriteBatch);
-				}
-				else
-				{
-					//Air.areACannonsOn = false;
-					//Air.turnOffAllACannons();
-				}
-			}
-			else if (airCannonSwitch.TileRepresentation == 'D')
-			{
-				if (!Air.areDCannonsOn)
-				{
-					Air.areDCannonsOn = true;
-					Air.turnOnAllDCannons(content, spriteBatch);
-				}
-				else
-				{
-					//Air.areDCannonsOn = false;
-					//Air.turnOffAllDCannons();
-				}
-			}
-			else if (airCannonSwitch.TileRepresentation == 'Z')
-			{
-				if (!Air.areZCannonsOn)
-				{
-					Air.areZCannonsOn = true;
-					Air.turnOnAllZCannons(content, spriteBatch);
-				}
-				else
-				{
-					//Air.areZCannonsOn = false;
-					//Air.turnOffAllZCannons();
-				}
-			}
-			else if (airCannonSwitch.TileRepresentation == 'X')
-			{
-				if (!Air.areXCannonsOn)
-				{
-					Air.areXCannonsOn = true;
-					Air.turnOnAllXCannons(content, spriteBatch);
-				}
-				else
-				{
-					//Air.areXCannonsOn = false;
-					//Air.turnOffAllXCannons();
-				}
-			}
-			else if (airCannonSwitch.TileRepresentation == 'C')
-			{
-				if (!Air.areCCannonsOn)
-				{
-					Air.areCCannonsOn = true;
-					Air.turnOnAllCCannons(content, spriteBatch);
-				}
-				else
-				{
-					//Air.areCCannonsOn = false;
-					//Air.turnOffAllCCannons();
-				}
-			}
-		}
+
 
 		// ******************
 		// * END AIR CANNON *

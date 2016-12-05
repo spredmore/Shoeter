@@ -65,13 +65,14 @@ namespace customAnimation
 		/// </summary>
 		/// <param name="gameTime">Snapshot of the game timing state.</param>
 		/// <param name="shoes">A reference to the Shoes.</param>
-		public void Update(GameTime gameTime, ref Shoes shoes)
+		/// <param name="guy">A reference to the Guy.</param>
+		public void Update(GameTime gameTime, ref Shoes shoes, ref Guy guy)
 		{
 			Animate(gameTime);
 
 			foreach(Air air in Air.allAirs)
 			{
-				if (this.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)))
+				if (this.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)) || this.RotatedRect.Intersects(new RotatedRectangle(guy.PositionRect, 0.0f)))
 				{
 					//MathHelper.Pi / 2
 					//shoes.Position = new Vector2(0, 0);
@@ -84,6 +85,81 @@ namespace customAnimation
 				}
 			}
 
+		}
+
+		/// <summary>
+		/// Activates all Air Cannons for the Switch that the Shoes collided with.
+		/// </summary>
+		/// <param name="airCannonSwitch">The Air Cannon Switch that the Shoes has collided with.</param>
+		/// <param name="tileCharacterCurrentlyCollidingWith">The tile that the Character is currently colliding with.</param>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
+		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
+		public static void activateAirCannons(Tile airCannonSwitch, Tile tileCharacterCurrentlyCollidingWith, ContentManager content, SpriteBatch spriteBatch)
+		{
+			if (airCannonSwitch.TileRepresentation == 'Q')
+			{
+				if (!Air.areQCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
+				{
+					Air.areQCannonsOn = true;
+					Air.turnOnAllQCannons(content, spriteBatch);
+				}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'W')
+			{
+				if (!Air.areWCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
+				{
+					Air.areWCannonsOn = true;
+					Air.turnOnAllWCannons(content, spriteBatch);
+				}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'E')
+			{
+				if (!Air.areECannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
+				{
+					Air.areECannonsOn = true;
+					Air.turnOnAllECannons(content, spriteBatch);
+				}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'A')
+			{
+				if (!Air.areACannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
+				{
+					Air.areACannonsOn = true;
+					Air.turnOnAllACannons(content, spriteBatch);
+				}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'D')
+			{
+				if (!Air.areDCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
+				{
+					Air.areDCannonsOn = true;
+					Air.turnOnAllDCannons(content, spriteBatch);
+				}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'Z')
+			{
+				if (!Air.areZCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
+				{
+					Air.areZCannonsOn = true;
+					Air.turnOnAllZCannons(content, spriteBatch);
+				}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'X')
+			{
+				if (!Air.areXCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
+				{
+					Air.areXCannonsOn = true;
+					Air.turnOnAllXCannons(content, spriteBatch);
+				}
+			}
+			else if (airCannonSwitch.TileRepresentation == 'C')
+			{
+				if (!Air.areCCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
+				{
+					Air.areCCannonsOn = true;
+					Air.turnOnAllCCannons(content, spriteBatch);
+				}
+			}
 		}
 
 		/// <summary>
@@ -206,18 +282,76 @@ namespace customAnimation
 			}
 		}
 
-		public static void turnOffAllWCannons()
+		/// <summary>
+		/// Turns off a specific set of Air Cannons, depending on which set is on.
+		/// </summary>
+		/// <param name="tileCharacterCurrentlyCollidingWith">The tile that the Character is currently colliding with.</param>
+		/// <param name="tileCharacterPreviouslyCollidedWith">The tile that the Character previously collided with.</param>
+		public static void turnOffAirCannonsIfPossible(Tile tileCharacterCurrentlyCollidingWith, Tile tileCharacterPreviouslyCollidedWith)
+		{
+			if ((tileCharacterCurrentlyCollidingWith != null && tileCharacterPreviouslyCollidedWith != null) && !tileCharacterCurrentlyCollidingWith.IsAirCannonSwitch && tileCharacterPreviouslyCollidedWith.IsAirCannonSwitch)
+			{
+				if (Air.areQCannonsOn)
+				{
+					Air.areQCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('Q');
+				}
+				else if (Air.areWCannonsOn)
+				{
+					Air.areWCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('W');
+				}
+				else if (Air.areECannonsOn)
+				{
+					Air.areECannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('E');
+				}
+				else if (Air.areACannonsOn)
+				{
+					Air.areACannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('A');
+				}
+				else if (Air.areDCannonsOn)
+				{
+					Air.areDCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('D');
+				}
+				else if (Air.areZCannonsOn)
+				{
+					Air.areZCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('Z');
+				}
+				else if (Air.areXCannonsOn)
+				{
+					Air.areXCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('X');
+				}
+				else if (Air.areCCannonsOn)
+				{
+					Air.areCCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('C');
+				}
+			}
+		}
+
+		/// <summary>
+		/// Turns off a specific set of Air Cannons, depending on the passed in Air Cannon representation.
+		/// </summary>
+		/// <param name="cannonRepresentation">A Char representing an Air Cannon.</param>
+		public static void turnOffSpecificSetOfCannons(Char cannonRepresentation)
 		{
 			List<Air> airsToRemove = new List<Air>();
 
+			// Find the Airs to remove.
 			foreach (Air air in allAirs)
 			{
-				if(air.airType == 'W')
+				if (air.airType == cannonRepresentation)
 				{
 					airsToRemove.Add(air);
 				}
 			}
 
+			// Remove the Airs that were found.
 			foreach (Air airToRemove in airsToRemove)
 			{
 				allAirs.Remove(airToRemove);

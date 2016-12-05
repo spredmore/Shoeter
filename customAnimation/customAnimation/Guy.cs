@@ -35,6 +35,8 @@ namespace customAnimation
 		
 		private float delta;
 
+		private ContentManager content;
+
 		public string debug;
 		public string debug2;
 
@@ -44,7 +46,7 @@ namespace customAnimation
 
 		public bool usingLauncher = false;
 
-		public Guy(Texture2D texture, SpriteBatch spriteBatch, int currentFrame, int totalFrames, int spriteWidth, int spriteHeight, int screenHeight, int screenWidth)
+		public Guy(Texture2D texture, SpriteBatch spriteBatch, int currentFrame, int totalFrames, int spriteWidth, int spriteHeight, int screenHeight, int screenWidth, ContentManager content)
 		{
 			this.spriteBatch = spriteBatch;
 			this.Texture = texture;
@@ -54,6 +56,7 @@ namespace customAnimation
 			this.spriteHeight = spriteHeight;
 			this.screenHeight = screenHeight;
 			this.screenWidth = screenWidth;
+			this.content = content;
 
 			gravity = 10f;
 			debug = "";
@@ -78,6 +81,7 @@ namespace customAnimation
 		{
 			currentLevel = level;
 			handleAnimation(gameTime);
+			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref shoes);
 		}
 
@@ -112,7 +116,7 @@ namespace customAnimation
 					}
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
-
+						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 					}
 					else
 					{
@@ -139,7 +143,7 @@ namespace customAnimation
 					}
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
-
+						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 					}
 					else
 					{
@@ -166,7 +170,7 @@ namespace customAnimation
 					}
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
-
+						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 					}
 					else
 					{
@@ -192,7 +196,7 @@ namespace customAnimation
 					}
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
-
+						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 					}
 					else
 					{
@@ -376,6 +380,9 @@ namespace customAnimation
 
 			// If the interface is not linked, allows the player to modify the value of gravity.
 			changeGravity();
+
+			// If the Guy has turned on a particular set of Air Cannons and has now left that switch, turn the corresponding Air Cannons off.
+			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile);
 
 			// Updates the variables that are used for storing the previous values of the current values.
 			updatePreviousFrameVariables();

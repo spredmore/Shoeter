@@ -63,13 +63,13 @@ namespace customAnimation
 			level.LoadLevel();
 		   
 			// Create the Shoes.
-			shoes = new Shoes(Content.Load<Texture2D>("Sprites/Shoes32x48"), Character.State.Idle, 0, 32, 48, 0, spriteBatch, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth, Keys.W, Keys.A, Keys.S, Keys.D, this.Content);
+			shoes = new Shoes(Content.Load<Texture2D>("Sprites/Shoes32x48"), Character.State.Idle, 0, 32, 48, 0, spriteBatch, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth, Keys.W, Keys.A, Keys.S, Keys.D, Content);
 
 			// Set the initial position of the player.
 			shoes.Position = level.getPlayerStartingPosition();
 
 			// Create the Guy.
-			guy = new Guy(Content.Load<Texture2D>("Sprites/Guy32x48"), spriteBatch, 0, 0, 32, 48, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth);
+			guy = new Guy(Content.Load<Texture2D>("Sprites/Guy32x48"), spriteBatch, 0, 0, 32, 48, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth, Content);
 
 			// Load the debug font. We use this for debugging purposes.
 			debugFont = Content.Load<SpriteFont>("debugFont"); 
@@ -93,7 +93,7 @@ namespace customAnimation
 
 			foreach(Air air in Air.allAirs)
 			{
-				air.Update(gameTime, ref shoes);
+				air.Update(gameTime, ref shoes, ref guy);
 			}
 
 			base.Update(gameTime);
