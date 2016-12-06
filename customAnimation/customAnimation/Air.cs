@@ -29,7 +29,7 @@ namespace customAnimation
 		public static Boolean areXCannonsOn = false;
 		public static Boolean areCCannonsOn = false;
 
-		private Char airType;	// Denotes what kind of Air Cannon the Air is coming out of.
+		private Char airCannonRepresentation;	// Denotes what kind of Air Cannon the Air is coming out of.
 
 		public static string debug;
 
@@ -55,7 +55,7 @@ namespace customAnimation
 			this.PositionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
 			this.Rotation = rotation;
 			this.RotatedRect = new RotatedRectangle(this.PositionRect, rotation);
-			airType = type;
+			airCannonRepresentation = type;
 
 			debug = "";
 		}
@@ -72,19 +72,22 @@ namespace customAnimation
 
 			foreach(Air air in Air.allAirs)
 			{
-				if (this.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)) || this.RotatedRect.Intersects(new RotatedRectangle(guy.PositionRect, 0.0f)))
+				// Shoes Collision
+				if (this.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)))
 				{
 					//MathHelper.Pi / 2
 					//shoes.Position = new Vector2(0, 0);
 					// Top Left, Top Right, Bottom Left, Bottom Right
-					debug = this.RotatedRect.UpperLeftCorner().ToString() + " | " + this.RotatedRect.UpperRightCorner().ToString() + " | " + this.RotatedRect.LowerLeftCorner().ToString() + " | " + this.RotatedRect.LowerRightCorner().ToString();
+					//debug = this.RotatedRect.UpperLeftCorner().ToString() + " | " + this.RotatedRect.UpperRightCorner().ToString() + " | " + this.RotatedRect.LowerLeftCorner().ToString() + " | " + this.RotatedRect.LowerRightCorner().ToString();
 				}
-				else
+
+				// Guy Collision
+				if (this.RotatedRect.Intersects(new RotatedRectangle(guy.PositionRect, 0.0f)) && !guy.airsGuyHasCollidedWith.Contains(air))
 				{
-					debug = "NO AIR COLLISION";
+					guy.airsGuyHasCollidedWith.Add(air);
+					guy.setVelocityUponAirCollision(air.airCannonRepresentation);
 				}
 			}
-
 		}
 
 		/// <summary>
@@ -287,10 +290,19 @@ namespace customAnimation
 		/// </summary>
 		/// <param name="tileCharacterCurrentlyCollidingWith">The tile that the Character is currently colliding with.</param>
 		/// <param name="tileCharacterPreviouslyCollidedWith">The tile that the Character previously collided with.</param>
-		public static void turnOffAirCannonsIfPossible(Tile tileCharacterCurrentlyCollidingWith, Tile tileCharacterPreviouslyCollidedWith)
+		public static void turnOffAirCannonsIfPossible(Tile tileCharacterCurrentlyCollidingWith, Tile tileCharacterPreviouslyCollidedWith, Guy guy, Shoes shoes)
 		{
 			if ((tileCharacterCurrentlyCollidingWith != null && tileCharacterPreviouslyCollidedWith != null) && !tileCharacterCurrentlyCollidingWith.IsAirCannonSwitch && tileCharacterPreviouslyCollidedWith.IsAirCannonSwitch)
 			{
+				if(guy != null)
+				{
+					guy.airsGuyHasCollidedWith.Clear();
+				}
+				else if(shoes != null)
+				{
+					shoes.airsShoesHasCollidedWith.Clear();
+				}
+
 				if (Air.areQCannonsOn)
 				{
 					Air.areQCannonsOn = false;
@@ -345,7 +357,7 @@ namespace customAnimation
 			// Find the Airs to remove.
 			foreach (Air air in allAirs)
 			{
-				if (air.airType == cannonRepresentation)
+				if (air.airCannonRepresentation == cannonRepresentation)
 				{
 					airsToRemove.Add(air);
 				}

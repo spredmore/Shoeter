@@ -35,6 +35,8 @@ namespace customAnimation
 		
 		private float delta;
 
+		public List<Air> airsGuyHasCollidedWith = new List<Air>();
+
 		private ContentManager content;
 
 		public string debug;
@@ -382,7 +384,7 @@ namespace customAnimation
 			changeGravity();
 
 			// If the Guy has turned on a particular set of Air Cannons and has now left that switch, turn the corresponding Air Cannons off.
-			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile);
+			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile, this, null);
 
 			// Updates the variables that are used for storing the previous values of the current values.
 			updatePreviousFrameVariables();
@@ -578,6 +580,58 @@ namespace customAnimation
 
 		// ******************
 		// *  END LAUNCHER  *
+		// ******************
+
+		// ********************
+		// * START AIR CANNON *
+		// ********************
+
+		/// <summary>
+		/// Sets the velocity of the Guy upon collision with an Air.
+		/// </summary>
+		/// <param name="airCannonRepresentation">The representation of the Air Cannon that the Air came out. Used to determine how to set velocity.</param>
+		public void setVelocityUponAirCollision(Char airCannonRepresentation)
+		{
+			if (airCannonRepresentation == 'Q')
+			{
+				velocity.X -= 2f;
+				velocity.Y -= 2f;
+			}
+			else if (airCannonRepresentation == 'W')
+			{
+				velocity.Y -= 2f;
+			}
+			else if (airCannonRepresentation == 'E')
+			{
+				velocity.X += 2f;
+				velocity.Y -= 2f;
+			}
+			else if (airCannonRepresentation == 'A')
+			{
+				velocity.X -= 2f;
+			}
+			else if (airCannonRepresentation == 'D')
+			{
+				velocity.X += 2f;
+			}
+			else if (airCannonRepresentation == 'Z')
+			{
+				velocity.X -= 2f;
+				velocity.Y += 2f;
+			}
+			else if (airCannonRepresentation == 'X')
+			{
+				velocity.Y += 2f;
+			}
+			else if (airCannonRepresentation == 'C')
+			{
+				velocity.X += 2f;
+				velocity.Y += 2f;
+			}
+		}
+
+		// ******************
+		// * END AIR CANNON *
 		// ******************
 
 		// **************************

@@ -44,6 +44,8 @@ namespace customAnimation
 		private int angleInDegreesOfLauncherShoesIsUsing;			// Stores the coordinates of the Launcher Tile from the level. Used to launch the Shoes at the correct angle.
 		private bool shoesAreCurrentlyMovingDueToLauncher = false;	// Says whether or not the Shoes are moving due to being launched from a Launcher. 
 
+		public List<Air> airsShoesHasCollidedWith = new List<Air>();
+
 		private bool isGravityOn = true;							// Flag to use gravity or not.
 
 		public Shoes(Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
@@ -379,7 +381,7 @@ namespace customAnimation
 			resetShoesAndGuyToLevelStartingPositionIfNecessary(guy);
 
 			// If the Shoes have turned on a particular set of Air Cannons and have now left that switch, turn the corresponding Air Cannons off.
-			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile);
+			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile, null, this);
 
 			// Update timers.
 			updateTimers(gameTime);
