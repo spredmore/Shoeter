@@ -175,7 +175,7 @@ namespace customAnimation
 			foreach(Tile cannon in allQCannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 67, cannon.Position.Y - 52), cannon.Rotation, 'Q');
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 39, cannon.Position.Y - 46), cannon.Rotation, 'Q');
 				Air.allAirs.Add(newAir);
 			}
 		}
@@ -190,7 +190,7 @@ namespace customAnimation
 			foreach (Tile cannon in allWCannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 32, cannon.Position.Y - 80), cannon.Rotation, 'W');
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y - 56), cannon.Rotation, 'W');
 				Air.allAirs.Add(newAir);
 			}
 		}
@@ -205,7 +205,7 @@ namespace customAnimation
 			foreach (Tile cannon in allECannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X + 12, cannon.Position.Y - 75), cannon.Rotation, 'E');
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X + 2, cannon.Position.Y - 44), cannon.Rotation, 'E');
 				Air.allAirs.Add(newAir);
 			}
 		}
@@ -220,7 +220,7 @@ namespace customAnimation
 			foreach (Tile cannon in allACannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 72, cannon.Position.Y - 8), cannon.Rotation, 'A');
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 48, cannon.Position.Y - 24), cannon.Rotation, 'A');
 				Air.allAirs.Add(newAir);
 			}
 		}
@@ -235,7 +235,7 @@ namespace customAnimation
 			foreach (Tile cannon in allDCannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X + 40, cannon.Position.Y - 40), cannon.Rotation, 'D');
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X + 16, cannon.Position.Y - 24), cannon.Rotation, 'D');
 				Air.allAirs.Add(newAir);
 			}
 		}
@@ -250,7 +250,7 @@ namespace customAnimation
 			foreach (Tile cannon in allZCannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 44, cannon.Position.Y + 26), cannon.Rotation, 'Z');
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 38, cannon.Position.Y - 2), cannon.Rotation, 'Z');
 				Air.allAirs.Add(newAir);
 			}
 		}
@@ -265,7 +265,7 @@ namespace customAnimation
 			foreach (Tile cannon in allXCannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X, cannon.Position.Y + 32), cannon.Rotation, 'X');
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 16, cannon.Position.Y + 8), cannon.Rotation, 'X');
 				Air.allAirs.Add(newAir);
 			}
 		}
@@ -280,7 +280,7 @@ namespace customAnimation
 			foreach (Tile cannon in allCCannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
-				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X + 34, cannon.Position.Y + 4), cannon.Rotation, 'C');
+				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X + 6, cannon.Position.Y - 2), cannon.Rotation, 'C');
 				Air.allAirs.Add(newAir);
 			}
 		}

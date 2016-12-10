@@ -33,6 +33,8 @@ namespace customAnimation
 		// Stores if we are facing right or not.
 		SpriteEffects facingRight;
 
+		Rectangle mouseRect;
+
 		String debug;
 
 		public Game1()
@@ -72,7 +74,11 @@ namespace customAnimation
 			guy = new Guy(Content.Load<Texture2D>("Sprites/Guy32x48"), spriteBatch, 0, 0, 32, 48, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth, Content);
 
 			// Load the debug font. We use this for debugging purposes.
-			debugFont = Content.Load<SpriteFont>("debugFont"); 
+			debugFont = Content.Load<SpriteFont>("debugFont");
+
+			MouseState currentMouseState;
+			currentMouseState = Mouse.GetState();
+			mouseRect = new Rectangle(currentMouseState.X, currentMouseState.Y, 16, 16);
 		}
 
 		protected override void UnloadContent()
@@ -91,9 +97,22 @@ namespace customAnimation
 			shoes.Update(gameTime, ref guy);
 			guy.Update(gameTime, ref shoes, ref level);
 
+			MouseState currentMouseState;
+			currentMouseState = Mouse.GetState();
+			mouseRect = new Rectangle(currentMouseState.X, currentMouseState.Y, 16, 16);
+
 			foreach(Air air in Air.allAirs)
 			{
 				air.Update(gameTime, ref shoes, ref guy);
+
+				if (air.RotatedRect.Intersects(mouseRect))
+				{
+					debug = "MOUSE COLLISION | " + mouseRect.Location.ToString();
+				}
+				else
+				{
+					debug = "NO MOUSE COLLISION | " + mouseRect.Location.ToString();
+				}
 			}
 
 			base.Update(gameTime);
@@ -144,6 +163,8 @@ namespace customAnimation
 			spriteBatch.DrawString(debugFont, "AnimatedSprite debug: " + AnimatedSprite.debug, new Vector2(0, 340), Color.Black);
 			spriteBatch.DrawString(debugFont, "Air debug: " + Air.debug, new Vector2(0, 360), Color.Black);
 			spriteBatch.DrawString(debugFont, "Game1 debug: " + debug, new Vector2(0, 380), Color.Black);
+
+			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), mouseRect, Color.White);
 			
 			spriteBatch.End();
 

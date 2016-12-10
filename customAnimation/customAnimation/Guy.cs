@@ -603,8 +603,8 @@ namespace customAnimation
 			}
 			else if (airCannonRepresentation == 'E')
 			{
-				velocity.X += 2f;
-				velocity.Y -= 2f;
+				velocity.X += 10f;
+				velocity.Y -= 10f;
 			}
 			else if (airCannonRepresentation == 'A')
 			{

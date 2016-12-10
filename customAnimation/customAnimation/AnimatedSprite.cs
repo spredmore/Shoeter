@@ -204,7 +204,7 @@ namespace customAnimation
 		public void Draw()
 		{
 			Rectangle aPositionAdjusted = new Rectangle(rotatedRect.X + (rotatedRect.Width / 2), rotatedRect.Y + (rotatedRect.Height / 2), rotatedRect.Width, rotatedRect.Height);
-			spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, Rotation, Center, SpriteEffects.None, 0);
+			spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, Rotation, new Vector2((int)PositionRect.Width / 2, (int)PositionRect.Height / 2), SpriteEffects.None, 0);
 		}
 	}
 }

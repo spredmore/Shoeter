@@ -33,8 +33,8 @@ namespace customAnimation
 		public float gravity;                   // Gravity CHANGE BACK TO PROTECTED LATER
 
 		protected float spriteSpeed = 600f;     // This is how fast the sprite moves.
-		protected int spriteWidth;              // The width of the individual sprite.
-		protected int spriteHeight;             // The height of the individual sprite.
+		public int spriteWidth;              // The width of the individual sprite.
+		public int spriteHeight;             // The height of the individual sprite.
 
 		// State
 		public State state;         // The current state of the player.
@@ -114,8 +114,8 @@ namespace customAnimation
 		/// </summary>
 		public RotatedRectangle RotatedRect
 		{
-			get { return RotatedRect; }
-			set { RotatedRect = value; }
+			get { return rotatedRect; }
+			set { rotatedRect = value; }
 		}
 
 		/// <summary>
