@@ -199,6 +199,7 @@ namespace customAnimation
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
 						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
+						position = new Vector2(Level.tiles[y, x].Position.X - 16, Level.tiles[y, x].Position.Y - 32);
 					}
 					else
 					{
