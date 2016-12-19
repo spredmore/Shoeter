@@ -73,9 +73,10 @@ namespace customAnimation
 			foreach(Air air in Air.allAirs)
 			{
 				// Shoes Collision
-				if (air.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)))
+				if (air.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)) && !shoes.airsShoesHasCollidedWith.Contains(air))
 				{
-
+					shoes.airsShoesHasCollidedWith.Add(air);
+					shoes.setVelocityUponAirCollision(air.airCannonRepresentation);
 				}
 
 				// Guy Collision
@@ -84,6 +85,21 @@ namespace customAnimation
 					guy.airsGuyHasCollidedWith.Add(air);
 					guy.setVelocityUponAirCollision(air.airCannonRepresentation);
 				}
+			}
+
+			List<Air> airsThatShoesAreNoLongerCollidingWith =  new List<Air>();
+			foreach(Air air in shoes.airsShoesHasCollidedWith)
+			{
+				if(!air.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)))
+				{
+					airsThatShoesAreNoLongerCollidingWith.Add(air);
+					//airsThatShoesAreNoLongerCollidingWith.Remove(air);
+				}
+			}
+
+			foreach (Air air in airsThatShoesAreNoLongerCollidingWith)
+			{
+				shoes.airsShoesHasCollidedWith.Remove(air);
 			}
 		}
 

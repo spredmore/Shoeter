@@ -157,12 +157,13 @@ namespace customAnimation
 			spriteBatch.DrawString(debugFont, "Guy Debug2: " + guy.debug2, new Vector2(0, 220), Color.Black);
 			spriteBatch.DrawString(debugFont, "Shoes Debug: " + shoes.debug.ToString(), new Vector2(0, 240), Color.Black);
 			spriteBatch.DrawString(debugFont, "Shoes Debug2: " + shoes.debug2.ToString(), new Vector2(0, 260), Color.Black);
-			spriteBatch.DrawString(debugFont, "Character Debug: " + Character.charDebug, new Vector2(0, 280), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes State: " + shoes.PlayerState.ToString(), new Vector2(0, 300), Color.Black);
-			spriteBatch.DrawString(debugFont, "Guy State: " + guy.PlayerState.ToString(), new Vector2(0, 320), Color.Black);
-			spriteBatch.DrawString(debugFont, "AnimatedSprite debug: " + AnimatedSprite.debug, new Vector2(0, 340), Color.Black);
-			spriteBatch.DrawString(debugFont, "Air debug: " + Air.debug, new Vector2(0, 360), Color.Black);
-			spriteBatch.DrawString(debugFont, "Game1 debug: " + debug, new Vector2(0, 380), Color.Black);
+			spriteBatch.DrawString(debugFont, "Shoes Debug3: " + shoes.debug3.ToString(), new Vector2(0, 280), Color.Black);
+			spriteBatch.DrawString(debugFont, "Character Debug: " + Character.charDebug, new Vector2(0, 300), Color.Black);
+			spriteBatch.DrawString(debugFont, "Shoes State: " + shoes.PlayerState.ToString(), new Vector2(0, 320), Color.Black);
+			spriteBatch.DrawString(debugFont, "Guy State: " + guy.PlayerState.ToString(), new Vector2(0, 340), Color.Black);
+			spriteBatch.DrawString(debugFont, "AnimatedSprite debug: " + AnimatedSprite.debug, new Vector2(0, 360), Color.Black);
+			spriteBatch.DrawString(debugFont, "Air debug: " + Air.debug, new Vector2(0, 380), Color.Black);
+			spriteBatch.DrawString(debugFont, "Game1 debug: " + debug, new Vector2(0, 400), Color.Black);
 
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), mouseRect, Color.White);
 			

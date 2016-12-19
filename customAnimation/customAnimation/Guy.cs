@@ -200,6 +200,7 @@ namespace customAnimation
 					{
 						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 						position = new Vector2(Level.tiles[y, x].Position.X - 16, Level.tiles[y, x].Position.Y - 32);
+						velocity = new Vector2(0f, 0f);
 					}
 					else
 					{

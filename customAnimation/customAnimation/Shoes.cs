@@ -30,6 +30,7 @@ namespace customAnimation
 		public string preset;
 		public string debug;
 		public string debug2;
+		public string debug3;
 
 		public bool interfaceLinked = true; // Public so that Game1.draw can see them for debugging.
 		private bool interfaceEnabled = true;
@@ -45,9 +46,11 @@ namespace customAnimation
 		private bool shoesAreCurrentlyMovingDueToLauncher = false;	// Says whether or not the Shoes are moving due to being launched from a Launcher. 
 
 		public List<Air> airsShoesHasCollidedWith = new List<Air>();
+		private float horizontalVelocityDueToAirCollision = 0f;
 		private Timer delayMovementAfterAirCannonSwitchCollisionTimer;			// Delays movement upon Air Cannon Switch collision so that activating Switches is easier.
 		private Boolean movementLockedDueToAirCannonSwitchCollision = false;	// Locks movement for the Shoes upon Air Cannon Switch collision.
 		private Boolean haveShoesMovedToADifferentTile = false;					// Says whether or not the Shoes have moved to a different tile after an Air Cannon Switch collision.
+		private Boolean haveShoesCollidedWithAnAir = false;
 
 		private bool isGravityOn = true;							// Flag to use gravity or not.
 
@@ -71,6 +74,7 @@ namespace customAnimation
 			gravity = 30f;
 			debug = "";
 			debug2 = "";
+			debug3 = "";
 
 			delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
 			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
@@ -106,16 +110,19 @@ namespace customAnimation
 			{
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
+					resetMovementModificationsDueToAirCollision();	// If the Shoes collided with this Tile after colliding with an Air, reset the movement properties of the Shoes back to normal.
 					position.X = Level.tiles[y, x].Position.X - spriteWidth;
 					delayMovementAfterSpringCollision = true;
 					prepareMovementDueToSpringCollision(currentState);
 				}
 				else if (Level.tiles[y, x].IsLauncher)
 				{
+					resetMovementModificationsDueToAirCollision();
 					prepareMovementDueToLauncherCollision(x, y, false);
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
+					resetMovementModificationsDueToAirCollision();
 					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 
 					if (!delayMovementAfterAirCannonSwitchCollisionTimer.TimerStarted && haveShoesMovedToADifferentTile) 
@@ -126,6 +133,7 @@ namespace customAnimation
 				}
 				else
 				{
+					resetMovementModificationsDueToAirCollision();
 					position.X = Level.tiles[y, x].Position.X - spriteWidth;
 					checkIfShoesCollidedWithTileViaSpring();
 					checkIfShoesCollidedWithTileViaLauncher();
@@ -135,16 +143,19 @@ namespace customAnimation
 			{
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
+					resetMovementModificationsDueToAirCollision();
 					position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
 					delayMovementAfterSpringCollision = true;
 					prepareMovementDueToSpringCollision(currentState);
 				}
 				else if (Level.tiles[y, x].IsLauncher)
 				{
+					resetMovementModificationsDueToAirCollision();
 					prepareMovementDueToLauncherCollision(x, y, false);
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
+					resetMovementModificationsDueToAirCollision();
 					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 
 					if (!delayMovementAfterAirCannonSwitchCollisionTimer.TimerStarted && haveShoesMovedToADifferentTile)
@@ -155,6 +166,7 @@ namespace customAnimation
 				}
 				else
 				{
+					resetMovementModificationsDueToAirCollision();
 					position.X = Level.tiles[y, x].Position.X + Level.tiles[y, x].Texture.Width;
 					checkIfShoesCollidedWithTileViaSpring();
 					checkIfShoesCollidedWithTileViaLauncher();
@@ -164,41 +176,50 @@ namespace customAnimation
 			{
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
+					resetMovementModificationsDueToAirCollision();
 					prepareMovementDueToSpringCollision(State.Decending); // Why is this passing in Decending?
 				}
 				else if (Level.tiles[y, x].IsLauncher)
 				{
+					resetMovementModificationsDueToAirCollision();
 					prepareMovementDueToLauncherCollision(x, y, false);
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
+					resetMovementModificationsDueToAirCollision();
 					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 				}
 				else
 				{
+					resetMovementModificationsDueToAirCollision();
 					position.Y = Level.tiles[y, x].Position.Y + Level.tiles[y, x].Texture.Height + 2;
 					velocity.Y = -1f;
 					isFalling = true;
 					checkIfShoesCollidedWithTileViaLauncher();
+					airsShoesHasCollidedWith.Clear();
 				}
 			}
 			else if (currentState == State.Decending)
 			{
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
+					resetMovementModificationsDueToAirCollision();
 					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
 					prepareMovementDueToSpringCollision(currentState);
 				}
 				else if (Level.tiles[y, x].IsLauncher)
 				{
+					resetMovementModificationsDueToAirCollision();
 					prepareMovementDueToLauncherCollision(x, y, false);
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
+					resetMovementModificationsDueToAirCollision();
 					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 				}
 				else
 				{
+					resetMovementModificationsDueToAirCollision();
 					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
 					spriteSpeed = 300f;
 					isJumping = false;
@@ -394,6 +415,9 @@ namespace customAnimation
 			// Have the Shoes ascend from jumping if they haven't started falling yet.
 			haveShoesAscendFromJumpOrFallFromGravity(delta);
 
+			applyHorizontalMovementDueToAirCannonIfNecessary();
+			clearAirsThatShoesCollidedWithIfPossible();
+
 			// If the Shoes have collided with a Spring, then apply movement from the Spring over time.
 			checkIfShoesCanBounceFromSpring(delta);
 
@@ -455,6 +479,7 @@ namespace customAnimation
 			// Allow movement if the player has pressed the correct key to move the Shoes, and the Shoes are allowed to move after colliding with a Spring, and the Shoes aren't locked into a Launcher.
 			if (newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision)
 			{
+				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
 				position.X += velocity.X * delta;
 
@@ -473,6 +498,7 @@ namespace customAnimation
 			}
 			if (newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision)
 			{
+				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
 				position.X -= velocity.X * delta;
 
@@ -507,12 +533,12 @@ namespace customAnimation
 		/// <summary>
 		/// Have the Shoes ascend if the Shoes are jumping over time.
 		/// </summary>
-		/// <remarks>This method only runs as the Shoes are jumping. That is, as they are ascending. Once the short hop is over, or the apex of the jump is reached, handleGravity takes over.</remarks>
+		/// <remarks>This method only runs as the Shoes are jumping. That is, as they are ascending. Once the short hop is over, or the apex of the jump is reached, doGravity takes over.</remarks>
 		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
 		private void doPlayerJump(float delta)
 		{
 			// The jump key was down last frame, but in the current frame it's not down. Begin descent. This is for short hops.
-			if (!newKeyboardState.IsKeyDown(up) && oldKeyboardState.IsKeyDown(up) && !isFalling && velocity.Y < 0f)
+			if (!newKeyboardState.IsKeyDown(up) && oldKeyboardState.IsKeyDown(up) && !isFalling && velocity.Y < 0f && !haveShoesCollidedWithAnAir)
 			{
 				velocity.Y = 0f;
 				isFalling = true;
@@ -578,6 +604,7 @@ namespace customAnimation
 				else if (Level.tiles[(int)TileArrayCoordinates.X, (int)TileArrayCoordinates.Y].IsLauncher)
 				{
 					isFalling = false;
+					resetMovementModificationsDueToAirCollision();
 					prepareMovementDueToLauncherCollision((int)TileArrayCoordinates.Y, (int)TileArrayCoordinates.X, true); // I pass the coordinates in backwards because I screwed up when I originally made did Level/Tile creation.
 				}
 				else
@@ -950,6 +977,80 @@ namespace customAnimation
 				delayMovementAfterAirCannonSwitchCollisionTimer.stopTimer();
 				movementLockedDueToAirCannonSwitchCollision = false;
 			}
+		}
+
+		public void setVelocityUponAirCollision(Char airCannonRepresentation)
+		{
+			haveShoesCollidedWithAnAir = true;
+
+			if (airCannonRepresentation == 'Q')
+			{
+				velocity.X -= 2f;
+				velocity.Y -= 2f;
+			}
+			else if (airCannonRepresentation == 'W')
+			{
+				velocity.Y -= 2f;
+			}
+			else if (airCannonRepresentation == 'E')
+			{
+				horizontalVelocityDueToAirCollision = 5f;
+				velocity.Y -= 5f;
+			}
+			else if (airCannonRepresentation == 'A')
+			{
+				velocity.X -= 2f;
+			}
+			else if (airCannonRepresentation == 'D')
+			{
+				velocity.X += 2f;
+			}
+			else if (airCannonRepresentation == 'Z')
+			{
+				velocity.X -= 2f;
+				velocity.Y += 2f;
+			}
+			else if (airCannonRepresentation == 'X')
+			{
+				velocity.Y += 2f;
+			}
+			else if (airCannonRepresentation == 'C')
+			{
+				velocity.X += 2f;
+				velocity.Y += 2f;
+			}
+		}
+
+		private void applyHorizontalMovementDueToAirCannonIfNecessary()
+		{
+			if (horizontalVelocityDueToAirCollision != 0f)
+			{
+				position.X += horizontalVelocityDueToAirCollision;
+
+				if (horizontalVelocityDueToAirCollision > 0)
+				{
+					updateRectangles(1, 0);
+					handleCollisions(State.RunningRight);
+					changeState(State.RunningRight);
+				}
+				else
+				{
+					updateRectangles(-1, 0);
+					handleCollisions(State.RunningLeft);
+					changeState(State.RunningLeft);
+				}	
+			}
+		}
+
+		private void clearAirsThatShoesCollidedWithIfPossible()
+		{
+			
+		}
+
+		private void resetMovementModificationsDueToAirCollision()
+		{
+			horizontalVelocityDueToAirCollision = 0f;
+			haveShoesCollidedWithAnAir = false;
 		}
 
 		// ******************
