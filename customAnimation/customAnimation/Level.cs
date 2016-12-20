@@ -35,8 +35,8 @@ namespace customAnimation
 		public Rectangle goalRectangle;
 
 		// Starts at 0.
-		int currentLevel = -1;
-		int totalLevels = 3;
+		public int currentLevel = -1;
+		int totalLevels = 4;
 
 		public string debug;
 
