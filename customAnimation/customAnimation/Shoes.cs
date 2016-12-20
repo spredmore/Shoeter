@@ -45,12 +45,12 @@ namespace customAnimation
 		private int angleInDegreesOfLauncherShoesIsUsing;			// Stores the coordinates of the Launcher Tile from the level. Used to launch the Shoes at the correct angle.
 		private bool shoesAreCurrentlyMovingDueToLauncher = false;	// Says whether or not the Shoes are moving due to being launched from a Launcher. 
 
-		public List<Air> airsShoesHasCollidedWith = new List<Air>();
-		private float horizontalVelocityDueToAirCollision = 0f;
+		public List<Air> airsShoesHasCollidedWith = new List<Air>();			// The List of Airs that the Shoes are colliding with.
+		private float horizontalVelocityDueToAirCollision = 0f;					// Stores the horizontal velocity due to using an Air Cannon.
 		private Timer delayMovementAfterAirCannonSwitchCollisionTimer;			// Delays movement upon Air Cannon Switch collision so that activating Switches is easier.
 		private Boolean movementLockedDueToAirCannonSwitchCollision = false;	// Locks movement for the Shoes upon Air Cannon Switch collision.
 		private Boolean haveShoesMovedToADifferentTile = false;					// Says whether or not the Shoes have moved to a different tile after an Air Cannon Switch collision.
-		private Boolean haveShoesCollidedWithAnAir = false;
+		private Boolean haveShoesCollidedWithAnAir = false;						// Says whether or not the Shoes have collided with an Air or not. Used to prevent jumping while the Shoes are moving due to using an Air Cannon.
 
 		private bool isGravityOn = true;							// Flag to use gravity or not.
 
@@ -415,8 +415,8 @@ namespace customAnimation
 			// Have the Shoes ascend from jumping if they haven't started falling yet.
 			haveShoesAscendFromJumpOrFallFromGravity(delta);
 
+			// Apply horizontal velocity due to using an Air Cannon if neccesary.
 			applyHorizontalMovementDueToAirCannonIfNecessary();
-			clearAirsThatShoesCollidedWithIfPossible();
 
 			// If the Shoes have collided with a Spring, then apply movement from the Spring over time.
 			checkIfShoesCanBounceFromSpring(delta);
@@ -609,6 +609,7 @@ namespace customAnimation
 				}
 				else
 				{
+					resetMovementModificationsDueToAirCollision();
 					velocity.Y = 0f;
 					isFalling = false;
 					shoesAreCurrentlyMovingDueToLauncher = false;
@@ -979,14 +980,18 @@ namespace customAnimation
 			}
 		}
 
+		/// <summary>
+		/// Sets the horizontal velocity for Air Cannon movement based on what kind of Air Cannon was used.
+		/// </summary>
+		/// <param name="airCannonRepresentation">The tile representation of the Air Cannon. Used to know how to set velocity correctly.</param>
 		public void setVelocityUponAirCollision(Char airCannonRepresentation)
 		{
 			haveShoesCollidedWithAnAir = true;
 
 			if (airCannonRepresentation == 'Q')
 			{
-				velocity.X -= 2f;
-				velocity.Y -= 2f;
+				horizontalVelocityDueToAirCollision -= 5f;
+				velocity.Y -= 5f;
 			}
 			else if (airCannonRepresentation == 'W')
 			{
@@ -999,28 +1004,31 @@ namespace customAnimation
 			}
 			else if (airCannonRepresentation == 'A')
 			{
-				velocity.X -= 2f;
+				horizontalVelocityDueToAirCollision -= 5f;
 			}
 			else if (airCannonRepresentation == 'D')
 			{
-				velocity.X += 2f;
+				horizontalVelocityDueToAirCollision += 5f;
 			}
 			else if (airCannonRepresentation == 'Z')
 			{
-				velocity.X -= 2f;
-				velocity.Y += 2f;
+				horizontalVelocityDueToAirCollision -= 5f;
+				velocity.Y += 5f;
 			}
 			else if (airCannonRepresentation == 'X')
 			{
-				velocity.Y += 2f;
+				velocity.Y += 5f;
 			}
 			else if (airCannonRepresentation == 'C')
 			{
-				velocity.X += 2f;
-				velocity.Y += 2f;
+				horizontalVelocityDueToAirCollision += 5f;
+				velocity.Y += 5f;
 			}
 		}
 
+		/// <summary>
+		/// Applies horizontal movement due to using an Air Cannon over time.
+		/// </summary>
 		private void applyHorizontalMovementDueToAirCannonIfNecessary()
 		{
 			if (horizontalVelocityDueToAirCollision != 0f)
@@ -1042,11 +1050,29 @@ namespace customAnimation
 			}
 		}
 
-		private void clearAirsThatShoesCollidedWithIfPossible()
+		/// <summary>
+		/// Removes Airs that the Shoes are no longer colliding with from the list of Airs being collided with.
+		/// </summary>
+		public void clearAirsThatShoesCollidedWithIfPossible()
 		{
-			
+			List<Air> airsThatShoesAreNoLongerCollidingWith = new List<Air>();
+			foreach (Air air in airsShoesHasCollidedWith)
+			{
+				if (!air.RotatedRect.Intersects(new RotatedRectangle(PositionRect, 0.0f)))
+				{
+					airsThatShoesAreNoLongerCollidingWith.Add(air);
+				}
+			}
+
+			foreach (Air air in airsThatShoesAreNoLongerCollidingWith)
+			{
+				airsShoesHasCollidedWith.Remove(air);
+			}
 		}
 
+		/// <summary>
+		/// Stops horizontal movement due to using an Air Cannon.
+		/// </summary>
 		private void resetMovementModificationsDueToAirCollision()
 		{
 			horizontalVelocityDueToAirCollision = 0f;

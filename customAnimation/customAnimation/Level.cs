@@ -35,7 +35,7 @@ namespace customAnimation
 		public Rectangle goalRectangle;
 
 		// Starts at 0.
-		int currentLevel = 0;
+		int currentLevel = -1;
 		int totalLevels = 3;
 
 		public string debug;
@@ -63,7 +63,7 @@ namespace customAnimation
 			}
 			else
 			{
-				currentLevel = 1;
+				currentLevel = 0;
 			}
 
 			// This array will store a level. Each element in the array will be
@@ -78,8 +78,6 @@ namespace customAnimation
 			lines = System.IO.File.ReadAllLines("Content/Levels/" + currentLevel.ToString() + ".txt");
 
 			int length = lines.Length;
-
-			debug = numberOfTilesInRow.ToString();
 
 			// The outer loop goes through the columns.
 			for (int column = 0; column < numberOfTileColumns; column++)

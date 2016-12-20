@@ -87,20 +87,7 @@ namespace customAnimation
 				}
 			}
 
-			List<Air> airsThatShoesAreNoLongerCollidingWith =  new List<Air>();
-			foreach(Air air in shoes.airsShoesHasCollidedWith)
-			{
-				if(!air.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)))
-				{
-					airsThatShoesAreNoLongerCollidingWith.Add(air);
-					//airsThatShoesAreNoLongerCollidingWith.Remove(air);
-				}
-			}
-
-			foreach (Air air in airsThatShoesAreNoLongerCollidingWith)
-			{
-				shoes.airsShoesHasCollidedWith.Remove(air);
-			}
+			shoes.clearAirsThatShoesCollidedWithIfPossible();
 		}
 
 		/// <summary>

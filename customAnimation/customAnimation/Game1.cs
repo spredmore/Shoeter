@@ -104,15 +104,6 @@ namespace customAnimation
 			foreach(Air air in Air.allAirs)
 			{
 				air.Update(gameTime, ref shoes, ref guy);
-
-				if (air.RotatedRect.Intersects(mouseRect))
-				{
-					debug = "MOUSE COLLISION | " + mouseRect.Location.ToString();
-				}
-				else
-				{
-					debug = "NO MOUSE COLLISION | " + mouseRect.Location.ToString();
-				}
 			}
 
 			base.Update(gameTime);
