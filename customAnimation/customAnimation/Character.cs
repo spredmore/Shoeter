@@ -518,7 +518,7 @@ namespace customAnimation
 			{
 				for (int x = leftTile; x <= rightTile; ++x)
 				{
-					if ((x < 0 && x > 79 && y < 0 & y > 44) && PositionRect.Intersects(Level.tiles[y, x].SourceRect))
+					if ((x > 0 && x < 79 && y > 0 & y < 44) && PositionRect.Intersects(Level.tiles[y, x].SourceRect))
 					{
 						currentTileCollidingWith = Level.tiles[y, x];
 						tileCollRect = Level.tiles[y, x].SourceRect;
