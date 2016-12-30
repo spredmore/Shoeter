@@ -32,6 +32,7 @@ namespace customAnimation
 		private Char airCannonRepresentation;	// Denotes what kind of Air Cannon the Air is coming out of.
 
 		public static string debug;
+		public static string debug2;
 
 		/// <summary>
 		/// Constructor for the Air class.
@@ -58,6 +59,7 @@ namespace customAnimation
 			airCannonRepresentation = type;
 
 			debug = "";
+			debug2 = "";
 		}
 
 		/// <summary>
@@ -294,11 +296,11 @@ namespace customAnimation
 		{
 			if ((tileCharacterCurrentlyCollidingWith != null && tileCharacterPreviouslyCollidedWith != null) && !tileCharacterCurrentlyCollidingWith.IsAirCannonSwitch && tileCharacterPreviouslyCollidedWith.IsAirCannonSwitch)
 			{
-				if(guy != null)
+				if(guy != null && shoes == null)
 				{
 					guy.airsGuyHasCollidedWith.Clear();
 				}
-				else if(shoes != null)
+				else if(shoes != null && guy == null)
 				{
 					shoes.airsShoesHasCollidedWith.Clear();
 				}
@@ -308,37 +310,44 @@ namespace customAnimation
 					Air.areQCannonsOn = false;
 					Air.turnOffSpecificSetOfCannons('Q');
 				}
-				else if (Air.areWCannonsOn)
+				
+				if (Air.areWCannonsOn)
 				{
 					Air.areWCannonsOn = false;
 					Air.turnOffSpecificSetOfCannons('W');
 				}
-				else if (Air.areECannonsOn)
+				
+				if (Air.areECannonsOn)
 				{
 					Air.areECannonsOn = false;
 					Air.turnOffSpecificSetOfCannons('E');
 				}
-				else if (Air.areACannonsOn)
+				
+				if (Air.areACannonsOn)
 				{
 					Air.areACannonsOn = false;
 					Air.turnOffSpecificSetOfCannons('A');
 				}
-				else if (Air.areDCannonsOn)
+				
+				if (Air.areDCannonsOn)
 				{
 					Air.areDCannonsOn = false;
 					Air.turnOffSpecificSetOfCannons('D');
 				}
-				else if (Air.areZCannonsOn)
+				
+				if (Air.areZCannonsOn)
 				{
 					Air.areZCannonsOn = false;
 					Air.turnOffSpecificSetOfCannons('Z');
 				}
-				else if (Air.areXCannonsOn)
+				
+				if (Air.areXCannonsOn)
 				{
 					Air.areXCannonsOn = false;
 					Air.turnOffSpecificSetOfCannons('X');
 				}
-				else if (Air.areCCannonsOn)
+				
+				if (Air.areCCannonsOn)
 				{
 					Air.areCCannonsOn = false;
 					Air.turnOffSpecificSetOfCannons('C');

@@ -78,7 +78,7 @@ namespace customAnimation
 
 			delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
 			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
-			delayMovementAfterAirCannonSwitchCollisionTimer = new Timer(1f);
+			delayMovementAfterAirCannonSwitchCollisionTimer = new Timer(0.5f);
 			angleInDegreesOfLauncherShoesIsUsing = 0;
 		}
 
@@ -995,7 +995,7 @@ namespace customAnimation
 			}
 			else if (airCannonRepresentation == 'W')
 			{
-				velocity.Y -= 2f;
+				velocity.Y -= 15f;
 			}
 			else if (airCannonRepresentation == 'E')
 			{

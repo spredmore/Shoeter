@@ -263,13 +263,13 @@ namespace customAnimation
 		/// <returns>The angle at which the Launcher should launch the Guy/Shoes, depending on which Launcher is passed in.</returns>
 		public static int getAngleInDegrees(Tile tile)
 		{
-			if (tile.TileRepresentation == '1' || tile.TileRepresentation == '!' || tile.TileRepresentation == 'z' || tile.TileRepresentation == 'Z') return 315;			// Down Left
+			if (tile.TileRepresentation == '1' || tile.TileRepresentation == '!' || tile.TileRepresentation == 'z' || tile.TileRepresentation == 'Z') return 315;		// Down Left
 			else if (tile.TileRepresentation == '2' || tile.TileRepresentation == '@' || tile.TileRepresentation == 'x' || tile.TileRepresentation == 'X') return 270;	// Down
 			else if (tile.TileRepresentation == '3' || tile.TileRepresentation == '#' || tile.TileRepresentation == 'c' || tile.TileRepresentation == 'C') return 225;	// Down Right
-			else if (tile.TileRepresentation == '4' || tile.TileRepresentation == '$' || tile.TileRepresentation == 'a' || tile.TileRepresentation == 'A') return 0;		// Left
+			else if (tile.TileRepresentation == '4' || tile.TileRepresentation == '$' || tile.TileRepresentation == 'a' || tile.TileRepresentation == 'A') return 0;	// Left
 			else if (tile.TileRepresentation == '6' || tile.TileRepresentation == '^' || tile.TileRepresentation == 'd' || tile.TileRepresentation == 'D') return 180;	// Right
-			else if (tile.TileRepresentation == '7' || tile.TileRepresentation == '&' || tile.TileRepresentation == 'q' || tile.TileRepresentation == 'Q') return 45;		// Up Left
-			else if (tile.TileRepresentation == '8' || tile.TileRepresentation == '*' || tile.TileRepresentation == 'w' || tile.TileRepresentation == 'W') return 90;		// Up
+			else if (tile.TileRepresentation == '7' || tile.TileRepresentation == '&' || tile.TileRepresentation == 'q' || tile.TileRepresentation == 'Q') return 45;	// Up Left
+			else if (tile.TileRepresentation == '8' || tile.TileRepresentation == '*' || tile.TileRepresentation == 'w' || tile.TileRepresentation == 'W') return 90;	// Up
 			else if (tile.TileRepresentation == '9' || tile.TileRepresentation == '(' || tile.TileRepresentation == 'e' || tile.TileRepresentation == 'E') return 135;	// Up Right
 			else return -1;
 		}

@@ -596,12 +596,12 @@ namespace customAnimation
 		{
 			if (airCannonRepresentation == 'Q')
 			{
-				velocity.X -= 2f;
-				velocity.Y -= 2f;
+				velocity.X -= 10f;
+				velocity.Y -= 10f;
 			}
 			else if (airCannonRepresentation == 'W')
 			{
-				velocity.Y -= 2f;
+				velocity.Y -= 10f;
 			}
 			else if (airCannonRepresentation == 'E')
 			{
@@ -610,25 +610,25 @@ namespace customAnimation
 			}
 			else if (airCannonRepresentation == 'A')
 			{
-				velocity.X -= 2f;
+				velocity.X -= 10f;
 			}
 			else if (airCannonRepresentation == 'D')
 			{
-				velocity.X += 2f;
+				velocity.X += 10f;
 			}
 			else if (airCannonRepresentation == 'Z')
 			{
-				velocity.X -= 2f;
-				velocity.Y += 2f;
+				velocity.X -= 10f;
+				velocity.Y += 10f;
 			}
 			else if (airCannonRepresentation == 'X')
 			{
-				velocity.Y += 2f;
+				velocity.Y += 10f;
 			}
 			else if (airCannonRepresentation == 'C')
 			{
-				velocity.X += 2f;
-				velocity.Y += 2f;
+				velocity.X += 10f;
+				velocity.Y += 10f;
 			}
 		}
 
