@@ -17,6 +17,9 @@ namespace customAnimation
 	{
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch spriteBatch;
+		private KeyboardState oldKeyboardState;
+		private KeyboardState newKeyboardState;
+		private Boolean displayInterface;
 
 		// The shoes
 		Shoes shoes;
@@ -43,7 +46,8 @@ namespace customAnimation
 			Content.RootDirectory = "Content";
 
 			graphics.PreferredBackBufferHeight = 720;
-			graphics.PreferredBackBufferWidth = 1280;      
+			graphics.PreferredBackBufferWidth = 1280;
+			displayInterface = false;
 		}
 
 		protected override void Initialize()
@@ -88,6 +92,8 @@ namespace customAnimation
 
 		protected override void Update(GameTime gameTime)
 		{
+			newKeyboardState = Keyboard.GetState();
+
 			// Allows the game to exit
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
 			{
@@ -105,6 +111,21 @@ namespace customAnimation
 			{
 				air.Update(gameTime, ref shoes, ref guy);
 			}
+
+			// Hide and display the interface.
+			if (!newKeyboardState.IsKeyDown(Keys.F10) && oldKeyboardState.IsKeyDown(Keys.F10))
+			{
+				if (displayInterface)
+				{
+					displayInterface = false;
+				}
+				else
+				{
+					displayInterface = true;
+				}
+			}
+
+			oldKeyboardState = newKeyboardState;
 
 			base.Update(gameTime);
 		}
@@ -136,26 +157,30 @@ namespace customAnimation
 			// Draw the debug font.
 			spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.Black);
 			spriteBatch.DrawString(debugFont, "Guy - Power (Scroll Wheel): " + guy.powerOfLauncherBeingUsed.ToString(), new Vector2(0, 20), Color.Black);
-			spriteBatch.DrawString(debugFont, "Guy - Gravity (./3): " + guy.gravity.ToString(), new Vector2(0, 40), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes - Air Movement (7/8): " + shoes.airMovementSpeed.ToString(), new Vector2(0, 60), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes - Ground Movement (4/5): " + shoes.groundMovementSpeed.ToString(), new Vector2(0, 80), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes - Jump Impulse (1/2): " + shoes.jumpImpulse.ToString(), new Vector2(0, 100), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes - Gravity (9/6): " + shoes.gravity.ToString(), new Vector2(0, 120), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes - Fall From Tile Rate (/ / -): " + shoes.fallFromTileRate.ToString(), new Vector2(0, 140), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes - Preset (F Keys): " + shoes.preset, new Vector2(0, 160), Color.Black);
-			spriteBatch.DrawString(debugFont, "Interface Linked (F12): " + shoes.interfaceLinked.ToString(), new Vector2(0, 180), Color.Black);
-			spriteBatch.DrawString(debugFont, "Guy Debug: " + guy.debug, new Vector2(0, 200), Color.Black);
-			spriteBatch.DrawString(debugFont, "Guy Debug2: " + guy.debug2, new Vector2(0, 220), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes Debug: " + shoes.debug.ToString(), new Vector2(0, 240), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes Debug2: " + shoes.debug2.ToString(), new Vector2(0, 260), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes Debug3: " + shoes.debug3.ToString(), new Vector2(0, 280), Color.Black);
-			spriteBatch.DrawString(debugFont, "Character Debug: " + Character.charDebug, new Vector2(0, 300), Color.Black);
-			spriteBatch.DrawString(debugFont, "Shoes State: " + shoes.PlayerState.ToString(), new Vector2(0, 320), Color.Black);
-			spriteBatch.DrawString(debugFont, "Guy State: " + guy.PlayerState.ToString(), new Vector2(0, 340), Color.Black);
-			spriteBatch.DrawString(debugFont, "AnimatedSprite Debug: " + AnimatedSprite.debug, new Vector2(0, 360), Color.Black);
-			spriteBatch.DrawString(debugFont, "Air Debug: " + Air.debug, new Vector2(0, 380), Color.Black);
-			spriteBatch.DrawString(debugFont, "Air Debug2: " + Air.debug2, new Vector2(0, 400), Color.Black);
-			spriteBatch.DrawString(debugFont, "Game1 Debug: " + debug, new Vector2(0, 420), Color.Black);
+			
+			if (displayInterface)
+			{
+				spriteBatch.DrawString(debugFont, "Guy - Gravity (./3): " + guy.gravity.ToString(), new Vector2(0, 40), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes - Air Movement (7/8): " + shoes.airMovementSpeed.ToString(), new Vector2(0, 60), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes - Ground Movement (4/5): " + shoes.groundMovementSpeed.ToString(), new Vector2(0, 80), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes - Jump Impulse (1/2): " + shoes.jumpImpulse.ToString(), new Vector2(0, 100), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes - Gravity (9/6): " + shoes.gravity.ToString(), new Vector2(0, 120), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes - Fall From Tile Rate (/ / -): " + shoes.fallFromTileRate.ToString(), new Vector2(0, 140), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes - Preset (F Keys): " + shoes.preset, new Vector2(0, 160), Color.Black);
+				spriteBatch.DrawString(debugFont, "Interface Linked (F12): " + shoes.interfaceLinked.ToString(), new Vector2(0, 180), Color.Black);
+				spriteBatch.DrawString(debugFont, "Guy Debug: " + guy.debug, new Vector2(0, 200), Color.Black);
+				spriteBatch.DrawString(debugFont, "Guy Debug2: " + guy.debug2, new Vector2(0, 220), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes Debug: " + shoes.debug.ToString(), new Vector2(0, 240), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes Debug2: " + shoes.debug2.ToString(), new Vector2(0, 260), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes Debug3: " + shoes.debug3.ToString(), new Vector2(0, 280), Color.Black);
+				spriteBatch.DrawString(debugFont, "Character Debug: " + Character.charDebug, new Vector2(0, 300), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes State: " + shoes.PlayerState.ToString(), new Vector2(0, 320), Color.Black);
+				spriteBatch.DrawString(debugFont, "Guy State: " + guy.PlayerState.ToString(), new Vector2(0, 340), Color.Black);
+				spriteBatch.DrawString(debugFont, "AnimatedSprite Debug: " + AnimatedSprite.debug, new Vector2(0, 360), Color.Black);
+				spriteBatch.DrawString(debugFont, "Air Debug: " + Air.debug, new Vector2(0, 380), Color.Black);
+				spriteBatch.DrawString(debugFont, "Air Debug2: " + Air.debug2, new Vector2(0, 400), Color.Black);
+				spriteBatch.DrawString(debugFont, "Game1 Debug: " + debug, new Vector2(0, 420), Color.Black);
+			}
 
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), mouseRect, Color.White);
 			
