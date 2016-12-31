@@ -36,7 +36,7 @@ namespace customAnimation
 
 		// Starts at 0.
 		public int currentLevel = -1;
-		int totalLevels = 4;
+		int totalLevels = 6;
 
 		public string debug;
 
@@ -56,6 +56,7 @@ namespace customAnimation
 		{
 			impassableTileRecs = new List<Rectangle>();
 			impassableTilePos = new List<Vector2>();
+			Air.resetAllAirCannons();
 
 			if (currentLevel + 1 <= totalLevels)
 			{

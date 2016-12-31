@@ -378,5 +378,29 @@ namespace customAnimation
 				allAirs.Remove(airToRemove);
 			}
 		}
+
+		/// <summary>
+		/// Resets all of the Air Cannons.
+		/// </summary>
+		public static void resetAllAirCannons()
+		{
+			Air.allAirs.Clear();
+			Air.allQCannons.Clear();
+			Air.allWCannons.Clear();
+			Air.allECannons.Clear();
+			Air.allACannons.Clear();
+			Air.allDCannons.Clear();
+			Air.allZCannons.Clear();
+			Air.allXCannons.Clear();
+			Air.allCCannons.Clear();
+			Air.areQCannonsOn = false;
+			Air.areWCannonsOn = false;
+			Air.areECannonsOn = false;
+			Air.areACannonsOn = false;
+			Air.areDCannonsOn = false;
+			Air.areZCannonsOn = false;
+			Air.areXCannonsOn = false;
+			Air.areCCannonsOn = false;
+		}
 	}
 }

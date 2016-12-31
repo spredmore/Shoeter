@@ -78,7 +78,7 @@ namespace customAnimation
 
 			delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
 			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
-			delayMovementAfterAirCannonSwitchCollisionTimer = new Timer(0.5f);
+			delayMovementAfterAirCannonSwitchCollisionTimer = new Timer(0.25f);
 			angleInDegreesOfLauncherShoesIsUsing = 0;
 		}
 
@@ -823,7 +823,31 @@ namespace customAnimation
 			{
 				position.Y = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.Y - 48;
 				position.Y += 32f;
-				position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X - 8;
+
+				// If the Launcher is a Left or Right Launcher, adjust the position of the Shoes so that they don't collide with the Launcher after they've been launched.
+				if (angleInDegreesOfLauncherShoesIsUsing == 0)
+				{
+					position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X - 24;
+				}
+				else if (angleInDegreesOfLauncherShoesIsUsing == 180)
+				{
+					position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X + 8;
+				}
+				else
+				{
+					position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X - 8;
+				}
+			}
+			else if (shoesFellOntoLauncher)
+			{
+				if (angleInDegreesOfLauncherShoesIsUsing == 0)
+				{
+					position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X - 24;
+				}
+				else if (angleInDegreesOfLauncherShoesIsUsing == 180)
+				{
+					position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X + 8;
+				}
 			}
 
 			// If the Shoes collided with a Launcher due to being launched, stop Launcher movement so that the Shoes can be locked onto the current Launcher to await being launched.
