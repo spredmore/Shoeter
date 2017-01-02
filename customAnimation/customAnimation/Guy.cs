@@ -680,6 +680,7 @@ namespace customAnimation
 		{
 			if (PositionRect.Intersects(shoes.PositionRect) && !delayCollisionWithShoesAndGuy && !areGuyAndShoesCurrentlyLinked)
 			{
+				shoes.velocity = new Vector2(0f, 0f);
 				shoes.Position = new Vector2(Position.X, Position.Y + 40);
 				velocity = new Vector2(0f, 0f);
 				delayCollisionWithShoesAndGuy = true;
