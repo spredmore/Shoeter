@@ -52,7 +52,8 @@ namespace customAnimation
 		private Boolean haveShoesMovedToADifferentTile = false;					// Says whether or not the Shoes have moved to a different tile after an Air Cannon Switch collision.
 		private Boolean haveShoesCollidedWithAnAir = false;						// Says whether or not the Shoes have collided with an Air or not. Used to prevent jumping while the Shoes are moving due to using an Air Cannon.
 
-		private bool isGravityOn = true;							// Flag to use gravity or not.
+		public Boolean stopPlayerInput = false;	// Used to stop player input once the Shoes have collided with the Guy initially. Prevents clipping through tiles.
+		private bool isGravityOn = true;		// Flag to use gravity or not.
 
 		public Shoes(Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
@@ -476,8 +477,14 @@ namespace customAnimation
 		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
 		private void moveShoesLeftOrRightIfPossible(float delta)
 		{
+			// If the Shoes have just collided with the Guy, prevent movement until the player presses a movement key again. Prevents clipping through tiles.
+			if (stopPlayerInput && ((newKeyboardState.IsKeyUp(right) && oldKeyboardState.IsKeyDown(right)) || (newKeyboardState.IsKeyUp(left) && oldKeyboardState.IsKeyDown(left))))
+			{
+				stopPlayerInput = false;
+			}
+
 			// Allow movement if the player has pressed the correct key to move the Shoes, and the Shoes are allowed to move after colliding with a Spring, and the Shoes aren't locked into a Launcher.
-			if (newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision)
+			if (newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
 			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
@@ -496,7 +503,7 @@ namespace customAnimation
 				handleCollisions(State.RunningRight);
 				changeState(State.RunningRight);
 			}
-			if (newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision)
+			if (newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
 			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
