@@ -38,6 +38,8 @@ namespace customAnimation
 
 		Rectangle mouseRect;
 
+		AnimatedSprite testAnimatedSprite;
+
 		String debug;
 
 		public Game1()
@@ -47,7 +49,7 @@ namespace customAnimation
 
 			graphics.PreferredBackBufferHeight = 720;
 			graphics.PreferredBackBufferWidth = 1280;
-			displayInterface = false;
+			displayInterface = true;
 		}
 
 		protected override void Initialize()
@@ -69,7 +71,7 @@ namespace customAnimation
 			level.LoadLevel();
 		   
 			// Create the Shoes.
-			shoes = new Shoes(Content.Load<Texture2D>("Sprites/Shoes32x48"), Character.State.Idle, 0, 32, 48, 0, spriteBatch, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth, Keys.W, Keys.A, Keys.S, Keys.D, Content);
+			shoes = new Shoes(level.getPlayerStartingPosition(), Content.Load<Texture2D>("Sprites/Shoes32x48"), Character.State.Idle, 0, 32, 48, 0, spriteBatch, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth, Keys.W, Keys.A, Keys.S, Keys.D, Content);
 
 			// Set the initial position of the player.
 			shoes.Position = level.getPlayerStartingPosition();
@@ -79,6 +81,8 @@ namespace customAnimation
 
 			// Load the debug font. We use this for debugging purposes.
 			debugFont = Content.Load<SpriteFont>("debugFont");
+
+			testAnimatedSprite = new AnimatedSprite(Content.Load<Texture2D>("Sprites/GuyIdleWithShoes"), new Vector2(25, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
 
 			MouseState currentMouseState;
 			currentMouseState = Mouse.GetState();
@@ -126,6 +130,8 @@ namespace customAnimation
 			}
 
 			oldKeyboardState = newKeyboardState;
+
+			testAnimatedSprite.Animate(gameTime);
 
 			base.Update(gameTime);
 		}
@@ -183,7 +189,9 @@ namespace customAnimation
 			}
 
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), mouseRect, Color.White);
-			
+
+			testAnimatedSprite.Draw();
+
 			spriteBatch.End();
 
 			base.Draw(gameTime);

@@ -56,6 +56,7 @@ namespace customAnimation
 			this.PositionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
 			this.Rotation = rotation;
 			this.RotatedRect = new RotatedRectangle(this.PositionRect, rotation);
+			this.interval = 100f;
 			airCannonRepresentation = type;
 
 			debug = "";

@@ -18,7 +18,7 @@ namespace customAnimation
 		SpriteBatch spriteBatch;
 		Texture2D spriteTexture;    // The image of our AnimatedSprite.
 		float timer = 0f;           // The amount of time it takes before the sprite moves to the next frame.
-		float interval = 100f;      // The amount of time a frame is shown on screen.
+		public float interval;		// The amount of time a frame is shown on screen.
 		int currentFrame = 0;       // The current frame we are drawing.
 		int spriteWidth = 64;       // The width of the individual sprite.
 		int spriteHeight = 64;      // The height of the individual sprite.
@@ -138,6 +138,12 @@ namespace customAnimation
 			set { rotation = value; }
 		}
 
+		public float Interval
+		{
+			get { return interval; }
+			set { interval = value; }
+		}
+
 		/// <summary>
 		/// Default constructor for the AnimatedSprite.
 		/// </summary>
@@ -154,7 +160,7 @@ namespace customAnimation
 		/// <param name="spriteHeight"></param>
 		/// <param name="totalFrames"></param>
 		/// <param name="spriteBatch"></param>
-		public AnimatedSprite(Texture2D texture, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch)
+		public AnimatedSprite(Texture2D texture, Vector2 position, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, float interval, Single initialRotation)
 		{
 			// When a new animated sprite is created, these variables must be initialized.
 
@@ -164,6 +170,10 @@ namespace customAnimation
 			this.spriteHeight = spriteHeight;   // The height of the individual sprite.
 			this.totalFrames = totalFrames;     // The total amount of frames in the sprite sheet.
 			this.spriteBatch = spriteBatch;     // The spriteBatch that we will use to draw the AnimatedSprite.
+			this.interval = interval;			// The amount of time it takes before the sprite moves to the next frame.
+			this.position = position;
+			this.positionRect = new Rectangle((int)Position.X, (int)Position.Y, spriteWidth, spriteHeight);
+			this.rotatedRect = new RotatedRectangle(PositionRect, initialRotation);
 		}
 
 		/// <summary>
@@ -174,6 +184,7 @@ namespace customAnimation
 		{
 			// Get a rectangle around the current frame.
 			sourceRect = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
+			debug = sourceRect.ToString();
 
 			// Increment the timer to see if the AnimatedSprite can move onto the next frame.
 			timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
