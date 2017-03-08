@@ -55,7 +55,7 @@ namespace customAnimation
 		public Boolean stopPlayerInput = false;	// Used to stop player input once the Shoes have collided with the Guy initially. Prevents clipping through tiles.
 		private bool isGravityOn = true;		// Flag to use gravity or not.
 
-		public Shoes(Vector2 startingPosition, Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
+		public Shoes(Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
 			this.state = state;                 // The initial state of the player.
@@ -71,9 +71,6 @@ namespace customAnimation
 			this.up = up;
 			this.down = down;
 			this.content = content;
-
-			this.position = startingPosition;
-			this.Sprite = getAnimatedSpriteBasedOnState(state);
 
 			gravity = 30f;
 			debug = "";
@@ -357,24 +354,6 @@ namespace customAnimation
 				spriteHeight = 16;
 				Texture = content.Load<Texture2D>("Sprites/Shoes32x48_Top");
 				position.Y += 32f;
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="state"></param>
-		/// <param name="spritePosition"></param>
-		/// <returns></returns>
-		private AnimatedSprite getAnimatedSpriteBasedOnState(State state)
-		{
-			if (state == State.Idle)
-			{
-				return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithShoes"), Position, 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
-			}
-			else
-			{
-				return null;
 			}
 		}
 

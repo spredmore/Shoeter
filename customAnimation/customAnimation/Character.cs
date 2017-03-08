@@ -15,7 +15,6 @@ namespace customAnimation
 		protected GameTime gameTime;
 
 		// Animation
-		AnimatedSprite sprite;
 		Rectangle sourceRect;   // The rectangle in which the animated sprite will be drawn.
 		float timer = 0f;       // The amount of time it takes before the sprite moves to the next frame.
 		float interval = 100f;  // The amount of time a frame is shown on screen.
@@ -219,12 +218,6 @@ namespace customAnimation
 		{
 			get { return totalFrames; }
 			set { totalFrames = value; }
-		}
-
-		public AnimatedSprite Sprite
-		{
-			get { return sprite; }
-			set { sprite = value; }
 		}
 
 		/// <summary>
