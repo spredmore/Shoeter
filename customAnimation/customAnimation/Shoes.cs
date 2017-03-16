@@ -432,7 +432,7 @@ namespace customAnimation
 			checkIfShoesWantToJump(guy.tileAbove());
 
 			// Move the Shoes if the player has pressed the appropriate key.
-			moveShoesLeftOrRightIfPossible(delta);
+			moveShoesLeftOrRightIfPossible(delta, guy);
 
 			// Have the Shoes ascend from jumping if they haven't started falling yet.
 			haveShoesAscendFromJumpOrFallFromGravity(delta);
@@ -496,7 +496,7 @@ namespace customAnimation
 		/// Move the Shoes if the player has pressed the appropriate key.
 		/// </summary>
 		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
-		private void moveShoesLeftOrRightIfPossible(float delta)
+		private void moveShoesLeftOrRightIfPossible(float delta, Guy guy)
 		{
 			// If the Shoes have just collided with the Guy, prevent movement until the player presses a movement key again. Prevents clipping through tiles.
 			if (stopPlayerInput && ((newKeyboardState.IsKeyUp(right) && oldKeyboardState.IsKeyDown(right)) || (newKeyboardState.IsKeyUp(left) && oldKeyboardState.IsKeyDown(left))))
@@ -510,6 +510,8 @@ namespace customAnimation
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
 				position.X += velocity.X * delta;
+
+				guy.changeSpriteOfTheGuy("Running");
 
 				// Allow the player to take over movement of the Shoes if the Shoes are currently being moved due to a Launcher.
 				if (shoesAreCurrentlyMovingDueToLauncher)
@@ -530,6 +532,8 @@ namespace customAnimation
 				bouncingHorizontally = 0;
 				position.X -= velocity.X * delta;
 
+				guy.changeSpriteOfTheGuy("Running");
+
 				if (shoesAreCurrentlyMovingDueToLauncher)
 				{
 					shoesAreCurrentlyMovingDueToLauncher = false;
@@ -539,6 +543,11 @@ namespace customAnimation
 				updateRectangles(-1, 0);
 				handleCollisions(State.RunningLeft);
 				changeState(State.RunningLeft);
+			}
+
+			if(!newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right))
+			{
+				guy.changeSpriteOfTheGuy("Idle");
 			}
 		}
 

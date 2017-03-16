@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace customAnimation
@@ -184,7 +185,6 @@ namespace customAnimation
 		{
 			// Get a rectangle around the current frame.
 			sourceRect = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
-			debug = sourceRect.ToString();
 
 			// Increment the timer to see if the AnimatedSprite can move onto the next frame.
 			timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -209,11 +209,29 @@ namespace customAnimation
 			}
 		}
 
+		public static AnimatedSprite generateAnimatedSpriteBasedOnState(String state, ContentManager content, SpriteBatch spriteBatch)
+		{
+			if (state == "Idle")
+			{
+				return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithShoes"), new Vector2(25, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
+			}
+			else if(state == "Running")
+			{
+				return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyRunning"), new Vector2(100, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// Draw the sprite
 		/// </summary>
 		public void Draw()
 		{
+			debug = "Position: " + position.ToString();
+			PositionRect = new Rectangle((int)Position.X, (int)Position.Y, spriteWidth, spriteHeight);
+			RotatedRect = new RotatedRectangle(PositionRect, 0f);
+
 			Rectangle aPositionAdjusted = new Rectangle(rotatedRect.X + (rotatedRect.Width / 2), rotatedRect.Y + (rotatedRect.Height / 2), rotatedRect.Width, rotatedRect.Height);
 			spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, Rotation, new Vector2((int)PositionRect.Width / 2, (int)PositionRect.Height / 2), SpriteEffects.None, 0);
 		}

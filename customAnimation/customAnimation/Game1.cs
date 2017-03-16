@@ -39,6 +39,7 @@ namespace customAnimation
 		Rectangle mouseRect;
 
 		AnimatedSprite testAnimatedSprite;
+		AnimatedSprite testAnimatedSprite2;
 
 		String debug;
 
@@ -82,7 +83,8 @@ namespace customAnimation
 			// Load the debug font. We use this for debugging purposes.
 			debugFont = Content.Load<SpriteFont>("debugFont");
 
-			testAnimatedSprite = new AnimatedSprite(Content.Load<Texture2D>("Sprites/GuyIdleWithShoes"), new Vector2(25, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
+			//testAnimatedSprite = new AnimatedSprite(Content.Load<Texture2D>("Sprites/GuyIdleWithShoes"), new Vector2(25, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
+			//testAnimatedSprite2 = new AnimatedSprite(Content.Load<Texture2D>("Sprites/GuyRunning"), new Vector2(100, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
 
 			MouseState currentMouseState;
 			currentMouseState = Mouse.GetState();
@@ -102,7 +104,7 @@ namespace customAnimation
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
 			{
 				this.Exit();
-			}	
+			}
 
 			shoes.Update(gameTime, ref guy);
 			guy.Update(gameTime, ref shoes, ref level);
@@ -131,7 +133,8 @@ namespace customAnimation
 
 			oldKeyboardState = newKeyboardState;
 
-			testAnimatedSprite.Animate(gameTime);
+			//testAnimatedSprite.Animate(gameTime);
+			//testAnimatedSprite2.Animate(gameTime);
 
 			base.Update(gameTime);
 		}
@@ -151,11 +154,12 @@ namespace customAnimation
 			level.Draw(spriteBatch);
 
 			guy.Draw();
+			guy.Sprite.Draw();
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox"), guy.Position, Color.White);
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox2"), guy.FutureRectangleRect, Color.White);
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), guy.TileCollisionRectangle, Color.White);
 
-			shoes.Draw();
+			//shoes.Draw();
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox"), shoes.PositionRect, Color.White);
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox2"), shoes.FutureRectangleRect, Color.White);
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), shoes.TileCollisionRectangle, Color.White);
@@ -163,7 +167,9 @@ namespace customAnimation
 			// Draw the debug font.
 			spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.Black);
 			spriteBatch.DrawString(debugFont, "Guy - Power (Scroll Wheel): " + guy.powerOfLauncherBeingUsed.ToString(), new Vector2(0, 20), Color.Black);
-			
+
+			debug = mouseRect.X.ToString() + " " + mouseRect.Y.ToString();
+
 			if (displayInterface)
 			{
 				spriteBatch.DrawString(debugFont, "Guy - Gravity (./3): " + guy.gravity.ToString(), new Vector2(0, 40), Color.Black);
@@ -190,7 +196,8 @@ namespace customAnimation
 
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), mouseRect, Color.White);
 
-			testAnimatedSprite.Draw();
+			//testAnimatedSprite.Draw();
+			//testAnimatedSprite2.Draw();
 
 			spriteBatch.End();
 

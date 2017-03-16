@@ -60,6 +60,8 @@ namespace customAnimation
 			this.screenWidth = screenWidth;
 			this.content = content;
 
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(State.Idle.ToString(), content, spriteBatch);
+
 			gravity = 10f;
 			debug = "";
 			debug2 = "";
@@ -82,7 +84,9 @@ namespace customAnimation
 		public void Update(GameTime gameTime, ref Shoes shoes, ref Level level)
 		{
 			currentLevel = level;
-			handleAnimation(gameTime);
+			//handleAnimation(gameTime);
+			debug = Position.ToString();
+			Sprite.Animate(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref shoes);
 		}
@@ -331,6 +335,11 @@ namespace customAnimation
 			}
 
 			return false;
+		}
+
+		public void changeSpriteOfTheGuy(String state)
+		{
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch);
 		}
 
 		// ******************
@@ -649,6 +658,7 @@ namespace customAnimation
 			if (!isGuyBeingShot)
 			{
 				Position = new Vector2(positionOfShoes.X, positionOfShoes.Y);
+				Sprite.Position = Position;
 				areGuyAndShoesCurrentlyLinked = true;
 			}
 		}
