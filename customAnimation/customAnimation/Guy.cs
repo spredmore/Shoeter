@@ -60,7 +60,7 @@ namespace customAnimation
 			this.screenWidth = screenWidth;
 			this.content = content;
 
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(State.Idle.ToString(), content, spriteBatch);
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(State.Idle_Right.ToString(), content, spriteBatch);
 
 			gravity = 10f;
 			debug = "";
@@ -102,7 +102,7 @@ namespace customAnimation
 		{
 			if (!delayBetweenLaunchesTimer.TimerStarted)    // Ensures the Guy doesn't use another Launcher too quickly.
 			{
-				if (currentState == State.RunningRight)  
+				if (currentState == State.Running_Right)  
 				{
 					// Allow the Guy to pass through an Air Switch Cannon.
 					if (!Level.tiles[y, x].IsAirCannonSwitch)
@@ -130,7 +130,7 @@ namespace customAnimation
 						delayCollisionWithShoesAndGuy = false;
 					}
 				}
-				else if (currentState == State.RunningLeft)
+				else if (currentState == State.Running_Left)
 				{
 					if (!Level.tiles[y, x].IsAirCannonSwitch)
 					{
@@ -445,14 +445,14 @@ namespace customAnimation
 			if (position.X > previousPosition.X)
 			{
 				updateRectangles(1, 0);
-				handleCollisions(State.RunningRight);
-				changeState(State.RunningRight);
+				handleCollisions(State.Running_Right);
+				changeState(State.Running_Right);
 			}
 			if (position.X < previousPosition.X)
 			{
 				updateRectangles(-1, 0);
-				handleCollisions(State.RunningLeft);
-				changeState(State.RunningLeft);
+				handleCollisions(State.Running_Left);
+				changeState(State.Running_Left);
 			}
 
 			position.Y += velocity.Y;
@@ -491,7 +491,7 @@ namespace customAnimation
 				velocity.Y *= 0.55f;		// Decrease the power of the next bounce.
 				position.Y += velocity.Y;
 			}
-			else if (currentState == State.RunningRight || currentState == State.RunningLeft)
+			else if (currentState == State.Running_Right || currentState == State.Running_Left)
 			{
 				velocity.X *= -1;
 				velocity.X *= 0.55f;

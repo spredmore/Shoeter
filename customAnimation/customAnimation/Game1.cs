@@ -72,7 +72,7 @@ namespace customAnimation
 			level.LoadLevel();
 		   
 			// Create the Shoes.
-			shoes = new Shoes(level.getPlayerStartingPosition(), Content.Load<Texture2D>("Sprites/Shoes32x48"), Character.State.Idle, 0, 32, 48, 0, spriteBatch, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth, Keys.W, Keys.A, Keys.S, Keys.D, Content);
+			shoes = new Shoes(level.getPlayerStartingPosition(), Content.Load<Texture2D>("Sprites/Shoes32x48"), Character.State.Idle_Right, 0, 32, 48, 0, spriteBatch, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth, Keys.W, Keys.A, Keys.S, Keys.D, Content);
 
 			// Set the initial position of the player.
 			shoes.Position = level.getPlayerStartingPosition();

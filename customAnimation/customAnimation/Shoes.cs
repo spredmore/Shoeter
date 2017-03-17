@@ -20,6 +20,9 @@ namespace customAnimation
 		private Keys up;
 		private Keys down;
 
+		// Values are: Running_Left, Running_Right, Idle
+		public State directionShoesAreRunning;
+
 		// These are public so that Game1.draw can see them for debugging.
 		public float airMovementSpeed = 600f;
 		public float groundMovementSpeed = 300f;
@@ -73,7 +76,9 @@ namespace customAnimation
 			this.content = content;
 
 			this.position = startingPosition;
-			this.Sprite = getAnimatedSpriteBasedOnState(state);
+			this.Sprite = getAnimatedSpriteBasedOnState(State.Idle_Right);
+
+			this.directionShoesAreRunning = State.Idle_Right;
 
 			gravity = 30f;
 			debug = "";
@@ -110,7 +115,7 @@ namespace customAnimation
 		/// <param name="x">The X coordinate of the Tile in the level being collided with.</param>
 		protected override void specializedCollision(State currentState, int y, int x)
 		{
-			if (currentState == State.RunningRight)
+			if (currentState == State.Running_Right)
 			{
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
@@ -143,7 +148,7 @@ namespace customAnimation
 					checkIfShoesCollidedWithTileViaLauncher();
 				}
 			}
-			else if (currentState == State.RunningLeft)
+			else if (currentState == State.Running_Left)
 			{
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
@@ -368,9 +373,9 @@ namespace customAnimation
 		/// <returns></returns>
 		private AnimatedSprite getAnimatedSpriteBasedOnState(State state)
 		{
-			if (state == State.Idle)
+			if (state == State.Idle_Right)
 			{
-				return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithShoes"), Position, 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
+				return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithShoes_FacingRight"), Position, 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
 			}
 			else
 			{
@@ -511,8 +516,6 @@ namespace customAnimation
 				bouncingHorizontally = 0;
 				position.X += velocity.X * delta;
 
-				guy.changeSpriteOfTheGuy("Running");
-
 				// Allow the player to take over movement of the Shoes if the Shoes are currently being moved due to a Launcher.
 				if (shoesAreCurrentlyMovingDueToLauncher)
 				{
@@ -523,16 +526,20 @@ namespace customAnimation
 				// Create the rectangle for the player's future position.
 				// Draw a rectangle around the player's position after they move.
 				updateRectangles(1, 0);
-				handleCollisions(State.RunningRight);
-				changeState(State.RunningRight);
+				handleCollisions(State.Running_Right);
+				changeState(State.Running_Right);
+				
+				if(directionShoesAreRunning != State.Running_Right) 
+				{
+					guy.changeSpriteOfTheGuy("Running_Right");
+					directionShoesAreRunning = State.Running_Right;
+				}
 			}
 			if (newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
 			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
 				position.X -= velocity.X * delta;
-
-				guy.changeSpriteOfTheGuy("Running");
 
 				if (shoesAreCurrentlyMovingDueToLauncher)
 				{
@@ -541,14 +548,31 @@ namespace customAnimation
 				}
 
 				updateRectangles(-1, 0);
-				handleCollisions(State.RunningLeft);
-				changeState(State.RunningLeft);
+				handleCollisions(State.Running_Left);
+				changeState(State.Running_Left);
+
+				if (directionShoesAreRunning != State.Running_Left)
+				{
+					guy.changeSpriteOfTheGuy("Running_Left");
+					directionShoesAreRunning = State.Running_Left;
+				}
 			}
 
-			if(!newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right))
+			if (!newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && directionShoesAreRunning != State.Idle_Right && directionShoesAreRunning != State.Idle_Left)
 			{
-				guy.changeSpriteOfTheGuy("Idle");
+				if (directionShoesAreRunning == State.Running_Right)
+				{
+					guy.changeSpriteOfTheGuy("Idle_Right");
+					directionShoesAreRunning = State.Idle_Right;
+				}
+				else
+				{
+					guy.changeSpriteOfTheGuy("Idle_Left");
+					directionShoesAreRunning = State.Idle_Left;
+				}				
 			}
+
+			debug = directionShoesAreRunning.ToString();
 		}
 
 		/// <summary>
@@ -708,13 +732,13 @@ namespace customAnimation
 				velocity.Y *= 0.55f;    // Decrease the power of the next bounce.
 				position.Y += velocity.Y;
 			}
-			else if (currentState == State.RunningRight)                
+			else if (currentState == State.Running_Right)                
 			{
 				delayMovementAfterSpringCollisionTimer.startTimer();
 				delayMovementAfterSpringCollision = true;
 				bouncingHorizontally = 1;
 			}
-			else if (currentState == State.RunningLeft)
+			else if (currentState == State.Running_Left)
 			{
 				delayMovementAfterSpringCollisionTimer.startTimer();
 				delayMovementAfterSpringCollision = true;
@@ -722,7 +746,7 @@ namespace customAnimation
 			}
 
 			// If the Shoes collided with a Spring due to being launched from a Launcher, let the Spring movement logic take over.
-			if ((currentState == State.RunningRight || currentState == State.RunningLeft) && shoesAreCurrentlyMovingDueToLauncher)
+			if ((currentState == State.Running_Right || currentState == State.Running_Left) && shoesAreCurrentlyMovingDueToLauncher)
 			{
 				velocity.Y *= -1;
 				velocity.Y *= 0.55f;
@@ -760,16 +784,16 @@ namespace customAnimation
 				position.X -= horizontalSpeedFromSpring;
 
 				updateRectangles(-1, 0);
-				handleCollisions(State.RunningLeft);
-				changeState(State.RunningLeft);
+				handleCollisions(State.Running_Left);
+				changeState(State.Running_Left);
 			}
 			else
 			{
 				position.X += horizontalSpeedFromSpring;
 
 				updateRectangles(1, 0);
-				handleCollisions(State.RunningRight);
-				changeState(State.RunningRight);
+				handleCollisions(State.Running_Right);
+				changeState(State.Running_Right);
 			}
 
 			horizontalSpeedFromSpring *= delta;
@@ -927,8 +951,8 @@ namespace customAnimation
 			else if (angleInDegreesOfLauncherShoesIsUsing == 225)
 			{
 				updateRectangles(1, 0);
-				handleCollisions(State.RunningRight);
-				changeState(State.RunningRight);
+				handleCollisions(State.Running_Right);
+				changeState(State.Running_Right);
 
 				updateRectangles(0, 1);
 				handleCollisions(State.Decending);
@@ -937,8 +961,8 @@ namespace customAnimation
 			else if (angleInDegreesOfLauncherShoesIsUsing == 315) 
 			{
 				updateRectangles(-1, 0);
-				handleCollisions(State.RunningLeft);
-				changeState(State.RunningLeft);
+				handleCollisions(State.Running_Left);
+				changeState(State.Running_Left);
 
 				updateRectangles(0, 1);
 				handleCollisions(State.Decending);
@@ -947,8 +971,8 @@ namespace customAnimation
 			else if (angleInDegreesOfLauncherShoesIsUsing >= 90 && angleInDegreesOfLauncherShoesIsUsing <= 180)
 			{
 				updateRectangles(1, 0);
-				handleCollisions(State.RunningRight);
-				changeState(State.RunningRight);
+				handleCollisions(State.Running_Right);
+				changeState(State.Running_Right);
 
 				updateRectangles(0, -1);
 				handleCollisions(State.Jumping);
@@ -957,8 +981,8 @@ namespace customAnimation
 			else
 			{
 				updateRectangles(-1, 0);
-				handleCollisions(State.RunningLeft);
-				changeState(State.RunningLeft);
+				handleCollisions(State.Running_Left);
+				changeState(State.Running_Left);
 
 				updateRectangles(0, -1);
 				handleCollisions(State.Jumping);
@@ -1099,14 +1123,14 @@ namespace customAnimation
 				if (horizontalVelocityDueToAirCollision > 0)
 				{
 					updateRectangles(1, 0);
-					handleCollisions(State.RunningRight);
-					changeState(State.RunningRight);
+					handleCollisions(State.Running_Right);
+					changeState(State.Running_Right);
 				}
 				else
 				{
 					updateRectangles(-1, 0);
-					handleCollisions(State.RunningLeft);
-					changeState(State.RunningLeft);
+					handleCollisions(State.Running_Left);
+					changeState(State.Running_Left);
 				}	
 			}
 		}

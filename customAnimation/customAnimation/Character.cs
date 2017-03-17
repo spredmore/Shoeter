@@ -169,11 +169,12 @@ namespace customAnimation
 		/// </summary>
 		public enum State
 		{
-			Idle = 0,
-			RunningRight = 1,
-			RunningLeft = 2,
-			Jumping = 3,
-			Decending = 4,
+			Idle_Left = 0,
+			Idle_Right = 1,
+			Running_Right = 2,
+			Running_Left = 3,
+			Jumping = 4,
+			Decending = 5,
 		}
 
 		/// <summary>
@@ -442,13 +443,13 @@ namespace customAnimation
 					else if (futurePositionRec.Intersects(Level.tiles[y, x].SourceRect) && (Level.tiles[y, x].CollProperties == Tile.CollisionProperty.Impassable || Level.tiles[y, x].IsAirCannonSwitch))
 					{
 						setFlagsForBorderCollision(false);
-						if (potentialState == State.RunningRight)
+						if (potentialState == State.Running_Right)
 						{
 							specializedCollision(potentialState, y, x);
 							updateRectangles(1, 0);
 							tileCollRect = Level.tiles[y, x].SourceRect;
 						}
-						else if (potentialState == State.RunningLeft)
+						else if (potentialState == State.Running_Left)
 						{
 							specializedCollision(potentialState, y, x);
 							updateRectangles(-1, 0);
