@@ -209,24 +209,59 @@ namespace customAnimation
 			}
 		}
 
-		public static AnimatedSprite generateAnimatedSpriteBasedOnState(String state, ContentManager content, SpriteBatch spriteBatch)
+		public static AnimatedSprite generateAnimatedSpriteBasedOnState(String state, ContentManager content, SpriteBatch spriteBatch, Boolean changingGuySprite)
 		{
-			if (state == "Idle_Left")
+			if (changingGuySprite)
 			{
-				return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithShoes_FacingLeft"), new Vector2(25, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
+				if (state == "Idle_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithShoes_FacingLeft"), new Vector2(50, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Idle_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithShoes_FacingRight"), new Vector2(51, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Idle_WithoutShoes")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdle_WithoutShoes"), new Vector2(52, 650), 0, 26, 48, 40, spriteBatch, 33f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Running_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyRunning_RunningLeft"), new Vector2(100, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Running_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyRunning_RunningRight"), new Vector2(101, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
 			}
-			else if (state == "Idle_Right")
+			else
 			{
-				return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithShoes_FacingRight"), new Vector2(25, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
+				if(state == "Idle_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/ShoesIdle_FacingLeft"), new Vector2(10, 650), 0, 23, 16, 10, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Idle_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/ShoesIdle_FacingRight"), new Vector2(11, 650), 0, 23, 16, 10, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if(state == "Running_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/ShoesRunning_FacingLeft"), new Vector2(100, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Running_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/ShoesRunning_FacingRight"), new Vector2(101, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
+				}
+					else if (state == "Running_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/ShoesRunning_FacingRight"), new Vector2(102, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
+				}
+				else if(state == "Empty")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 0, 0, 0, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
 			}
-			else if(state == "Running_Left")
-			{
-				return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyRunning_RunningLeft"), new Vector2(100, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
-			}
-			else if (state == "Running_Right")
-			{
-				return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyRunning_RunningRight"), new Vector2(100, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
-			}
+			
 
 			return null;
 		}

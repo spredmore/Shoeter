@@ -58,6 +58,8 @@ namespace customAnimation
 		public Boolean stopPlayerInput = false;	// Used to stop player input once the Shoes have collided with the Guy initially. Prevents clipping through tiles.
 		private bool isGravityOn = true;		// Flag to use gravity or not.
 
+		private static int test = 0;
+
 		public Shoes(Vector2 startingPosition, Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
@@ -76,7 +78,9 @@ namespace customAnimation
 			this.content = content;
 
 			this.position = startingPosition;
-			this.Sprite = getAnimatedSpriteBasedOnState(State.Idle_Right);
+			
+			changeSpriteOfTheShoes("Idle_Right", true);
+			Sprite.Position = Position;
 
 			this.directionShoesAreRunning = State.Idle_Right;
 
@@ -98,7 +102,10 @@ namespace customAnimation
 		/// <param name="guy">A reference to the Guy.</param>
 		public void Update(GameTime gameTime, ref Guy guy)
 		{
-			handleAnimation(gameTime);
+			//handleAnimation(gameTime);
+			debug2 = "Shoes Position: " + Position.ToString();
+			debug3 = "Shoes Sprite Position: " + Sprite.Position.ToString();
+			Sprite.Animate(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref guy);
 			doInterface(guy.isGuyBeingShot);
@@ -365,22 +372,9 @@ namespace customAnimation
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="state"></param>
-		/// <param name="spritePosition"></param>
-		/// <returns></returns>
-		private AnimatedSprite getAnimatedSpriteBasedOnState(State state)
+		public void changeSpriteOfTheShoes(String state, Boolean accessGuySprites)
 		{
-			if (state == State.Idle_Right)
-			{
-				return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithShoes_FacingRight"), Position, 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
-			}
-			else
-			{
-				return null;
-			}
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, accessGuySprites);
 		}
 
 		/// <summary>
@@ -460,6 +454,17 @@ namespace customAnimation
 			// Update timers.
 			updateTimers(gameTime);
 
+			if (guy.isGuyBeingShot)
+			{
+				Sprite.Position = Position;
+			}
+			else
+			{
+				//Sprite.Position = new Vector2(Position.X, Position.Y - 32);
+				Sprite.Position = Position;
+			}
+			
+
 			// Get the old state of the keyboard.
 			//oldKeyboardState = newKeyboardState; // Commented out so the interface works.
 		}
@@ -531,8 +536,13 @@ namespace customAnimation
 				
 				if(directionShoesAreRunning != State.Running_Right) 
 				{
-					guy.changeSpriteOfTheGuy("Running_Right");
+					changeSpriteOfTheShoes("Running_Right", true);
 					directionShoesAreRunning = State.Running_Right;
+
+					if(guy.isGuyBeingShot)
+					{
+						changeSpriteOfTheShoes("Running_Right", false);
+					}
 				}
 			}
 			if (newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
@@ -553,8 +563,13 @@ namespace customAnimation
 
 				if (directionShoesAreRunning != State.Running_Left)
 				{
-					guy.changeSpriteOfTheGuy("Running_Left");
+					changeSpriteOfTheShoes("Running_Left", true);
 					directionShoesAreRunning = State.Running_Left;
+
+					if (guy.isGuyBeingShot)
+					{
+						changeSpriteOfTheShoes("Running_Left", false);
+					}
 				}
 			}
 
@@ -562,14 +577,24 @@ namespace customAnimation
 			{
 				if (directionShoesAreRunning == State.Running_Right)
 				{
-					guy.changeSpriteOfTheGuy("Idle_Right");
+					changeSpriteOfTheShoes("Idle_Right", true);
 					directionShoesAreRunning = State.Idle_Right;
+
+					if (guy.isGuyBeingShot)
+					{
+						changeSpriteOfTheShoes("Idle_Right", false);
+					}
 				}
 				else
 				{
-					guy.changeSpriteOfTheGuy("Idle_Left");
+					changeSpriteOfTheShoes("Idle_Left", true);
 					directionShoesAreRunning = State.Idle_Left;
-				}				
+
+					if (guy.isGuyBeingShot)
+					{
+						changeSpriteOfTheShoes("Idle_Left", false);
+					}
+				}
 			}
 
 			debug = directionShoesAreRunning.ToString();
@@ -648,6 +673,7 @@ namespace customAnimation
 		private void doGravity(float delta)
 		{
 			position.Y += velocity.Y;
+			//Sprite.Position = position;
 			velocity.Y += fallFromTileRate * delta;
 
 			// If the Shoes are not standing on the ground, apply gravity.

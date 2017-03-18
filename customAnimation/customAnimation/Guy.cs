@@ -60,7 +60,7 @@ namespace customAnimation
 			this.screenWidth = screenWidth;
 			this.content = content;
 
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(State.Idle_Right.ToString(), content, spriteBatch);
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState("Empty", content, spriteBatch, false);
 
 			gravity = 10f;
 			debug = "";
@@ -86,6 +86,7 @@ namespace customAnimation
 			currentLevel = level;
 			//handleAnimation(gameTime);
 			debug = Position.ToString();
+			Sprite.Position = Position;
 			Sprite.Animate(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref shoes);
@@ -208,8 +209,9 @@ namespace customAnimation
 					}
 					else
 					{
-						velocity = new Vector2(0f, 0f); // So we don't fall through.
+						velocity = new Vector2(0f, 0f); // So the Guy doesn't fall through.
 						useGravity = false;
+						//changeSpriteOfTheGuy("Idle_WithoutShoes");
 					}
 				}
 			}
@@ -339,7 +341,7 @@ namespace customAnimation
 
 		public void changeSpriteOfTheGuy(String state)
 		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch);
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, true);
 		}
 
 		// ******************
@@ -360,7 +362,7 @@ namespace customAnimation
 			stopDelayingCollisionWithGuyAndShoesIfPossible();
 
 			// Set the position to the player's position so it follows him around.
-			setPositionOfGuyToPositionOfShoesIfPossible(shoes.Position);
+			setPositionOfGuyToPositionOfShoesIfPossible(shoes);
 
 			// Shoot the Guy if the player clicks the left mouse button.
 			shootGuyIfPossible(shoes);
@@ -424,6 +426,15 @@ namespace customAnimation
 				velocity *= -1;
 				areGuyAndShoesCurrentlyLinked = false;
 				shoes.swapTexture(areGuyAndShoesCurrentlyLinked); // Changes the texture/size of the shoes because the Guy is being shot.
+
+				if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Left", false);
+				}
+				else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Right", false);
+				}
 			}
 		}
 
@@ -469,6 +480,8 @@ namespace customAnimation
 				handleCollisions(State.Jumping);
 				changeState(State.Jumping);
 			}
+
+			//Sprite.Position = position;
 		}
 		
 		// ****************
@@ -653,12 +666,11 @@ namespace customAnimation
 		/// Set the position to the player's position so it follows him around.
 		/// </summary>
 		/// <param name="positionOfShoes">The current position of the Shoes.</param>
-		private void setPositionOfGuyToPositionOfShoesIfPossible(Vector2 positionOfShoes)
+		private void setPositionOfGuyToPositionOfShoesIfPossible(Shoes shoes)
 		{
 			if (!isGuyBeingShot)
 			{
-				Position = new Vector2(positionOfShoes.X, positionOfShoes.Y);
-				Sprite.Position = Position;
+				Position = new Vector2(shoes.Position.X, shoes.Position.Y);
 				areGuyAndShoesCurrentlyLinked = true;
 			}
 		}
@@ -679,6 +691,15 @@ namespace customAnimation
 				usingLauncher = false;
 				delayLaunchAfterLauncherCollisionTimer.stopTimer();
 				delayBetweenLaunchesTimer.stopTimer();
+
+				if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Left", true);
+				}
+				else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Right", true);
+				}
 			}
 		}
 
