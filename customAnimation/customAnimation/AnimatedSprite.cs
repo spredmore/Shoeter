@@ -223,9 +223,9 @@ namespace customAnimation
 				{
 					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithShoes_FacingRight"), new Vector2(51, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
 				}
-				else if (state == "Idle_WithoutShoes")
+				else if (state == "Idle_WithoutShoes_Right")
 				{
-					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdle_WithoutShoes"), new Vector2(52, 650), 0, 26, 48, 40, spriteBatch, 33f, MathHelper.ToRadians(0));
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyIdleWithoutShoes_FacingRight"), new Vector2(52, 650), 0, 26, 48, 40, spriteBatch, 33f, MathHelper.ToRadians(0));
 				}
 				else if (state == "Running_Left")
 				{
@@ -234,6 +234,18 @@ namespace customAnimation
 				else if (state == "Running_Right")
 				{
 					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyRunning_RunningRight"), new Vector2(101, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "BeingShot_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyBeingShot_FacingLeft_LessFrames"), new Vector2(150, 650), 0, 68, 70, 18, spriteBatch, 33f, MathHelper.ToRadians(0));
+				}
+				else if (state == "BeingShot_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/GuyBeingShot_FacingRight_LessFrames"), new Vector2(150, 650), 0, 68, 70, 18, spriteBatch, 33f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Empty")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 0, 0, 69, spriteBatch, 34f, MathHelper.ToRadians(0));
 				}
 			}
 			else
@@ -257,10 +269,6 @@ namespace customAnimation
 					else if (state == "Running_Right")
 				{
 					return new AnimatedSprite(content.Load<Texture2D>("Sprites/ShoesRunning_FacingRight"), new Vector2(102, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
-				}
-				else if(state == "Empty")
-				{
-					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 0, 0, 69, spriteBatch, 34f, MathHelper.ToRadians(0));
 				}
 			}
 			

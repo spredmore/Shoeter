@@ -60,7 +60,7 @@ namespace customAnimation
 			this.screenWidth = screenWidth;
 			this.content = content;
 
-			//Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState("Empty", content, spriteBatch, false);
+			changeSpriteOfTheGuy("Empty");
 
 			gravity = 10f;
 			debug = "";
@@ -86,8 +86,7 @@ namespace customAnimation
 			currentLevel = level;
 			//handleAnimation(gameTime);
 			debug = Position.ToString();
-			//Sprite.Position = Position;
-			//Sprite.Animate(gameTime);
+			Sprite.Animate(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref shoes);
 		}
@@ -211,7 +210,7 @@ namespace customAnimation
 					{
 						velocity = new Vector2(0f, 0f); // So the Guy doesn't fall through.
 						useGravity = false;
-						//changeSpriteOfTheGuy("Idle_WithoutShoes");
+						changeSpriteOfTheGuy("Idle_WithoutShoes_Right");
 					}
 				}
 			}
@@ -339,10 +338,10 @@ namespace customAnimation
 			return false;
 		}
 
-		//public void changeSpriteOfTheGuy(String state)
-		//{
-		//    Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, true);
-		//}
+		public void changeSpriteOfTheGuy(String state)
+		{
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, true);
+		}
 
 		// ******************
 		// * START MOVEMENT *
@@ -404,6 +403,8 @@ namespace customAnimation
 
 			// Update timers.
 			updateTimers(gameTime);
+
+			Sprite.Position = Position;
 		}
 
 		/// <summary>
@@ -427,13 +428,25 @@ namespace customAnimation
 				areGuyAndShoesCurrentlyLinked = false;
 				shoes.swapTexture(areGuyAndShoesCurrentlyLinked); // Changes the texture/size of the shoes because the Guy is being shot.
 
-				if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
+				if (shoes.directionShoesAreRunning == State.Running_Left)
+				{
+					shoes.changeSpriteOfTheShoes("Running_Left", false);
+					changeSpriteOfTheGuy("BeingShot_Left");
+				}
+				else if(shoes.directionShoesAreRunning == State.Idle_Left)
 				{
 					shoes.changeSpriteOfTheShoes("Idle_Left", false);
+					changeSpriteOfTheGuy("BeingShot_Left");
 				}
-				else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
+				else if (shoes.directionShoesAreRunning == State.Running_Right)
+				{
+					shoes.changeSpriteOfTheShoes("Running_Right", false);
+					changeSpriteOfTheGuy("BeingShot_Right");
+				}
+				else if(shoes.directionShoesAreRunning == State.Idle_Right)
 				{
 					shoes.changeSpriteOfTheShoes("Idle_Right", false);
+					changeSpriteOfTheGuy("BeingShot_Right");
 				}
 			}
 		}
@@ -480,8 +493,6 @@ namespace customAnimation
 				handleCollisions(State.Jumping);
 				changeState(State.Jumping);
 			}
-
-			//Sprite.Position = position;
 		}
 		
 		// ****************
@@ -695,10 +706,12 @@ namespace customAnimation
 				if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
 				{
 					shoes.changeSpriteOfTheShoes("Idle_Left", true);
+					changeSpriteOfTheGuy("Empty");
 				}
 				else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
 				{
 					shoes.changeSpriteOfTheShoes("Idle_Right", true);
+					changeSpriteOfTheGuy("Empty");
 				}
 			}
 		}
@@ -719,6 +732,17 @@ namespace customAnimation
 				areGuyAndShoesCurrentlyLinked = true;
 				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
 				shoes.stopPlayerInput = true;
+
+				if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Left", true);
+					changeSpriteOfTheGuy("Empty");
+				}
+				else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Right", true);
+					changeSpriteOfTheGuy("Empty");
+				}
 			}
 		}
 

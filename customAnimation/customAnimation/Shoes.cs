@@ -461,7 +461,6 @@ namespace customAnimation
 				//Sprite.Position = new Vector2(Position.X, Position.Y - 32);
 				Sprite.Position = Position;
 			}
-			
 
 			// Get the old state of the keyboard.
 			//oldKeyboardState = newKeyboardState; // Commented out so the interface works.
