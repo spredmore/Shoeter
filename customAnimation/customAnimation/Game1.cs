@@ -154,7 +154,7 @@ namespace customAnimation
 			level.Draw(spriteBatch);
 
 			//guy.Draw();
-			guy.Sprite.Draw();
+			//guy.Sprite.Draw();
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox"), guy.Position, Color.White);
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox2"), guy.FutureRectangleRect, Color.White);
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), guy.TileCollisionRectangle, Color.White);

@@ -211,6 +211,8 @@ namespace customAnimation
 
 		public static AnimatedSprite generateAnimatedSpriteBasedOnState(String state, ContentManager content, SpriteBatch spriteBatch, Boolean changingGuySprite)
 		{
+			//debug = "state: " + state.ToString();
+
 			if (changingGuySprite)
 			{
 				if (state == "Idle_Left")
@@ -258,7 +260,7 @@ namespace customAnimation
 				}
 				else if(state == "Empty")
 				{
-					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 0, 0, 0, spriteBatch, 34f, MathHelper.ToRadians(0));
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 0, 0, 69, spriteBatch, 34f, MathHelper.ToRadians(0));
 				}
 			}
 			
@@ -271,7 +273,6 @@ namespace customAnimation
 		/// </summary>
 		public void Draw()
 		{
-			debug = "Position: " + position.ToString();
 			PositionRect = new Rectangle((int)Position.X, (int)Position.Y, spriteWidth, spriteHeight);
 			RotatedRect = new RotatedRectangle(PositionRect, 0f);
 

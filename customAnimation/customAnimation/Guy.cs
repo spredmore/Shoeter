@@ -60,7 +60,7 @@ namespace customAnimation
 			this.screenWidth = screenWidth;
 			this.content = content;
 
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState("Empty", content, spriteBatch, false);
+			//Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState("Empty", content, spriteBatch, false);
 
 			gravity = 10f;
 			debug = "";
@@ -86,8 +86,8 @@ namespace customAnimation
 			currentLevel = level;
 			//handleAnimation(gameTime);
 			debug = Position.ToString();
-			Sprite.Position = Position;
-			Sprite.Animate(gameTime);
+			//Sprite.Position = Position;
+			//Sprite.Animate(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref shoes);
 		}
@@ -339,10 +339,10 @@ namespace customAnimation
 			return false;
 		}
 
-		public void changeSpriteOfTheGuy(String state)
-		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, true);
-		}
+		//public void changeSpriteOfTheGuy(String state)
+		//{
+		//    Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, true);
+		//}
 
 		// ******************
 		// * START MOVEMENT *
