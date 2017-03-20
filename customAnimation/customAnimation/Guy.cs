@@ -85,10 +85,9 @@ namespace customAnimation
 		{
 			currentLevel = level;
 			//handleAnimation(gameTime);
-			debug = Position.ToString();
-			Sprite.Animate(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref shoes);
+			Sprite.Animate(gameTime);
 		}
 
 		/// <summary>

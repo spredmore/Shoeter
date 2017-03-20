@@ -59,6 +59,8 @@ namespace customAnimation
 		private bool isGravityOn = true;		// Flag to use gravity or not.
 
 		private static int test = 0;
+		public Boolean fallingAnimationLockIsOn = false;
+		public Boolean jumpingAnimationLockIsOn = false;
 
 		public Shoes(Vector2 startingPosition, Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
@@ -103,11 +105,10 @@ namespace customAnimation
 		public void Update(GameTime gameTime, ref Guy guy)
 		{
 			//handleAnimation(gameTime);
-			Sprite.Animate(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref guy);
 			doInterface(guy.isGuyBeingShot);
-
+			Sprite.Animate(gameTime);
 			oldKeyboardState = newKeyboardState; // In Update() so the interface works. Commented out at the bottom of handleMovement.
 		}
 
@@ -426,13 +427,13 @@ namespace customAnimation
 			setHorizontalVelocity();
 
 			// Check to see if the player wants to jump. If so, set the vertical velocity appropriately.
-			checkIfShoesWantToJump(guy.tileAbove());
+			checkIfShoesWantToJump(guy.tileAbove(), guy.isGuyBeingShot);
 
 			// Move the Shoes if the player has pressed the appropriate key.
 			moveShoesLeftOrRightIfPossible(delta, guy);
 
 			// Have the Shoes ascend from jumping if they haven't started falling yet.
-			haveShoesAscendFromJumpOrFallFromGravity(delta);
+			haveShoesAscendFromJumpOrFallFromGravity(delta, guy.isGuyBeingShot);
 
 			// Apply horizontal velocity due to using an Air Cannon if neccesary.
 			applyHorizontalMovementDueToAirCannonIfNecessary();
@@ -485,7 +486,7 @@ namespace customAnimation
 		/// Check to see if the player wants to jump. If so, set the velocity to a negetive number so that the Shoes will move upwards.
 		/// </summary>
 		/// <param name="isThereATileAboveTheGuy">Flag that says whether or not there is a tile above the linked Guy/Shoes.</param>
-		private void checkIfShoesWantToJump(bool isThereATileAboveTheGuy)
+		private void checkIfShoesWantToJump(Boolean isThereATileAboveTheGuy, Boolean isGuyBeingShot)
 		{
 			if (!isJumping
 				&& ((newKeyboardState.IsKeyDown(up) && !oldKeyboardState.IsKeyDown(up)) || (newKeyboardState.IsKeyDown(Keys.Space) && !oldKeyboardState.IsKeyDown(Keys.Space)))
@@ -496,6 +497,20 @@ namespace customAnimation
 			{
 				isJumping = true;
 				velocity.Y = jumpImpulse * -1;
+				
+				if (CurrentState == State.Jumping && !jumpingAnimationLockIsOn && !isGuyBeingShot)
+				{
+					if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
+					{
+						changeSpriteOfTheShoes("Jumping_Left", true);
+						jumpingAnimationLockIsOn = true;
+					}
+					else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
+					{
+						changeSpriteOfTheShoes("Jumping_Right", true);
+						jumpingAnimationLockIsOn = true;
+					}
+				}
 			}
 		}
 
@@ -599,7 +614,7 @@ namespace customAnimation
 		/// Have the Shoes ascend due to jumping, or fall due to gravity.
 		/// </summary>
 		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
-		private void haveShoesAscendFromJumpOrFallFromGravity(float delta)
+		private void haveShoesAscendFromJumpOrFallFromGravity(float delta, Boolean isGuyBeingShot)
 		{
 			if (isJumping)
 			{
@@ -607,6 +622,20 @@ namespace customAnimation
 			}
 			else if (isGravityOn)
 			{
+				if (CurrentState == State.Decending && !fallingAnimationLockIsOn && !isGuyBeingShot)
+				{
+					if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
+					{
+						changeSpriteOfTheShoes("Falling_Left", true);
+						fallingAnimationLockIsOn = true;
+					}
+					else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
+					{
+						changeSpriteOfTheShoes("Falling_Right", true);
+						fallingAnimationLockIsOn = true;
+					}
+				}
+				
 				doGravity(delta); // Handles for when the player walks off the edge of a platform.
 			}
 		}
@@ -633,6 +662,7 @@ namespace customAnimation
 			{
 				isFalling = true;
 				isJumping = false;
+				jumpingAnimationLockIsOn = false;
 			}
 
 			// Depending on which direction the Shoes are moving, check the top or bottom.
@@ -668,7 +698,6 @@ namespace customAnimation
 		private void doGravity(float delta)
 		{
 			position.Y += velocity.Y;
-			//Sprite.Position = position;
 			velocity.Y += fallFromTileRate * delta;
 
 			// If the Shoes are not standing on the ground, apply gravity.
@@ -695,6 +724,7 @@ namespace customAnimation
 					velocity.Y = 0f;
 					isFalling = false;
 					shoesAreCurrentlyMovingDueToLauncher = false;
+					fallingAnimationLockIsOn = false;
 				}
 			}
 

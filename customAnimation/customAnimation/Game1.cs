@@ -187,8 +187,8 @@ namespace customAnimation
 				spriteBatch.DrawString(debugFont, "Shoes Debug2: " + shoes.debug2.ToString(), new Vector2(0, 260), Color.Black);
 				spriteBatch.DrawString(debugFont, "Shoes Debug3: " + shoes.debug3.ToString(), new Vector2(0, 280), Color.Black);
 				spriteBatch.DrawString(debugFont, "Character Debug: " + Character.charDebug, new Vector2(0, 300), Color.Black);
-				spriteBatch.DrawString(debugFont, "Shoes State: " + shoes.PlayerState.ToString(), new Vector2(0, 320), Color.Black);
-				spriteBatch.DrawString(debugFont, "Guy State: " + guy.PlayerState.ToString(), new Vector2(0, 340), Color.Black);
+				spriteBatch.DrawString(debugFont, "Shoes State: " + shoes.CurrentState.ToString(), new Vector2(0, 320), Color.Black);
+				spriteBatch.DrawString(debugFont, "Guy State: " + guy.CurrentState.ToString(), new Vector2(0, 340), Color.Black);
 				spriteBatch.DrawString(debugFont, "AnimatedSprite Debug: " + AnimatedSprite.debug, new Vector2(0, 360), Color.Black);
 				spriteBatch.DrawString(debugFont, "Air Debug: " + Air.debug, new Vector2(0, 380), Color.Black);
 				spriteBatch.DrawString(debugFont, "Air Debug2: " + Air.debug2, new Vector2(0, 400), Color.Black);
