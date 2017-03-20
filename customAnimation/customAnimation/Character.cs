@@ -180,7 +180,7 @@ namespace customAnimation
 		/// <summary>
 		/// Property for the State of the Character.
 		/// </summary>
-		public State PlayerState
+		public State CurrentState
 		{
 			get { return state; }
 			set { state = value; }
