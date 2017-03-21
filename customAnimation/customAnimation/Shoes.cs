@@ -79,12 +79,11 @@ namespace customAnimation
 			this.down = down;
 			this.content = content;
 
-			this.position = startingPosition;
+			position = startingPosition;
 			
 			changeSpriteOfTheShoes("Idle_Right", true);
+			directionShoesAreRunning = State.Idle_Right;
 			Sprite.Position = Position;
-
-			this.directionShoesAreRunning = State.Idle_Right;
 
 			gravity = 30f;
 			debug = "";
@@ -371,11 +370,6 @@ namespace customAnimation
 			}
 		}
 
-		public void changeSpriteOfTheShoes(String state, Boolean accessGuySprites)
-		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, accessGuySprites);
-		}
-
 		/// <summary>
 		/// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
 		/// </summary>
@@ -398,6 +392,23 @@ namespace customAnimation
 			delayMovementAfterSpringCollisionTimer.Update(gameTime);
 			delayLaunchAfterLauncherCollisionTimer.Update(gameTime);
 			delayMovementAfterAirCannonSwitchCollisionTimer.Update(gameTime);
+		}
+
+		/// <summary>
+		/// Updates the Position of the Sprite attached to the Shoes.
+		/// </summary>
+		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot or not.</param>
+		private void updateSpritePosition(Boolean isGuyBeingShot)
+		{
+			if (isGuyBeingShot)
+			{
+				Sprite.Position = Position;
+			}
+			else
+			{
+				//Sprite.Position = new Vector2(Position.X, Position.Y - 32);
+				Sprite.Position = Position;
+			}
 		}
 
 		// ******************
@@ -450,18 +461,11 @@ namespace customAnimation
 			// If the Shoes have turned on a particular set of Air Cannons and have now left that switch, turn the corresponding Air Cannons off.
 			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile, null, this);
 
+			// Update the Position of the Sprite attached to the Shoes.
+			updateSpritePosition(guy.isGuyBeingShot);
+
 			// Update timers.
 			updateTimers(gameTime);
-
-			if (guy.isGuyBeingShot)
-			{
-				Sprite.Position = Position;
-			}
-			else
-			{
-				//Sprite.Position = new Vector2(Position.X, Position.Y - 32);
-				Sprite.Position = Position;
-			}
 
 			// Get the old state of the keyboard.
 			//oldKeyboardState = newKeyboardState; // Commented out so the interface works.
@@ -497,20 +501,7 @@ namespace customAnimation
 			{
 				isJumping = true;
 				velocity.Y = jumpImpulse * -1;
-				
-				if (CurrentState == State.Jumping && !jumpingAnimationLockIsOn && !isGuyBeingShot)
-				{
-					if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
-					{
-						changeSpriteOfTheShoes("Jumping_Left", true);
-						jumpingAnimationLockIsOn = true;
-					}
-					else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
-					{
-						changeSpriteOfTheShoes("Jumping_Right", true);
-						jumpingAnimationLockIsOn = true;
-					}
-				}
+				setJumpingAnimationIfPossible(isGuyBeingShot);
 			}
 		}
 
@@ -545,17 +536,7 @@ namespace customAnimation
 				updateRectangles(1, 0);
 				handleCollisions(State.Running_Right);
 				changeState(State.Running_Right);
-				
-				if(directionShoesAreRunning != State.Running_Right) 
-				{
-					changeSpriteOfTheShoes("Running_Right", true);
-					directionShoesAreRunning = State.Running_Right;
-
-					if(guy.isGuyBeingShot)
-					{
-						changeSpriteOfTheShoes("Running_Right", false);
-					}
-				}
+				setRunningAnimationIfPossible(guy.isGuyBeingShot);				
 			}
 			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
 			{
@@ -572,41 +553,13 @@ namespace customAnimation
 				updateRectangles(-1, 0);
 				handleCollisions(State.Running_Left);
 				changeState(State.Running_Left);
-
-				if (directionShoesAreRunning != State.Running_Left)
-				{
-					changeSpriteOfTheShoes("Running_Left", true);
-					directionShoesAreRunning = State.Running_Left;
-
-					if (guy.isGuyBeingShot)
-					{
-						changeSpriteOfTheShoes("Running_Left", false);
-					}
-				}
+				setRunningAnimationIfPossible(guy.isGuyBeingShot);
 			}
 
+			// Sets the Idle Animation if possible.
 			if (!newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && directionShoesAreRunning != State.Idle_Right && directionShoesAreRunning != State.Idle_Left)
 			{
-				if (directionShoesAreRunning == State.Running_Right)
-				{
-					changeSpriteOfTheShoes("Idle_Right", true);
-					directionShoesAreRunning = State.Idle_Right;
-
-					if (guy.isGuyBeingShot)
-					{
-						changeSpriteOfTheShoes("Idle_Right", false);
-					}
-				}
-				else
-				{
-					changeSpriteOfTheShoes("Idle_Left", true);
-					directionShoesAreRunning = State.Idle_Left;
-
-					if (guy.isGuyBeingShot)
-					{
-						changeSpriteOfTheShoes("Idle_Left", false);
-					}
-				}
+				setIdleAnimationIfPossible(guy.isGuyBeingShot);
 			}
 		}
 
@@ -614,6 +567,7 @@ namespace customAnimation
 		/// Have the Shoes ascend due to jumping, or fall due to gravity.
 		/// </summary>
 		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
+		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot.</param>
 		private void haveShoesAscendFromJumpOrFallFromGravity(float delta, Boolean isGuyBeingShot)
 		{
 			if (isJumping)
@@ -622,20 +576,7 @@ namespace customAnimation
 			}
 			else if (isGravityOn)
 			{
-				if (CurrentState == State.Decending && !fallingAnimationLockIsOn && !isGuyBeingShot)
-				{
-					if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
-					{
-						changeSpriteOfTheShoes("Falling_Left", true);
-						fallingAnimationLockIsOn = true;
-					}
-					else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
-					{
-						changeSpriteOfTheShoes("Falling_Right", true);
-						fallingAnimationLockIsOn = true;
-					}
-				}
-				
+				setFallingAnimationIfPossible(isGuyBeingShot);				
 				doGravity(delta); // Handles for when the player walks off the edge of a platform.
 			}
 		}
@@ -1218,5 +1159,121 @@ namespace customAnimation
 		// ******************
 		// * END AIR CANNON *
 		// ******************
+
+		// *******************
+		// * START ANIMATION *
+		// *******************
+
+		/// <summary>
+		/// Sets the Animated Sprite for the Shoes to a new Animated Sprite.
+		/// </summary>
+		/// <param name="state">The State of the Shoes. Used to get the correct Animated Sprite.</param>
+		/// <param name="accessGuySprites">Says whether or not to use the Guy's Animated Sprites or not.</param>
+		public void changeSpriteOfTheShoes(String state, Boolean accessGuySprites)
+		{
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, accessGuySprites);
+		}
+
+		/// <summary>
+		/// Sets the Animated Sprite for the Shoes to the Jumping Animation.
+		/// </summary>
+		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot or not.</param>
+		private void setJumpingAnimationIfPossible(Boolean isGuyBeingShot)
+		{
+			if (CurrentState == State.Jumping && !jumpingAnimationLockIsOn && !isGuyBeingShot)
+			{
+				if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
+				{
+					changeSpriteOfTheShoes("Jumping_Left", true);
+					jumpingAnimationLockIsOn = true;
+				}
+				else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
+				{
+					changeSpriteOfTheShoes("Jumping_Right", true);
+					jumpingAnimationLockIsOn = true;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Sets the Animated Sprite for the Shoes to the Running Animation.
+		/// </summary>
+		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot or not.</param>
+		private void setRunningAnimationIfPossible(Boolean isGuyBeingShot)
+		{
+			if (directionShoesAreRunning != State.Running_Right && CurrentState == State.Running_Right)
+			{
+				changeSpriteOfTheShoes("Running_Right", true);
+				directionShoesAreRunning = State.Running_Right;
+
+				if (isGuyBeingShot)
+				{
+					changeSpriteOfTheShoes("Running_Right", false);
+				}
+			}
+			else if (directionShoesAreRunning != State.Running_Left && CurrentState == State.Running_Left)
+			{
+				changeSpriteOfTheShoes("Running_Left", true);
+				directionShoesAreRunning = State.Running_Left;
+
+				if (isGuyBeingShot)
+				{
+					changeSpriteOfTheShoes("Running_Left", false);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Sets the Animated Sprite for the Shoes to the Idle Animation.
+		/// </summary>
+		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot or not.</param>
+		private void setIdleAnimationIfPossible(Boolean isGuyBeingShot)
+		{
+			if (directionShoesAreRunning == State.Running_Right)
+			{
+				changeSpriteOfTheShoes("Idle_Right", true);
+				directionShoesAreRunning = State.Idle_Right;
+
+				if (isGuyBeingShot)
+				{
+					changeSpriteOfTheShoes("Idle_Right", false);
+				}
+			}
+			else
+			{
+				changeSpriteOfTheShoes("Idle_Left", true);
+				directionShoesAreRunning = State.Idle_Left;
+
+				if (isGuyBeingShot)
+				{
+					changeSpriteOfTheShoes("Idle_Left", false);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Sets the Animated Sprite for the Shoes to the Falling Animation.
+		/// </summary>
+		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot or not.</param>
+		private void setFallingAnimationIfPossible(Boolean isGuyBeingShot)
+		{
+			if (CurrentState == State.Decending && !fallingAnimationLockIsOn && !isGuyBeingShot)
+			{
+				if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
+				{
+					changeSpriteOfTheShoes("Falling_Left", true);
+					fallingAnimationLockIsOn = true;
+				}
+				else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
+				{
+					changeSpriteOfTheShoes("Falling_Right", true);
+					fallingAnimationLockIsOn = true;
+				}
+			}
+		}
+
+		// *****************
+		// * END ANIMATION *
+		// *****************
 	}
 }

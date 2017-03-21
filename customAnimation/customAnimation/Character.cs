@@ -222,6 +222,9 @@ namespace customAnimation
 			set { totalFrames = value; }
 		}
 
+		/// <summary>
+		/// The Animated Sprite that represents the Character.
+		/// </summary>
 		public AnimatedSprite Sprite
 		{
 			get { return sprite; }

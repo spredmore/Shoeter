@@ -139,6 +139,9 @@ namespace customAnimation
 			set { rotation = value; }
 		}
 
+		/// <summary>
+		/// The interval at which to move to the next frame of a Sprite Sheet.
+		/// </summary>
 		public float Interval
 		{
 			get { return interval; }
@@ -209,6 +212,14 @@ namespace customAnimation
 			}
 		}
 
+		/// <summary>
+		/// Creates and returns a new Animated Sprite based on the passed in state.
+		/// </summary>
+		/// <param name="state">The State of the Character. Determines which Animated Spriteto return.</param>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
+		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
+		/// <param name="isChangingGuySprite">Says whether or not the Guy is being shot or not.</param>
+		/// <returns>A new Animated Sprite based on the passed in state.</returns>
 		public static AnimatedSprite generateAnimatedSpriteBasedOnState(String state, ContentManager content, SpriteBatch spriteBatch, Boolean isChangingGuySprite)
 		{
 			if (isChangingGuySprite)
@@ -285,7 +296,6 @@ namespace customAnimation
 					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesRunning_FacingRight"), new Vector2(102, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
 				}
 			}
-			
 
 			return null;
 		}

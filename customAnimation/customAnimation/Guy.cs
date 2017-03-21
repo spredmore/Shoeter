@@ -337,11 +337,6 @@ namespace customAnimation
 			return false;
 		}
 
-		public void changeSpriteOfTheGuy(String state)
-		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, true);
-		}
-
 		// ******************
 		// * START MOVEMENT *
 		// ******************
@@ -426,27 +421,7 @@ namespace customAnimation
 				velocity *= -1;
 				areGuyAndShoesCurrentlyLinked = false;
 				shoes.swapTexture(areGuyAndShoesCurrentlyLinked); // Changes the texture/size of the shoes because the Guy is being shot.
-
-				if (shoes.directionShoesAreRunning == State.Running_Left)
-				{
-					shoes.changeSpriteOfTheShoes("Running_Left", false);
-					changeSpriteOfTheGuy("BeingShot_Left");
-				}
-				else if(shoes.directionShoesAreRunning == State.Idle_Left)
-				{
-					shoes.changeSpriteOfTheShoes("Idle_Left", false);
-					changeSpriteOfTheGuy("BeingShot_Left");
-				}
-				else if (shoes.directionShoesAreRunning == State.Running_Right)
-				{
-					shoes.changeSpriteOfTheShoes("Running_Right", false);
-					changeSpriteOfTheGuy("BeingShot_Right");
-				}
-				else if(shoes.directionShoesAreRunning == State.Idle_Right)
-				{
-					shoes.changeSpriteOfTheShoes("Idle_Right", false);
-					changeSpriteOfTheGuy("BeingShot_Right");
-				}
+				setBeingShotAnimationIfPossible(shoes);
 			}
 		}
 
@@ -701,17 +676,7 @@ namespace customAnimation
 				usingLauncher = false;
 				delayLaunchAfterLauncherCollisionTimer.stopTimer();
 				delayBetweenLaunchesTimer.stopTimer();
-
-				if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
-				{
-					shoes.changeSpriteOfTheShoes("Idle_Left", true);
-					changeSpriteOfTheGuy("Empty");
-				}
-				else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
-				{
-					shoes.changeSpriteOfTheShoes("Idle_Right", true);
-					changeSpriteOfTheGuy("Empty");
-				}
+				setIdleAnimationIfPossible(shoes);
 			}
 		}
 
@@ -731,22 +696,73 @@ namespace customAnimation
 				areGuyAndShoesCurrentlyLinked = true;
 				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
 				shoes.stopPlayerInput = true;
-
-				if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
-				{
-					shoes.changeSpriteOfTheShoes("Idle_Left", true);
-					changeSpriteOfTheGuy("Empty");
-				}
-				else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
-				{
-					shoes.changeSpriteOfTheShoes("Idle_Right", true);
-					changeSpriteOfTheGuy("Empty");
-				}
+				setIdleAnimationIfPossible(shoes);
 			}
 		}
 
 		// ************************
 		// * END POSITION SETTING *
 		// ************************
+
+		// *******************
+		// * START ANIMATION *
+		// *******************
+
+		/// <summary>
+		/// Sets the Animated Sprite for the Guy to a new Animated Sprite.
+		/// </summary>
+		/// <param name="state">The State of the Guy. Used to get the correct Animated Sprite.</param>
+		public void changeSpriteOfTheGuy(String state)
+		{
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, true);
+		}
+
+		/// <summary>
+		/// Sets the Animated Sprite for the Guy to the Being Shot Animation.
+		/// </summary>
+		private void setBeingShotAnimationIfPossible(Shoes shoes)
+		{
+			if (shoes.directionShoesAreRunning == State.Running_Left)
+			{
+				shoes.changeSpriteOfTheShoes("Running_Left", false);
+				changeSpriteOfTheGuy("BeingShot_Left");
+			}
+			else if (shoes.directionShoesAreRunning == State.Idle_Left)
+			{
+				shoes.changeSpriteOfTheShoes("Idle_Left", false);
+				changeSpriteOfTheGuy("BeingShot_Left");
+			}
+			else if (shoes.directionShoesAreRunning == State.Running_Right)
+			{
+				shoes.changeSpriteOfTheShoes("Running_Right", false);
+				changeSpriteOfTheGuy("BeingShot_Right");
+			}
+			else if (shoes.directionShoesAreRunning == State.Idle_Right)
+			{
+				shoes.changeSpriteOfTheShoes("Idle_Right", false);
+				changeSpriteOfTheGuy("BeingShot_Right");
+			}
+		}
+
+		/// <summary>
+		/// Sets the Animated Sprite for the Guy to the Being Shot Animation.
+		/// </summary>
+		private void setIdleAnimationIfPossible(Shoes shoes)
+		{
+			if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
+			{
+				shoes.changeSpriteOfTheShoes("Idle_Left", true);
+				changeSpriteOfTheGuy("Empty");
+			}
+			else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
+			{
+				shoes.changeSpriteOfTheShoes("Idle_Right", true);
+				changeSpriteOfTheGuy("Empty");
+			}
+		}
+
+		// *****************
+		// * END ANIMATION *
+		// *****************
 	}
 }
