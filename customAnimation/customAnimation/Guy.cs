@@ -47,6 +47,7 @@ namespace customAnimation
 		private int collY;
 
 		public bool usingLauncher = false;
+		private Boolean idleAnimationLockIsOn = false;
 
 		public Guy(Texture2D texture, SpriteBatch spriteBatch, int currentFrame, int totalFrames, int spriteWidth, int spriteHeight, int screenHeight, int screenWidth, ContentManager content)
 		{
@@ -204,6 +205,12 @@ namespace customAnimation
 						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 						position = new Vector2(Level.tiles[y, x].Position.X - 16, Level.tiles[y, x].Position.Y - 32);
 						velocity = new Vector2(0f, 0f);
+
+						if (!idleAnimationLockIsOn)
+						{
+							changeSpriteOfTheGuy("Idle_WithoutShoes_Right");
+							idleAnimationLockIsOn = true;
+						}
 					}
 					else
 					{
@@ -668,12 +675,13 @@ namespace customAnimation
 		{
 			if (!(currentMouseState.RightButton == ButtonState.Pressed) && previousMouseState.RightButton == ButtonState.Pressed && !areGuyAndShoesCurrentlyLinked)
 			{
-				velocity = new Vector2(0f, 0f);
 				isGuyBeingShot = false;
+				usingLauncher = false;
+				idleAnimationLockIsOn = false;
 				areGuyAndShoesCurrentlyLinked = true;
 				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
 				Position = new Vector2(shoes.Position.X, shoes.Position.Y);
-				usingLauncher = false;
+				velocity = new Vector2(0f, 0f);
 				delayLaunchAfterLauncherCollisionTimer.stopTimer();
 				delayBetweenLaunchesTimer.stopTimer();
 				setIdleAnimationIfPossible(shoes);
@@ -691,11 +699,12 @@ namespace customAnimation
 				velocity = new Vector2(0f, 0f);
 				shoes.velocity = new Vector2(0f, 0f);
 				shoes.Position = new Vector2(Position.X, Position.Y + 40);
-				delayCollisionWithShoesAndGuy = true;
 				isGuyBeingShot = false;
+				shoes.stopPlayerInput = true;
+				idleAnimationLockIsOn = false;
+				delayCollisionWithShoesAndGuy = true;
 				areGuyAndShoesCurrentlyLinked = true;
 				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
-				shoes.stopPlayerInput = true;
 				setIdleAnimationIfPossible(shoes);
 			}
 		}
