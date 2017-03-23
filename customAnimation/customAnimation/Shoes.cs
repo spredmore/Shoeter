@@ -80,8 +80,8 @@ namespace customAnimation
 			this.content = content;
 
 			position = startingPosition;
-			
-			changeSpriteOfTheShoes("Idle_Right", true);
+
+			changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
 			directionShoesAreRunning = State.Idle_Right;
 			Sprite.Position = Position;
 
@@ -1169,9 +1169,9 @@ namespace customAnimation
 		/// </summary>
 		/// <param name="state">The State of the Shoes. Used to get the correct Animated Sprite.</param>
 		/// <param name="accessGuySprites">Says whether or not to use the Guy's Animated Sprites or not.</param>
-		public void changeSpriteOfTheShoes(String state, Boolean accessGuySprites)
+		public void changeSpriteOfTheShoes(AnimatedSprite.AnimationState state)
 		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, accessGuySprites);
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y);
 		}
 
 		/// <summary>
@@ -1184,12 +1184,12 @@ namespace customAnimation
 			{
 				if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
 				{
-					changeSpriteOfTheShoes("Jumping_Left", true);
+					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Jumping_Left);
 					jumpingAnimationLockIsOn = true;
 				}
 				else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
 				{
-					changeSpriteOfTheShoes("Jumping_Right", true);
+					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Jumping_Right);
 					jumpingAnimationLockIsOn = true;
 				}
 			}
@@ -1203,22 +1203,22 @@ namespace customAnimation
 		{
 			if (directionShoesAreRunning != State.Running_Right && CurrentState == State.Running_Right)
 			{
-				changeSpriteOfTheShoes("Running_Right", true);
+				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Running_Right);
 				directionShoesAreRunning = State.Running_Right;
 
 				if (isGuyBeingShot)
 				{
-					changeSpriteOfTheShoes("Running_Right", false);
+					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Running_Right);
 				}
 			}
 			else if (directionShoesAreRunning != State.Running_Left && CurrentState == State.Running_Left)
 			{
-				changeSpriteOfTheShoes("Running_Left", true);
+				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Running_Left);
 				directionShoesAreRunning = State.Running_Left;
 
 				if (isGuyBeingShot)
 				{
-					changeSpriteOfTheShoes("Running_Left", false);
+					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Running_Left);
 				}
 			}
 		}
@@ -1231,22 +1231,22 @@ namespace customAnimation
 		{
 			if (directionShoesAreRunning == State.Running_Right)
 			{
-				changeSpriteOfTheShoes("Idle_Right", true);
+				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
 				directionShoesAreRunning = State.Idle_Right;
 
 				if (isGuyBeingShot)
 				{
-					changeSpriteOfTheShoes("Idle_Right", false);
+					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Idle_Right);
 				}
 			}
 			else
 			{
-				changeSpriteOfTheShoes("Idle_Left", true);
+				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Left);
 				directionShoesAreRunning = State.Idle_Left;
 
 				if (isGuyBeingShot)
 				{
-					changeSpriteOfTheShoes("Idle_Left", false);
+					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Idle_Left);
 				}
 			}
 		}
@@ -1261,12 +1261,12 @@ namespace customAnimation
 			{
 				if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
 				{
-					changeSpriteOfTheShoes("Falling_Left", true);
+					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Falling_Left);
 					fallingAnimationLockIsOn = true;
 				}
 				else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
 				{
-					changeSpriteOfTheShoes("Falling_Right", true);
+					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Falling_Right);
 					fallingAnimationLockIsOn = true;
 				}
 			}

@@ -61,7 +61,7 @@ namespace customAnimation
 			this.screenWidth = screenWidth;
 			this.content = content;
 
-			changeSpriteOfTheGuy("Empty");
+			changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Empty);
 
 			gravity = 10f;
 			debug = "";
@@ -208,7 +208,7 @@ namespace customAnimation
 
 						if (!idleAnimationLockIsOn)
 						{
-							changeSpriteOfTheGuy("Idle_WithoutShoes_Right");
+							changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_Idle_WithoutShoes_Right);
 							idleAnimationLockIsOn = true;
 						}
 					}
@@ -216,7 +216,7 @@ namespace customAnimation
 					{
 						velocity = new Vector2(0f, 0f); // So the Guy doesn't fall through.
 						useGravity = false;
-						changeSpriteOfTheGuy("Idle_WithoutShoes_Right");
+						changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_Idle_WithoutShoes_Right);
 					}
 				}
 			}
@@ -721,9 +721,9 @@ namespace customAnimation
 		/// Sets the Animated Sprite for the Guy to a new Animated Sprite.
 		/// </summary>
 		/// <param name="state">The State of the Guy. Used to get the correct Animated Sprite.</param>
-		public void changeSpriteOfTheGuy(String state)
+		public void changeSpriteOfTheGuy(AnimatedSprite.AnimationState state)
 		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, true);
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y);
 		}
 
 		/// <summary>
@@ -733,23 +733,23 @@ namespace customAnimation
 		{
 			if (shoes.directionShoesAreRunning == State.Running_Left)
 			{
-				shoes.changeSpriteOfTheShoes("Running_Left", false);
-				changeSpriteOfTheGuy("BeingShot_Left");
+				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Running_Left);
+				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_BeingShot_Left);
 			}
 			else if (shoes.directionShoesAreRunning == State.Idle_Left)
 			{
-				shoes.changeSpriteOfTheShoes("Idle_Left", false);
-				changeSpriteOfTheGuy("BeingShot_Left");
+				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Idle_Left);
+				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_BeingShot_Left);
 			}
 			else if (shoes.directionShoesAreRunning == State.Running_Right)
 			{
-				shoes.changeSpriteOfTheShoes("Running_Right", false);
-				changeSpriteOfTheGuy("BeingShot_Right");
+				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Running_Right);
+				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_BeingShot_Right);
 			}
 			else if (shoes.directionShoesAreRunning == State.Idle_Right)
 			{
-				shoes.changeSpriteOfTheShoes("Idle_Right", false);
-				changeSpriteOfTheGuy("BeingShot_Right");
+				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Idle_Right);
+				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_BeingShot_Right);
 			}
 		}
 
@@ -760,13 +760,13 @@ namespace customAnimation
 		{
 			if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
 			{
-				shoes.changeSpriteOfTheShoes("Idle_Left", true);
-				changeSpriteOfTheGuy("Empty");
+				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Left);
+				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Empty);
 			}
 			else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
 			{
-				shoes.changeSpriteOfTheShoes("Idle_Right", true);
-				changeSpriteOfTheGuy("Empty");
+				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
+				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Empty);
 			}
 		}
 

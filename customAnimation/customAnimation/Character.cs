@@ -74,6 +74,18 @@ namespace customAnimation
 			set { position = value; }
 		}
 
+		public int SpriteWidth
+		{
+			get { return spriteWidth; }
+			set { spriteWidth = value; }
+		}
+
+		public int SpriteHeight
+		{
+			get { return spriteWidth; }
+			set { spriteWidth = value; }
+		}
+
 		/// <summary>
 		/// Property for the center of the sprite.
 		/// </summary>
