@@ -49,6 +49,7 @@ namespace customAnimation
 		Vector2 tileArrayCoordinates;   // The current tile's coordinates into the level array.
 		Tile currentTileCollidingWith;	// The current tile that the Character is currently colliding with.
 		Tile previousTileCollidingWith;	// The previous tile that the Character collided with.
+		public RotatedRectangle hbox; // Change name to 'hitbox' later. Currently used to differentiate between AnimatedSprite.hitbox easier.
 
 		// Important: Be sure to reset the appropriate border collision variable to false after it has been found that is has been set to true.
 		// Flag that says whether or not the Character has collided with that particular border of the screen.
@@ -129,6 +130,12 @@ namespace customAnimation
 		{
 			get { return rotatedRect; }
 			set { rotatedRect = value; }
+		}
+
+		public RotatedRectangle Hbox
+		{
+			get { return hbox; }
+			set { hbox = value; }
 		}
 
 		/// <summary>
@@ -252,42 +259,6 @@ namespace customAnimation
 		}
 
 		/// <summary>
-		/// Animates the character.
-		/// </summary>
-		/// <param name="gameTime">Snapshot of the game timing state.</param>
-		protected void handleAnimation(GameTime gameTime)
-		{
-			// Get a rectangle around the current frame we're on.
-			sourceRect = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
-
-			// Increment the timer to see if we need to move to the next frame.
-			timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-			// Check to see if we need to move to the next frame.
-			if (timer > interval)
-			{
-				// Check to see if we can move to the next frame.
-				if (currentFrame < totalFrames)
-				{
-					// Move to the next frame.
-					currentFrame++;
-				}
-				else
-				{
-					// We reached the end of the sprite sheet. Reset to the beginning.
-					currentFrame = 0;
-				}
-
-				// Reset the timer.
-				timer = 0f;
-			}
-
-			// Get the center of the current frame.
-			// The center will be important, because we will have to do rotations about the center of the sprite.
-			center = new Vector2(sourceRect.Width / 2, sourceRect.Height / 2);
-		}
-
-		/// <summary>
 		/// Determines if there is a Tile below the Character.
 		/// </summary>
 		/// <returns>A boolean saying whether or not there is a Tile below the Character.</returns>
@@ -334,7 +305,7 @@ namespace customAnimation
 		/// Determines if there is a Tile above the Chracter.
 		/// </summary>
 		/// <returns>A boolean saying whether or not there is a Tile above the Character.</returns>
-		protected bool underTile()
+		public bool underTile()
 		{
 			updateRectangles(0, -1);
 
@@ -398,8 +369,74 @@ namespace customAnimation
 		/// <remarks>The offsets are used so that it is always known what's "in front" of the Character. Used for collision detection.</remarks>
 		protected void updateRectangles(int xOffset, int yOffset)
 		{
-			positionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
-			futurePositionRec = new Rectangle((int)position.X + xOffset, (int)position.Y + yOffset, spriteWidth, spriteHeight);
+			// Before
+			// Position: Top right corner of the sprite.
+			// PositionRect: Rectangle used to test for collisions with other tiles.
+			// FuturePositionRect: Future position of PositionRect.
+
+			//positionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
+			//futurePositionRec = new Rectangle((int)position.X + xOffset, (int)position.Y + yOffset, spriteWidth, spriteHeight);
+
+			// After
+			// Position: Top right corner of the sprite.
+			// Hbox: The RotatedRectangle that will be used to test for collisions with other tiles.
+			// FutureHitboxRectangle: The RotatedRectangle that will be used to test for collisions with other tiles.
+
+			//charDebug = "Hitbox.Width: " + Hbox.Width.ToString() + " | Hitbox.Height: " + Hbox.Height.ToString();
+			//charDebug = "Tag: " + Hbox.Tag;
+
+			Vector2 shiftedHitboxPosition = getShiftedPositionOfHitbox();
+			//if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_Empty.ToString())
+			//{
+			//    Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, 36, 48), 0);
+			//}
+			//else if (Hbox.Tag == AnimatedSprite.AnimationState.Shoes_Empty.ToString())
+			//{
+			//    Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, 25, 16), 0);
+			//}
+			//else if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_Idle_Right.ToString())
+			//{
+				
+			//}
+			//else if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_Idle_Left.ToString())
+			//{
+
+			//}
+			//else
+			//{
+			//    Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, Hbox.Width, Hbox.Height), 0);
+			//}
+
+			RotatedRectangle oldHbox = Hbox;
+			Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, oldHbox.Width, oldHbox.Height), 0);
+
+			Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight), 0);
+			//positionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
+			futurePositionRec = new Rectangle((int)Hbox.X + xOffset, (int)Hbox.Y + yOffset, Math.Abs(Hbox.Right - Hbox.Left), Math.Abs(Hbox.Top - Hbox.Bottom));
+
+			// Notes:
+			// Need to shift both Hitbox rectangles depending on which animation is playing.
+			// - Write a method to see if the hitbox is the Guy being shot. If it is, adjust appropiraetly. Otherwise, set it to the current Position of the Character.
+			// Change all of the positionRect references to Hbox.
+
+			//positionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
+			//futurePositionRec = new Rectangle((int)position.X + xOffset, (int)position.Y + yOffset, spriteWidth, spriteHeight);
+		}
+
+		private Vector2 getShiftedPositionOfHitbox()
+		{
+			if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Left.ToString())
+			{
+				return new Vector2(position.X, position.Y);
+			}
+			else if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Right.ToString())
+			{
+				return new Vector2(position.X, position.Y);
+			}
+			else
+			{
+				return new Vector2(position.X, position.Y);
+			}
 		}
 
 		/// <summary>
@@ -423,10 +460,10 @@ namespace customAnimation
 		/// <remarks>When a collision is detected, execution is shifted to specializedCollision. This is an overloaded method for a derived class.</remarks>
 		protected void handleCollisions(State potentialState)
 		{
-			int leftTile = (int)Math.Floor((float)positionRect.Left / Level.impassableTileRecs[0].Width);
-			int rightTile = (int)Math.Ceiling(((float)positionRect.Right / Level.impassableTileRecs[0].Width)) - 1;
-			int topTile = (int)Math.Floor((float)positionRect.Top / Level.impassableTileRecs[0].Height);
-			int bottomTile = (int)Math.Ceiling(((float)positionRect.Bottom / Level.impassableTileRecs[0].Height)) - 1;
+			int leftTile = (int)Math.Floor((float)Hbox.Left / Level.impassableTileRecs[0].Width);
+			int rightTile = (int)Math.Ceiling(((float)Hbox.Right / Level.impassableTileRecs[0].Width)) - 1;
+			int topTile = (int)Math.Floor((float)Hbox.Top / Level.impassableTileRecs[0].Height);
+			int bottomTile = (int)Math.Ceiling(((float)Hbox.Bottom / Level.impassableTileRecs[0].Height)) - 1;
 
 			for (int y = topTile; y <= bottomTile; ++y)
 			{
@@ -441,7 +478,7 @@ namespace customAnimation
 					}
 					else if (x > 79)
 					{
-						position.X = screenWidth - spriteWidth;
+						position.X = screenWidth - Hbox.Width;
 						velocity.X = 0f;
 						didCharacterCollideWithRightBorderOfScreen = true;
 					}
@@ -482,6 +519,10 @@ namespace customAnimation
 							updateRectangles(0, -1);
 							tileCollRect = Level.tiles[y, x].SourceRect;
 						}
+					}
+					else
+					{
+						charDebug = "piss shit";
 					}
 				}
 			}
@@ -532,16 +573,16 @@ namespace customAnimation
 		{
 			PreviousCollidingTile = CurrentCollidingTile;
 
-			int leftTile = (int)Math.Floor((float)positionRect.Left / Level.impassableTileRecs[0].Width);
-			int rightTile = (int)Math.Ceiling(((float)positionRect.Right / Level.impassableTileRecs[0].Width)) - 1;
-			int topTile = (int)Math.Floor((float)positionRect.Top / Level.impassableTileRecs[0].Height);
-			int bottomTile = (int)Math.Ceiling(((float)positionRect.Bottom / Level.impassableTileRecs[0].Height)) - 1;
+			int leftTile = (int)Math.Floor((float)Hbox.Left / Level.impassableTileRecs[0].Width);
+			int rightTile = (int)Math.Ceiling(((float)Hbox.Right / Level.impassableTileRecs[0].Width)) - 1;
+			int topTile = (int)Math.Floor((float)Hbox.Top / Level.impassableTileRecs[0].Height);
+			int bottomTile = (int)Math.Ceiling(((float)Hbox.Bottom / Level.impassableTileRecs[0].Height)) - 1;
 
 			for (int y = topTile; y <= bottomTile; ++y)
 			{
 				for (int x = leftTile; x <= rightTile; ++x)
 				{
-					if ((x > 0 && x < 79 && y > 0 & y < 44) && PositionRect.Intersects(Level.tiles[y, x].SourceRect))
+					if ((x > 0 && x < 79 && y > 0 & y < 44) && Hbox.Intersects(Level.tiles[y, x].SourceRect))
 					{
 						currentTileCollidingWith = Level.tiles[y, x];
 						tileCollRect = Level.tiles[y, x].SourceRect;

@@ -11,11 +11,23 @@ namespace customAnimation
 		public Rectangle CollisionRectangle;
 		public float Rotation;
 		public Vector2 Origin;
+		public String Tag;
 
 		public RotatedRectangle(Rectangle theRectangle, float theInitialRotation)
 		{
 			CollisionRectangle = theRectangle;
 			Rotation = theInitialRotation;
+
+			//Calculate the Rectangles origin. We assume the center of the Rectangle will
+			//be the point that we will be rotating around and we use that for the origin
+			Origin = new Vector2((int)theRectangle.Width / 2, (int)theRectangle.Height / 2);
+		}
+
+		public RotatedRectangle(Rectangle theRectangle, float theInitialRotation, String tag)
+		{
+			CollisionRectangle = theRectangle;
+			Rotation = theInitialRotation;
+			Tag = tag;
 
 			//Calculate the Rectangles origin. We assume the center of the Rectangle will
 			//be the point that we will be rotating around and we use that for the origin
@@ -207,6 +219,26 @@ namespace customAnimation
 		public int Height
 		{
 			get { return CollisionRectangle.Height; }
+		}
+
+		public int Left
+		{
+			get { return X; }
+		}
+
+		public int Right
+		{
+			get { return X + Width; }
+		}
+
+		public int Top
+		{
+			get { return Y; }
+		}
+
+		public int Bottom
+		{
+			get { return Y + Height; }
 		}
 	}
 }

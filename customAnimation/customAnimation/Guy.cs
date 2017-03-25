@@ -55,13 +55,13 @@ namespace customAnimation
 			this.Texture = texture;
 			this.currentFrame = currentFrame;
 			this.totalFrames = totalFrames;
-			this.spriteWidth = spriteWidth;
-			this.spriteHeight = spriteHeight;
+			//this.spriteWidth = spriteWidth;
+			//this.spriteHeight = spriteHeight;
 			this.screenHeight = screenHeight;
 			this.screenWidth = screenWidth;
 			this.content = content;
 
-			changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Empty);
+			changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_Empty);
 
 			gravity = 10f;
 			debug = "";
@@ -107,7 +107,7 @@ namespace customAnimation
 					// Allow the Guy to pass through an Air Switch Cannon.
 					if (!Level.tiles[y, x].IsAirCannonSwitch)
 					{
-						position.X = Level.tiles[y, x].Position.X - spriteWidth;
+						position.X = Level.tiles[y, x].Position.X - Hbox.Width;
 					}
 
 					if (Level.tiles[y, x].TileRepresentation == 'S')
@@ -187,7 +187,7 @@ namespace customAnimation
 				{
 					if (!Level.tiles[y, x].IsAirCannonSwitch)
 					{
-						position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
+						position.Y = Level.tiles[y, x].Position.Y - Hbox.Width;
 					}
 
 					if (Level.tiles[y, x].TileRepresentation == 'S' && velocity.Y > 1f)
@@ -228,7 +228,7 @@ namespace customAnimation
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void loadNextLevelIfPossible(Shoes shoes)
 		{
-			if (PositionRect.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
+			if (Hbox.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
 			{
 				currentLevel.LoadLevel();
 				shoes.Position = currentLevel.getPlayerStartingPosition();
@@ -673,7 +673,7 @@ namespace customAnimation
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void resetGuyToShoesCurrentPositionIfPossible(Shoes shoes)
 		{
-			if (!(currentMouseState.RightButton == ButtonState.Pressed) && previousMouseState.RightButton == ButtonState.Pressed && !areGuyAndShoesCurrentlyLinked)
+			if (!(currentMouseState.RightButton == ButtonState.Pressed) && previousMouseState.RightButton == ButtonState.Pressed && !areGuyAndShoesCurrentlyLinked && !shoes.underTile())
 			{
 				isGuyBeingShot = false;
 				usingLauncher = false;
@@ -694,7 +694,7 @@ namespace customAnimation
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void setShoesPositionToGuyUponCollisionIfPossible(Shoes shoes)
 		{
-			if (PositionRect.Intersects(shoes.PositionRect) && !delayCollisionWithShoesAndGuy && !areGuyAndShoesCurrentlyLinked)
+			if (Hbox.Intersects(shoes.Hbox) && !delayCollisionWithShoesAndGuy && !areGuyAndShoesCurrentlyLinked)
 			{
 				velocity = new Vector2(0f, 0f);
 				shoes.velocity = new Vector2(0f, 0f);
@@ -723,7 +723,8 @@ namespace customAnimation
 		/// <param name="state">The State of the Guy. Used to get the correct Animated Sprite.</param>
 		public void changeSpriteOfTheGuy(AnimatedSprite.AnimationState state)
 		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y);
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y, ref hbox);
+			debug = hbox.Height.ToString();
 		}
 
 		/// <summary>
@@ -761,12 +762,12 @@ namespace customAnimation
 			if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
 			{
 				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Left);
-				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Empty);
+				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
 			}
 			else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
 			{
 				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
-				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Empty);
+				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
 			}
 		}
 

@@ -67,8 +67,8 @@ namespace customAnimation
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
 			this.state = state;                 // The initial state of the player.
 			this.currentFrame = currentFrame;   // The current frame that we are drawing.
-			this.spriteWidth = spriteWidth;     // The width of the individual sprite.
-			this.spriteHeight = spriteHeight;   // The height of the individual sprite.
+			//this.spriteWidth = spriteWidth;     // The width of the individual sprite.
+			//this.spriteHeight = spriteHeight;   // The height of the individual sprite.
 			this.totalFrames = totalFrames;     // The total frames in the current sprite sheet.
 			this.spriteBatch = spriteBatch;     // The spriteBatch we will use to draw the player.
 			this.screenHeight = screenHeight;
@@ -125,7 +125,7 @@ namespace customAnimation
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					resetMovementModificationsDueToAirCollision();	// If the Shoes collided with this Tile after colliding with an Air, reset the movement properties of the Shoes back to normal.
-					position.X = Level.tiles[y, x].Position.X - spriteWidth;
+					position.X = Level.tiles[y, x].Position.X - Hbox.Width;
 					delayMovementAfterSpringCollision = true;
 					prepareMovementDueToSpringCollision(currentState);
 				}
@@ -148,7 +148,7 @@ namespace customAnimation
 				else
 				{
 					resetMovementModificationsDueToAirCollision();
-					position.X = Level.tiles[y, x].Position.X - spriteWidth;
+					position.X = Level.tiles[y, x].Position.X - Hbox.Width;
 					checkIfShoesCollidedWithTileViaSpring();
 					checkIfShoesCollidedWithTileViaLauncher();
 				}
@@ -218,7 +218,7 @@ namespace customAnimation
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					resetMovementModificationsDueToAirCollision();
-					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
+					position.Y = Level.tiles[y, x].Position.Y - Hbox.Height;
 					prepareMovementDueToSpringCollision(currentState);
 				}
 				else if (Level.tiles[y, x].IsLauncher)
@@ -234,7 +234,7 @@ namespace customAnimation
 				else
 				{
 					resetMovementModificationsDueToAirCollision();
-					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
+					position.Y = Level.tiles[y, x].Position.Y - Hbox.Height;
 					spriteSpeed = 300f;
 					isJumping = false;
 					isFalling = false;
@@ -422,6 +422,11 @@ namespace customAnimation
 		/// <param name="guy">A reference to the Guy.</param>
 		private void handleMovement(GameTime gameTime, ref Guy guy)
 		{
+			debug = "Shoes Position: " + Position.ToString();
+			//debug2 = "Hitbox.X: " + Hbox.X.ToString() + " | Hitbox.Y: " + Hbox.Y.ToString();
+			debug2 = "Hitbox.Width: " + Hbox.Width.ToString() + " | Hitbox.Height: " + Hbox.Height.ToString();
+			debug3 = "SpriteWidth: " + SpriteWidth.ToString() + " | SpriteHeight: " + SpriteHeight.ToString();
+
 			float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;	// Represents the amount of time that has passed since the previous frame.
 			newKeyboardState = Keyboard.GetState();						// Get the new state of the keyboard.
 
@@ -1135,7 +1140,7 @@ namespace customAnimation
 			List<Air> airsThatShoesAreNoLongerCollidingWith = new List<Air>();
 			foreach (Air air in airsShoesHasCollidedWith)
 			{
-				if (!air.RotatedRect.Intersects(new RotatedRectangle(PositionRect, 0.0f)))
+				if (!air.RotatedRect.Intersects(Hbox))
 				{
 					airsThatShoesAreNoLongerCollidingWith.Add(air);
 				}
@@ -1171,7 +1176,8 @@ namespace customAnimation
 		/// <param name="accessGuySprites">Says whether or not to use the Guy's Animated Sprites or not.</param>
 		public void changeSpriteOfTheShoes(AnimatedSprite.AnimationState state)
 		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y);
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y, ref hbox);
+			//debug3 = "shoes tag: " + hbox.Width.ToString();
 		}
 
 		/// <summary>

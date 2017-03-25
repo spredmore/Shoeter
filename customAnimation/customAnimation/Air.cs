@@ -76,14 +76,14 @@ namespace customAnimation
 			foreach(Air air in Air.allAirs)
 			{
 				// Shoes Collision
-				if (air.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)) && !shoes.airsShoesHasCollidedWith.Contains(air))
+				if (air.RotatedRect.Intersects(shoes.Hbox) && !shoes.airsShoesHasCollidedWith.Contains(air))
 				{
 					shoes.airsShoesHasCollidedWith.Add(air);
 					shoes.setVelocityUponAirCollision(air.airCannonRepresentation);
 				}
 
 				// Guy Collision
-				if (air.RotatedRect.Intersects(new RotatedRectangle(guy.PositionRect, 0.0f)) && !guy.airsGuyHasCollidedWith.Contains(air))
+				if (air.RotatedRect.Intersects(guy.Hbox) && !guy.airsGuyHasCollidedWith.Contains(air))
 				{
 					guy.airsGuyHasCollidedWith.Add(air);
 					guy.setVelocityUponAirCollision(air.airCannonRepresentation);
