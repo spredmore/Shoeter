@@ -321,7 +321,7 @@ namespace customAnimation
 			else if (state == AnimationState.Guy_Empty)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 37, 48, 69, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 37, 48), 0, AnimationState.Guy_Running_Left.ToString());
+				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 0, 0), 0, AnimationState.Guy_Running_Left.ToString());
 				return sprite;
 			}
 			else if(state == AnimationState.Shoes_Idle_Left)

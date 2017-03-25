@@ -217,6 +217,7 @@ namespace customAnimation
 						velocity = new Vector2(0f, 0f); // So the Guy doesn't fall through.
 						useGravity = false;
 						changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_Idle_WithoutShoes_Right);
+						position.Y -= 27f;
 					}
 				}
 			}
@@ -355,6 +356,8 @@ namespace customAnimation
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void handleMovement(GameTime gameTime, ref Shoes shoes)
 		{
+			debug = "Bottom: " + Hbox.Bottom.ToString() + " | " + "Right: " + Hbox.Right.ToString();
+
 			// Updates a variety of variables used for knowing information about the current frame.
 			updateCurrentFrameVariables(gameTime, shoes.Position);
 
@@ -679,7 +682,7 @@ namespace customAnimation
 				usingLauncher = false;
 				idleAnimationLockIsOn = false;
 				areGuyAndShoesCurrentlyLinked = true;
-				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
+				//shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
 				Position = new Vector2(shoes.Position.X, shoes.Position.Y);
 				velocity = new Vector2(0f, 0f);
 				delayLaunchAfterLauncherCollisionTimer.stopTimer();
@@ -698,13 +701,13 @@ namespace customAnimation
 			{
 				velocity = new Vector2(0f, 0f);
 				shoes.velocity = new Vector2(0f, 0f);
-				shoes.Position = new Vector2(Position.X, Position.Y + 40);
+				Position = new Vector2(shoes.Position.X, shoes.Position.Y);
 				isGuyBeingShot = false;
 				shoes.stopPlayerInput = true;
 				idleAnimationLockIsOn = false;
 				delayCollisionWithShoesAndGuy = true;
 				areGuyAndShoesCurrentlyLinked = true;
-				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
+				//shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
 				setIdleAnimationIfPossible(shoes);
 			}
 		}
@@ -724,7 +727,7 @@ namespace customAnimation
 		public void changeSpriteOfTheGuy(AnimatedSprite.AnimationState state)
 		{
 			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y, ref hbox);
-			debug = hbox.Height.ToString();
+			debug2 = hbox.Height.ToString();
 		}
 
 		/// <summary>
@@ -755,7 +758,7 @@ namespace customAnimation
 		}
 
 		/// <summary>
-		/// Sets the Animated Sprite for the Guy to the Being Shot Animation.
+		/// Sets the Animated Sprite for the Guy to the Idle With Shoes Animation.
 		/// </summary>
 		private void setIdleAnimationIfPossible(Shoes shoes)
 		{

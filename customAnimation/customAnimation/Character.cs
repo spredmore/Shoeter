@@ -270,7 +270,7 @@ namespace customAnimation
 			{
 				if (futurePositionRec.Intersects(Level.impassableTileRecs[i]))
 				{
-					position.Y = Level.impassableTilePos[i].Y - spriteHeight;
+					position.Y = Level.impassableTilePos[i].Y - Hbox.Height;
 					updateRectangles(0, -1);
 					tileCollRect = Level.impassableTileRecs[i];
 					setTileArrayCoordinates(Level.impassableTilePos[i].X, Level.impassableTilePos[i].Y);
@@ -410,7 +410,8 @@ namespace customAnimation
 			RotatedRectangle oldHbox = Hbox;
 			Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, oldHbox.Width, oldHbox.Height), 0);
 
-			Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight), 0);
+			//Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, 32, 48), 0);
+			//Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight), 0);
 			//positionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
 			futurePositionRec = new Rectangle((int)Hbox.X + xOffset, (int)Hbox.Y + yOffset, Math.Abs(Hbox.Right - Hbox.Left), Math.Abs(Hbox.Top - Hbox.Bottom));
 

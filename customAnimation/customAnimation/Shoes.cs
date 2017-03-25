@@ -67,8 +67,8 @@ namespace customAnimation
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
 			this.state = state;                 // The initial state of the player.
 			this.currentFrame = currentFrame;   // The current frame that we are drawing.
-			//this.spriteWidth = spriteWidth;     // The width of the individual sprite.
-			//this.spriteHeight = spriteHeight;   // The height of the individual sprite.
+																						//this.spriteWidth = spriteWidth;     // The width of the individual sprite.
+																						//this.spriteHeight = spriteHeight;   // The height of the individual sprite.
 			this.totalFrames = totalFrames;     // The total frames in the current sprite sheet.
 			this.spriteBatch = spriteBatch;     // The spriteBatch we will use to draw the player.
 			this.screenHeight = screenHeight;
@@ -358,14 +358,14 @@ namespace customAnimation
 		{
 			if (areGuyAndShoesCurrentlyLinked)
 			{
-				spriteHeight = 48;
-				Texture = content.Load<Texture2D>("Sprites/Shoes32x48"); // Bottom
+				//spriteHeight = 48;
+				//Texture = content.Load<Texture2D>("Sprites/Shoes32x48"); // Bottom
 				position.Y -= 32f;
 			}
 			else
 			{
-				spriteHeight = 16;
-				Texture = content.Load<Texture2D>("Sprites/Shoes32x48_Top");
+				//spriteHeight = 16;
+				//Texture = content.Load<Texture2D>("Sprites/Shoes32x48_Top");
 				position.Y += 32f;
 			}
 		}
@@ -424,8 +424,9 @@ namespace customAnimation
 		{
 			debug = "Shoes Position: " + Position.ToString();
 			//debug2 = "Hitbox.X: " + Hbox.X.ToString() + " | Hitbox.Y: " + Hbox.Y.ToString();
-			debug2 = "Hitbox.Width: " + Hbox.Width.ToString() + " | Hitbox.Height: " + Hbox.Height.ToString();
-			debug3 = "SpriteWidth: " + SpriteWidth.ToString() + " | SpriteHeight: " + SpriteHeight.ToString();
+			//debug2 = "Hitbox.Width: " + Hbox.Width.ToString() + " | Hitbox.Height: " + Hbox.Height.ToString();
+			debug2 = "Bottom: " + Hbox.Bottom.ToString() + " | " + "Right: " + Hbox.Right.ToString();
+			//debug3 = "SpriteWidth: " + SpriteWidth.ToString() + " | SpriteHeight: " + SpriteHeight.ToString();
 
 			float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;	// Represents the amount of time that has passed since the previous frame.
 			newKeyboardState = Keyboard.GetState();						// Get the new state of the keyboard.
@@ -497,6 +498,7 @@ namespace customAnimation
 		/// <param name="isThereATileAboveTheGuy">Flag that says whether or not there is a tile above the linked Guy/Shoes.</param>
 		private void checkIfShoesWantToJump(Boolean isThereATileAboveTheGuy, Boolean isGuyBeingShot)
 		{
+			debug3 = "isThereATileAboveTheGuy: " + isThereATileAboveTheGuy.ToString();
 			if (!isJumping
 				&& ((newKeyboardState.IsKeyDown(up) && !oldKeyboardState.IsKeyDown(up)) || (newKeyboardState.IsKeyDown(Keys.Space) && !oldKeyboardState.IsKeyDown(Keys.Space)))
 				&& standingOnGround()
@@ -1239,6 +1241,7 @@ namespace customAnimation
 			{
 				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
 				directionShoesAreRunning = State.Idle_Right;
+				position.X -= 9f;
 
 				if (isGuyBeingShot)
 				{
