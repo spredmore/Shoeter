@@ -369,22 +369,6 @@ namespace customAnimation
 		/// <remarks>The offsets are used so that it is always known what's "in front" of the Character. Used for collision detection.</remarks>
 		protected void updateRectangles(int xOffset, int yOffset)
 		{
-			// Before
-			// Position: Top right corner of the sprite.
-			// PositionRect: Rectangle used to test for collisions with other tiles.
-			// FuturePositionRect: Future position of PositionRect.
-
-			//positionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
-			//futurePositionRec = new Rectangle((int)position.X + xOffset, (int)position.Y + yOffset, spriteWidth, spriteHeight);
-
-			// After
-			// Position: Top right corner of the sprite.
-			// Hbox: The RotatedRectangle that will be used to test for collisions with other tiles.
-			// FutureHitboxRectangle: The RotatedRectangle that will be used to test for collisions with other tiles.
-
-			//charDebug = "Hitbox.Width: " + Hbox.Width.ToString() + " | Hitbox.Height: " + Hbox.Height.ToString();
-			//charDebug = "Tag: " + Hbox.Tag;
-
 			Vector2 shiftedHitboxPosition = getShiftedPositionOfHitbox();
 			//if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_Empty.ToString())
 			//{
@@ -409,19 +393,7 @@ namespace customAnimation
 
 			RotatedRectangle oldHbox = Hbox;
 			Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, oldHbox.Width, oldHbox.Height), 0);
-
-			//Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, 32, 48), 0);
-			//Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight), 0);
-			//positionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
 			futurePositionRec = new Rectangle((int)Hbox.X + xOffset, (int)Hbox.Y + yOffset, Math.Abs(Hbox.Right - Hbox.Left), Math.Abs(Hbox.Top - Hbox.Bottom));
-
-			// Notes:
-			// Need to shift both Hitbox rectangles depending on which animation is playing.
-			// - Write a method to see if the hitbox is the Guy being shot. If it is, adjust appropiraetly. Otherwise, set it to the current Position of the Character.
-			// Change all of the positionRect references to Hbox.
-
-			//positionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
-			//futurePositionRec = new Rectangle((int)position.X + xOffset, (int)position.Y + yOffset, spriteWidth, spriteHeight);
 		}
 
 		private Vector2 getShiftedPositionOfHitbox()
@@ -520,10 +492,6 @@ namespace customAnimation
 							updateRectangles(0, -1);
 							tileCollRect = Level.tiles[y, x].SourceRect;
 						}
-					}
-					else
-					{
-						charDebug = "piss shit";
 					}
 				}
 			}

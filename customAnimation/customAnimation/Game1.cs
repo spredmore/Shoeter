@@ -157,13 +157,13 @@ namespace customAnimation
 			guy.Sprite.Draw();
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox"), new Rectangle(guy.Hbox.X, guy.Hbox.Y, guy.Hbox.Width, guy.Hbox.Height), Color.White);
 			//spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox2"), guy.FutureRectangleRect, Color.White);
-			//spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), guy.TileCollisionRectangle, Color.White);
+			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), guy.TileCollisionRectangle, Color.White);
 
 			//shoes.Draw();
 			shoes.Sprite.Draw();
 			//spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox"), shoes.PositionRect, Color.White);
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox2"), new Rectangle(shoes.Hbox.X, shoes.Hbox.Y, shoes.Hbox.Width, shoes.Hbox.Height), Color.White);
-			//spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), shoes.TileCollisionRectangle, Color.White);
+			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), shoes.TileCollisionRectangle, Color.White);
 
 			// Draw the debug font.
 			spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.Black);

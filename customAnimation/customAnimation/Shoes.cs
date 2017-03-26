@@ -67,8 +67,6 @@ namespace customAnimation
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
 			this.state = state;                 // The initial state of the player.
 			this.currentFrame = currentFrame;   // The current frame that we are drawing.
-																						//this.spriteWidth = spriteWidth;     // The width of the individual sprite.
-																						//this.spriteHeight = spriteHeight;   // The height of the individual sprite.
 			this.totalFrames = totalFrames;     // The total frames in the current sprite sheet.
 			this.spriteBatch = spriteBatch;     // The spriteBatch we will use to draw the player.
 			this.screenHeight = screenHeight;
@@ -103,7 +101,6 @@ namespace customAnimation
 		/// <param name="guy">A reference to the Guy.</param>
 		public void Update(GameTime gameTime, ref Guy guy)
 		{
-			//handleAnimation(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref guy);
 			doInterface(guy.isGuyBeingShot);
@@ -351,26 +348,6 @@ namespace customAnimation
 		}
 
 		/// <summary>
-		/// Swaps the texture and dimensions of the Shoes. Used to switch between the Guy being shot and the Guy traveling with the Shoes.
-		/// </summary>
-		/// <param name="currentLinkedState">Flag that says whether or not the Shoes and Guy are currently linked or not.</param>
-		public void swapTexture(bool areGuyAndShoesCurrentlyLinked)
-		{
-			if (areGuyAndShoesCurrentlyLinked)
-			{
-				//spriteHeight = 48;
-				//Texture = content.Load<Texture2D>("Sprites/Shoes32x48"); // Bottom
-				position.Y -= 32f;
-			}
-			else
-			{
-				//spriteHeight = 16;
-				//Texture = content.Load<Texture2D>("Sprites/Shoes32x48_Top");
-				position.Y += 32f;
-			}
-		}
-
-		/// <summary>
 		/// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
 		/// </summary>
 		/// <param name="guy">A reference to the Guy. Needed so that a check can be done to ensure that there isn't a tile above the linked Guy/Shoes.</param>
@@ -422,12 +399,6 @@ namespace customAnimation
 		/// <param name="guy">A reference to the Guy.</param>
 		private void handleMovement(GameTime gameTime, ref Guy guy)
 		{
-			debug = "Shoes Position: " + Position.ToString();
-			//debug2 = "Hitbox.X: " + Hbox.X.ToString() + " | Hitbox.Y: " + Hbox.Y.ToString();
-			//debug2 = "Hitbox.Width: " + Hbox.Width.ToString() + " | Hitbox.Height: " + Hbox.Height.ToString();
-			debug2 = "Bottom: " + Hbox.Bottom.ToString() + " | " + "Right: " + Hbox.Right.ToString();
-			//debug3 = "SpriteWidth: " + SpriteWidth.ToString() + " | SpriteHeight: " + SpriteHeight.ToString();
-
 			float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;	// Represents the amount of time that has passed since the previous frame.
 			newKeyboardState = Keyboard.GetState();						// Get the new state of the keyboard.
 
@@ -498,7 +469,6 @@ namespace customAnimation
 		/// <param name="isThereATileAboveTheGuy">Flag that says whether or not there is a tile above the linked Guy/Shoes.</param>
 		private void checkIfShoesWantToJump(Boolean isThereATileAboveTheGuy, Boolean isGuyBeingShot)
 		{
-			debug3 = "isThereATileAboveTheGuy: " + isThereATileAboveTheGuy.ToString();
 			if (!isJumping
 				&& ((newKeyboardState.IsKeyDown(up) && !oldKeyboardState.IsKeyDown(up)) || (newKeyboardState.IsKeyDown(Keys.Space) && !oldKeyboardState.IsKeyDown(Keys.Space)))
 				&& standingOnGround()
@@ -1179,7 +1149,6 @@ namespace customAnimation
 		public void changeSpriteOfTheShoes(AnimatedSprite.AnimationState state)
 		{
 			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y, ref hbox);
-			//debug3 = "shoes tag: " + hbox.Width.ToString();
 		}
 
 		/// <summary>

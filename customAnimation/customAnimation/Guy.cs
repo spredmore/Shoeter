@@ -49,14 +49,14 @@ namespace customAnimation
 		public bool usingLauncher = false;
 		private Boolean idleAnimationLockIsOn = false;
 
+		public static int test;
+
 		public Guy(Texture2D texture, SpriteBatch spriteBatch, int currentFrame, int totalFrames, int spriteWidth, int spriteHeight, int screenHeight, int screenWidth, ContentManager content)
 		{
 			this.spriteBatch = spriteBatch;
 			this.Texture = texture;
 			this.currentFrame = currentFrame;
 			this.totalFrames = totalFrames;
-			//this.spriteWidth = spriteWidth;
-			//this.spriteHeight = spriteHeight;
 			this.screenHeight = screenHeight;
 			this.screenWidth = screenWidth;
 			this.content = content;
@@ -100,6 +100,7 @@ namespace customAnimation
 		/// <param name="x">The X coordinate of the Tile in the level being collided with.</param>
 		protected override void specializedCollision(State currentState, int y, int x)
 		{
+			debug2 = "pos: " + Position.ToString(); 
 			if (!delayBetweenLaunchesTimer.TimerStarted)    // Ensures the Guy doesn't use another Launcher too quickly.
 			{
 				if (currentState == State.Running_Right)  
@@ -217,7 +218,7 @@ namespace customAnimation
 						velocity = new Vector2(0f, 0f); // So the Guy doesn't fall through.
 						useGravity = false;
 						changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_Idle_WithoutShoes_Right);
-						position.Y -= 27f;
+						position.Y -= 27f;	// Magic fix. >:[. Without this, the Guy clips into the ground.
 					}
 				}
 			}
@@ -356,8 +357,6 @@ namespace customAnimation
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void handleMovement(GameTime gameTime, ref Shoes shoes)
 		{
-			debug = "Bottom: " + Hbox.Bottom.ToString() + " | " + "Right: " + Hbox.Right.ToString();
-
 			// Updates a variety of variables used for knowing information about the current frame.
 			updateCurrentFrameVariables(gameTime, shoes.Position);
 
@@ -378,8 +377,8 @@ namespace customAnimation
 				// Takes care of movement for the Guy while he's being shot.
 				handleGuyMovementWhenBeingShot();
 
-				// Set the Shoes' position to the Guys' upon collision.
-				setShoesPositionToGuyUponCollisionIfPossible(shoes);
+				// Set the Guy's position to the Shoes' upon collision.
+				setGuyPositionToShoesUponCollisionIfPossible(shoes);
 
 				// Checks to see if the Guy is using a Launcher. If so, then launch the Guy if possible.
 				checkIfGuyCanLaunch(gameTime);
@@ -424,13 +423,13 @@ namespace customAnimation
 					delayCollisionWithGuyAndShoesTimer.startTimer();
 				}
 
-				isGuyBeingShot = true;
 				useGravity = true;
+				isGuyBeingShot = true;
 				delayCollisionWithShoesAndGuy = true;
+				areGuyAndShoesCurrentlyLinked = false;
 				velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(angleBetweenGuyAndMouseCursor)) * powerOfLauncherBeingUsed;
 				velocity *= -1;
-				areGuyAndShoesCurrentlyLinked = false;
-				shoes.swapTexture(areGuyAndShoesCurrentlyLinked); // Changes the texture/size of the shoes because the Guy is being shot.
+				shoes.Position = new Vector2(shoes.Position.X, shoes.Position.Y + 32f);	// Move the shoes to the ground.
 				setBeingShotAnimationIfPossible(shoes);
 			}
 		}
@@ -682,12 +681,11 @@ namespace customAnimation
 				usingLauncher = false;
 				idleAnimationLockIsOn = false;
 				areGuyAndShoesCurrentlyLinked = true;
-				//shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
 				Position = new Vector2(shoes.Position.X, shoes.Position.Y);
 				velocity = new Vector2(0f, 0f);
-				delayLaunchAfterLauncherCollisionTimer.stopTimer();
 				delayBetweenLaunchesTimer.stopTimer();
-				setIdleAnimationIfPossible(shoes);
+				delayLaunchAfterLauncherCollisionTimer.stopTimer();
+				setIdleAnimationIfPossible(shoes, false);
 			}
 		}
 
@@ -695,7 +693,7 @@ namespace customAnimation
 		/// Set the Shoes's position to the position of the Guy if the collision delay timer is completed and the Guy and Shoes are not currently linked.
 		/// </summary>
 		/// <param name="shoes">A reference to the Shoes.</param>
-		private void setShoesPositionToGuyUponCollisionIfPossible(Shoes shoes)
+		private void setGuyPositionToShoesUponCollisionIfPossible(Shoes shoes)
 		{
 			if (Hbox.Intersects(shoes.Hbox) && !delayCollisionWithShoesAndGuy && !areGuyAndShoesCurrentlyLinked)
 			{
@@ -707,8 +705,7 @@ namespace customAnimation
 				idleAnimationLockIsOn = false;
 				delayCollisionWithShoesAndGuy = true;
 				areGuyAndShoesCurrentlyLinked = true;
-				//shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
-				setIdleAnimationIfPossible(shoes);
+				setIdleAnimationIfPossible(shoes, true);
 			}
 		}
 
@@ -727,7 +724,6 @@ namespace customAnimation
 		public void changeSpriteOfTheGuy(AnimatedSprite.AnimationState state)
 		{
 			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y, ref hbox);
-			debug2 = hbox.Height.ToString();
 		}
 
 		/// <summary>
@@ -760,14 +756,24 @@ namespace customAnimation
 		/// <summary>
 		/// Sets the Animated Sprite for the Guy to the Idle With Shoes Animation.
 		/// </summary>
-		private void setIdleAnimationIfPossible(Shoes shoes)
+		private void setIdleAnimationIfPossible(Shoes shoes, Boolean calledFromMutualCollision)
 		{
-			if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
+			if (shoes.directionShoesAreRunning == State.Running_Left && !calledFromMutualCollision)
+			{
+				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Running_Left);
+				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
+			}
+			else if ((shoes.directionShoesAreRunning == State.Idle_Left || calledFromMutualCollision) && shoes.directionShoesAreRunning != State.Running_Right)
 			{
 				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Left);
 				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
 			}
-			else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
+			else if (shoes.directionShoesAreRunning == State.Running_Right && !calledFromMutualCollision)
+			{
+				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Running_Right);
+				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
+			}
+			else if ((shoes.directionShoesAreRunning == State.Idle_Right || calledFromMutualCollision) && shoes.directionShoesAreRunning != State.Running_Left)
 			{
 				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
 				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
