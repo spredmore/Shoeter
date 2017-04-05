@@ -13,7 +13,7 @@ namespace customAnimation
 	{
 		private KeyboardState currentKeyboardState;
 		private KeyboardState previousKeyboardState;
-		private MouseState currentMouseState;
+		public MouseState currentMouseState;
 		private MouseState previousMouseState;
 
 		private Vector2 currentMousePosition;
@@ -35,12 +35,16 @@ namespace customAnimation
 		
 		private float delta;
 
+		private Timer airCannonActivationTimer;	// A timer that keeps track of how long an Air Cannon has been on.
 		public List<Air> airsGuyHasCollidedWith = new List<Air>();
+		public Queue<Char> airCannonSwitchesCollidedWith;
+		public Queue<float> airCannonSwitchesCollidedWithActivationTimes;
 
 		private ContentManager content;
 
 		public string debug;
 		public string debug2;
+		public string debug3;
 
 		private Level currentLevel;
 		private int collX;
@@ -74,6 +78,10 @@ namespace customAnimation
 			delayCollisionWithGuyAndShoesTimer = new Timer(0.5f);
 			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
 			delayBetweenLaunchesTimer = new Timer(0.1f);
+			airCannonActivationTimer = new Timer(2f);
+
+			airCannonSwitchesCollidedWith = new Queue<Char>();
+			airCannonSwitchesCollidedWithActivationTimes = new Queue<float>();
 		}
 
 		/// <summary>
@@ -100,7 +108,6 @@ namespace customAnimation
 		/// <param name="x">The X coordinate of the Tile in the level being collided with.</param>
 		protected override void specializedCollision(State currentState, int y, int x)
 		{
-			debug2 = "pos: " + Position.ToString(); 
 			if (!delayBetweenLaunchesTimer.TimerStarted)    // Ensures the Guy doesn't use another Launcher too quickly.
 			{
 				if (currentState == State.Running_Right)  
@@ -124,6 +131,12 @@ namespace customAnimation
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
 						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
+						queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
+
+						if (!airCannonActivationTimer.TimerStarted)
+						{
+							airCannonActivationTimer.startTimer();
+						}
 					}
 					else
 					{
@@ -151,6 +164,12 @@ namespace customAnimation
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
 						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
+						queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
+
+						if (!airCannonActivationTimer.TimerStarted)
+						{
+							airCannonActivationTimer.startTimer();
+						}
 					}
 					else
 					{
@@ -178,6 +197,12 @@ namespace customAnimation
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
 						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
+						queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
+
+						if (!airCannonActivationTimer.TimerStarted)
+						{
+							airCannonActivationTimer.startTimer();
+						}
 					}
 					else
 					{
@@ -203,9 +228,16 @@ namespace customAnimation
 					}
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
-						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 						position = new Vector2(Level.tiles[y, x].Position.X - 16, Level.tiles[y, x].Position.Y - 32);
 						velocity = new Vector2(0f, 0f);
+
+						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
+						queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
+
+						if (!airCannonActivationTimer.TimerStarted)
+						{
+							airCannonActivationTimer.startTimer();
+						}
 
 						if (!idleAnimationLockIsOn)
 						{
@@ -215,10 +247,10 @@ namespace customAnimation
 					}
 					else
 					{
+						Position = new Vector2(TileCollisionRectangle.X - 8, TileCollisionRectangle.Y - 32);
 						velocity = new Vector2(0f, 0f); // So the Guy doesn't fall through.
 						useGravity = false;
 						changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_Idle_WithoutShoes_Right);
-						position.Y -= 27f;	// Magic fix. >:[. Without this, the Guy clips into the ground.
 					}
 				}
 			}
@@ -230,7 +262,7 @@ namespace customAnimation
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void loadNextLevelIfPossible(Shoes shoes)
 		{
-			if (Hbox.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
+			if (shoes.Hbox.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
 			{
 				currentLevel.LoadLevel();
 				shoes.Position = currentLevel.getPlayerStartingPosition();
@@ -324,6 +356,7 @@ namespace customAnimation
 			delayCollisionWithGuyAndShoesTimer.Update(gameTime);
 			delayLaunchAfterLauncherCollisionTimer.Update(gameTime);
 			delayBetweenLaunchesTimer.Update(gameTime);
+			airCannonActivationTimer.Update(gameTime);
 		}
 
 		/// <summary>
@@ -350,6 +383,18 @@ namespace customAnimation
 		// * START MOVEMENT *
 		// ******************
 
+		private void debugs()
+		{
+			//debug = "test: " + test.ToString();
+			debug = "airCannonActivationTimer.ElapsedTime: " + airCannonActivationTimer.ElapsedTime.ToString();
+			debug2 = "airCannonActivationTimer.TimerStarted: " + airCannonActivationTimer.TimerStarted.ToString();
+			debug3 = "airCannonActivationTimer.TimerCompleted: " + airCannonActivationTimer.TimerCompleted.ToString();
+			//debug3 = "airCannonTileCollidedWith: " + airCannonSwitchCurrentlyCollidingWith.ToString();
+			//debug2 = "airCannonActivationTimer.ElapsedTime: " + airCannonActivationTimer.ElapsedTime.ToString();
+			//debug = "areGuyAndShoesCurrentlyLinked: " + areGuyAndShoesCurrentlyLinked.ToString();
+			//debug = "currentLevel.goalRectangle: " + currentLevel.goalRectangle.X + ", " + currentLevel.goalRectangle.Y;
+		}
+
 		/// <summary>
 		/// Handles all of the movement for the Guy.
 		/// </summary>
@@ -357,6 +402,8 @@ namespace customAnimation
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void handleMovement(GameTime gameTime, ref Shoes shoes)
 		{
+			debugs();
+
 			// Updates a variety of variables used for knowing information about the current frame.
 			updateCurrentFrameVariables(gameTime, shoes.Position);
 
@@ -399,7 +446,7 @@ namespace customAnimation
 			changeGravity();
 
 			// If the Guy has turned on a particular set of Air Cannons and has now left that switch, turn the corresponding Air Cannons off.
-			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile, this, null);
+			checkIfAirCannonsCanBeTurnedOff();
 
 			// Updates the variables that are used for storing the previous values of the current values.
 			updatePreviousFrameVariables();
@@ -429,7 +476,17 @@ namespace customAnimation
 				areGuyAndShoesCurrentlyLinked = false;
 				velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(angleBetweenGuyAndMouseCursor)) * powerOfLauncherBeingUsed;
 				velocity *= -1;
-				shoes.Position = new Vector2(shoes.Position.X, shoes.Position.Y + 32f);	// Move the shoes to the ground.
+				//shoes.Position = new Vector2(shoes.Position.X, shoes.Position.Y + 32f);	// Move the shoes to the ground.
+				
+				if (shoes.CurrentCollidingTile.IsAirCannonSwitch)
+				{
+					shoes.Position = new Vector2(shoes.CurrentCollidingTile.Position.X, shoes.CurrentCollidingTile.Position.Y);
+				}
+				else
+				{
+					shoes.Position = new Vector2(shoes.Position.X, shoes.Position.Y + 32f);	// Move the shoes to the ground.
+				}
+
 				setBeingShotAnimationIfPossible(shoes);
 			}
 		}
@@ -645,6 +702,45 @@ namespace customAnimation
 			{
 				velocity.X += 10f;
 				velocity.Y += 10f;
+			}
+		}
+
+		/// <summary>
+		/// Turns off any activated Air Cannons if they are on.
+		/// </summary>
+		private void checkIfAirCannonsCanBeTurnedOff()
+		{
+			if (airCannonActivationTimer.TimerCompleted)
+			{
+				airCannonActivationTimer.resetTimer();
+				Air.turnOffAirCannonsIfPossible(this, null, airCannonSwitchesCollidedWith.Dequeue());
+
+				// If there are multiple Air Cannon sets activated at the same time, then ensure that the next set to turn off happens at the correct time.
+				if (airCannonSwitchesCollidedWith.Count >= 1)
+				{
+					airCannonActivationTimer.startTimer();
+					airCannonActivationTimer.ElapsedTime += airCannonSwitchesCollidedWithActivationTimes.Dequeue();
+				}
+			}
+		}
+
+		/// <summary>
+		/// If multiple Air Cannon Switches are activated, ensure that subsequent Air Cannon activations (after the initial one) only stay on for the correct length of time.
+		/// </summary>
+		/// <param name="tileRepresentation">Denotes which Air Cannon Switch was activated.</param>
+		private void queueSubsequentAirCannonSwitchCollisions(Char tileRepresentation)
+		{
+			// Add the Air Cannon Switch set to the Queue if that set isn't already in the queue.
+			if (!airCannonSwitchesCollidedWith.Contains<Char>(tileRepresentation))
+			{
+				airCannonSwitchesCollidedWith.Enqueue(tileRepresentation);
+
+				// Enqueue the current elapsed time of the timer if there is a Air Cannon set already active.
+				// This is needed to ensure that every Air Cannon set only stays active for the correct amount of time.
+				if (airCannonActivationTimer.ElapsedTime != 0f)
+				{
+					airCannonSwitchesCollidedWithActivationTimes.Enqueue(airCannonActivationTimer.ElapsedTime);
+				}
 			}
 		}
 

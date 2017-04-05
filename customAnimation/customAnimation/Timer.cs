@@ -19,6 +19,7 @@ namespace customAnimation
 		public float ElapsedTime
 		{
 			get { return elapsedTime; }
+			set { elapsedTime = value; }
 		}
 
 		/// <summary>

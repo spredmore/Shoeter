@@ -15,6 +15,9 @@ namespace customAnimation
 		private KeyboardState oldKeyboardState;
 		private KeyboardState newKeyboardState;
 
+		public MouseState currentMouseState;
+		public MouseState previousMouseState;
+
 		private Keys right;
 		private Keys left;
 		private Keys up;
@@ -48,12 +51,12 @@ namespace customAnimation
 		private int angleInDegreesOfLauncherShoesIsUsing;			// Stores the coordinates of the Launcher Tile from the level. Used to launch the Shoes at the correct angle.
 		private bool shoesAreCurrentlyMovingDueToLauncher = false;	// Says whether or not the Shoes are moving due to being launched from a Launcher. 
 
-		public List<Air> airsShoesHasCollidedWith = new List<Air>();			// The List of Airs that the Shoes are colliding with.
-		private float horizontalVelocityDueToAirCollision = 0f;					// Stores the horizontal velocity due to using an Air Cannon.
-		private Timer delayMovementAfterAirCannonSwitchCollisionTimer;			// Delays movement upon Air Cannon Switch collision so that activating Switches is easier.
-		private Boolean movementLockedDueToAirCannonSwitchCollision = false;	// Locks movement for the Shoes upon Air Cannon Switch collision.
-		private Boolean haveShoesMovedToADifferentTile = false;					// Says whether or not the Shoes have moved to a different tile after an Air Cannon Switch collision.
-		private Boolean haveShoesCollidedWithAnAir = false;						// Says whether or not the Shoes have collided with an Air or not. Used to prevent jumping while the Shoes are moving due to using an Air Cannon.
+		private Timer airCannonActivationTimer;							// A timer that keeps track of how long an Air Cannon has been on.
+		public List<Air> airsShoesHasCollidedWith = new List<Air>();	// The List of Airs that the Shoes are colliding with.
+		private float horizontalVelocityDueToAirCollision = 0f;			// Stores the horizontal velocity due to using an Air Cannon.
+		private Boolean haveShoesCollidedWithAnAir = false;				// Says whether or not the Shoes have collided with an Air or not. Used to prevent jumping while the Shoes are moving due to using an Air Cannon.
+		public Queue<Char> airCannonSwitchesCollidedWith;
+		public Queue<float> airCannonSwitchesCollidedWithActivationTimes;
 
 		public Boolean stopPlayerInput = false;	// Used to stop player input once the Shoes have collided with the Guy initially. Prevents clipping through tiles.
 		private bool isGravityOn = true;		// Flag to use gravity or not.
@@ -90,8 +93,11 @@ namespace customAnimation
 
 			delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
 			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
-			delayMovementAfterAirCannonSwitchCollisionTimer = new Timer(0.25f);
+			airCannonActivationTimer = new Timer(2f);
 			angleInDegreesOfLauncherShoesIsUsing = 0;
+
+			airCannonSwitchesCollidedWith = new Queue<Char>();
+			airCannonSwitchesCollidedWithActivationTimes = new Queue<float>();
 		}
 
 		/// <summary>
@@ -101,11 +107,13 @@ namespace customAnimation
 		/// <param name="guy">A reference to the Guy.</param>
 		public void Update(GameTime gameTime, ref Guy guy)
 		{
+			currentMouseState = Mouse.GetState();
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref guy);
 			doInterface(guy.isGuyBeingShot);
 			Sprite.Animate(gameTime);
 			oldKeyboardState = newKeyboardState; // In Update() so the interface works. Commented out at the bottom of handleMovement.
+			previousMouseState = currentMouseState;
 		}
 
 		/// <summary>
@@ -133,13 +141,13 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					resetMovementModificationsDueToAirCollision();
 					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
-
-					if (!delayMovementAfterAirCannonSwitchCollisionTimer.TimerStarted && haveShoesMovedToADifferentTile) 
+					resetMovementModificationsDueToAirCollision();
+					queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
+					
+					if (!airCannonActivationTimer.TimerStarted)
 					{
-						delayMovementAfterAirCannonSwitchCollisionTimer.startTimer();
-						movementLockedDueToAirCannonSwitchCollision = true;
+						airCannonActivationTimer.startTimer();
 					}
 				}
 				else
@@ -166,13 +174,13 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					resetMovementModificationsDueToAirCollision();
 					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
+					resetMovementModificationsDueToAirCollision();
+					queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
 
-					if (!delayMovementAfterAirCannonSwitchCollisionTimer.TimerStarted && haveShoesMovedToADifferentTile)
+					if (!airCannonActivationTimer.TimerStarted)
 					{
-						delayMovementAfterAirCannonSwitchCollisionTimer.startTimer();
-						movementLockedDueToAirCannonSwitchCollision = true;
+						airCannonActivationTimer.startTimer();
 					}
 				}
 				else
@@ -197,8 +205,14 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					resetMovementModificationsDueToAirCollision();
 					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
+					resetMovementModificationsDueToAirCollision();
+					queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
+
+					if (!airCannonActivationTimer.TimerStarted)
+					{
+						airCannonActivationTimer.startTimer();
+					}
 				}
 				else
 				{
@@ -225,8 +239,14 @@ namespace customAnimation
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					resetMovementModificationsDueToAirCollision();
 					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
+					resetMovementModificationsDueToAirCollision();
+					queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
+
+					if (!airCannonActivationTimer.TimerStarted)
+					{
+						airCannonActivationTimer.startTimer();
+					}
 				}
 				else
 				{
@@ -368,7 +388,7 @@ namespace customAnimation
 		{
 			delayMovementAfterSpringCollisionTimer.Update(gameTime);
 			delayLaunchAfterLauncherCollisionTimer.Update(gameTime);
-			delayMovementAfterAirCannonSwitchCollisionTimer.Update(gameTime);
+			airCannonActivationTimer.Update(gameTime);
 		}
 
 		/// <summary>
@@ -392,6 +412,21 @@ namespace customAnimation
 		// * START MOVEMENT *
 		// ******************
 
+		private void debugs()
+		{
+			debug = "airCannonActivationTimer elapsed time: " + airCannonActivationTimer.ElapsedTime.ToString();
+			debug2 = "Are A Cannons On: " + Air.areACannonsOn.ToString();
+			//debug2 = "airCannonActivationTimer TimerStarted: " + airCannonActivationTimer.TimerStarted.ToString();
+			//debug3 = "airCannonActivationTimer TimerCompleted: " + airCannonActivationTimer.TimerCompleted.ToString();
+			//debug3 = "airCannonTileCollidedWith: " + airCannonSwitchCurrentlyCollidingWith.ToString();
+			//debug3 = airCannonSwitchesCollidedWith.Count.ToString();
+
+			//if (airCannonSwitchesCollidedWith.Peek() != null) 
+			//{
+			//    debug3 = "airCannonSwitchesCollidedWith Peek: " + airCannonSwitchesCollidedWith.Peek().ToString();
+			//}
+		}
+
 		/// <summary>
 		/// Handles all of the movement for the Shoes.
 		/// </summary>
@@ -399,17 +434,13 @@ namespace customAnimation
 		/// <param name="guy">A reference to the Guy.</param>
 		private void handleMovement(GameTime gameTime, ref Guy guy)
 		{
+			debugs();
+
 			float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;	// Represents the amount of time that has passed since the previous frame.
 			newKeyboardState = Keyboard.GetState();						// Get the new state of the keyboard.
 
-			// Checks if the Shoes can have their movement unlocked after colliding with an Air Cannon Switch.
-			checkIfShoesHaveMovedToAnAirCannonSwitchFromADifferentTile();
-
 			// Handles delaying movement after the Shoes have collided with a Spring.
 			stopDelayingMovementAfterSpringCollisionIfPossible();
-
-			// Handles delaying movement after the Shoes have collided with an Air Cannon Switch.
-			stopDelayingMovementAfterAirSwitchCollisionIfPossible();
 
 			// Set the horizontal velocity based on if the Shoes are on the ground or in the air.
 			setHorizontalVelocity();
@@ -436,7 +467,7 @@ namespace customAnimation
 			resetShoesAndGuyToLevelStartingPositionIfNecessary(guy);
 
 			// If the Shoes have turned on a particular set of Air Cannons and have now left that switch, turn the corresponding Air Cannons off.
-			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile, null, this);
+			checkIfAirCannonsCanBeTurnedOff();
 
 			// Update the Position of the Sprite attached to the Shoes.
 			updateSpritePosition(guy.isGuyBeingShot);
@@ -495,7 +526,7 @@ namespace customAnimation
 			}
 
 			// Allow movement if the player has pressed the correct key to move the Shoes, and the Shoes are allowed to move after colliding with a Spring, and the Shoes aren't locked into a Launcher.
-			if (newKeyboardState.IsKeyDown(right) && !newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
+			if (newKeyboardState.IsKeyDown(right) && !newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !stopPlayerInput)
 			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
@@ -515,7 +546,7 @@ namespace customAnimation
 				changeState(State.Running_Right);
 				setRunningAnimationIfPossible(guy.isGuyBeingShot);				
 			}
-			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
+			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !stopPlayerInput)
 			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
@@ -1007,34 +1038,6 @@ namespace customAnimation
 		// ********************
 
 		/// <summary>
-		/// Determines if the Shoes have moved to an Air Cannon Switch after moving from a different tile.
-		/// </summary>
-		/// <remarks>Used to unlock Shoes movement upon Air Cannon Switch collision. Needed because it's kind of hard to collide with an Air Cannon Switch reliably.</remarks>
-		private void checkIfShoesHaveMovedToAnAirCannonSwitchFromADifferentTile()
-		{
-			if(CurrentCollidingTile != null && PreviousCollidingTile != null && CurrentCollidingTile != PreviousCollidingTile && CurrentCollidingTile.IsAirCannonSwitch)
-			{
-				haveShoesMovedToADifferentTile = true;
-			}
-			else if (CurrentCollidingTile != null && PreviousCollidingTile != null && CurrentCollidingTile == PreviousCollidingTile)
-			{
-				haveShoesMovedToADifferentTile = false;
-			}
-		}
-
-		/// <summary>
-		/// Handles unlocking movement for the Shoes due to an Air Cannon Switch collision.
-		/// </summary>
-		private void stopDelayingMovementAfterAirSwitchCollisionIfPossible()
-		{
-			if (delayMovementAfterAirCannonSwitchCollisionTimer.TimerCompleted)
-			{
-				delayMovementAfterAirCannonSwitchCollisionTimer.stopTimer();
-				movementLockedDueToAirCannonSwitchCollision = false;
-			}
-		}
-
-		/// <summary>
 		/// Sets the horizontal velocity for Air Cannon movement based on what kind of Air Cannon was used.
 		/// </summary>
 		/// <param name="airCannonRepresentation">The tile representation of the Air Cannon. Used to know how to set velocity correctly.</param>
@@ -1133,6 +1136,45 @@ namespace customAnimation
 			haveShoesCollidedWithAnAir = false;
 		}
 
+		/// <summary>
+		/// Turns off any activated Air Cannons if they are on.
+		/// </summary>
+		private void checkIfAirCannonsCanBeTurnedOff()
+		{
+			if (airCannonActivationTimer.TimerCompleted)
+			{
+				airCannonActivationTimer.resetTimer();
+				Air.turnOffAirCannonsIfPossible(null, this, airCannonSwitchesCollidedWith.Dequeue());
+
+				// If there are multiple Air Cannon sets activated at the same time, then ensure that the next set to turn off happens at the correct time.
+				if (airCannonSwitchesCollidedWith.Count >= 1)
+				{
+					airCannonActivationTimer.startTimer();
+					airCannonActivationTimer.ElapsedTime += airCannonSwitchesCollidedWithActivationTimes.Dequeue();
+				}
+			}
+		}
+
+		/// <summary>
+		/// If multiple Air Cannon Switches are activated, ensure that subsequent Air Cannon activations (after the initial one) only stay on for the correct length of time.
+		/// </summary>
+		/// <param name="tileRepresentation">Denotes which Air Cannon Switch was activated.</param>
+		private void queueSubsequentAirCannonSwitchCollisions(Char tileRepresentation)
+		{
+			// Add the Air Cannon Switch set to the Queue if that set isn't already in the queue.
+			if (!airCannonSwitchesCollidedWith.Contains<Char>(tileRepresentation))
+			{
+				airCannonSwitchesCollidedWith.Enqueue(tileRepresentation);
+
+				// Enqueue the current elapsed time of the timer if there is a Air Cannon set already active.
+				// This is needed to ensure that every Air Cannon set only stays active for the correct amount of time.
+				if (airCannonActivationTimer.ElapsedTime != 0f)
+				{
+					airCannonSwitchesCollidedWithActivationTimes.Enqueue(airCannonActivationTimer.ElapsedTime);
+				}
+			}
+		}
+
 		// ******************
 		// * END AIR CANNON *
 		// ******************
@@ -1210,7 +1252,7 @@ namespace customAnimation
 			{
 				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
 				directionShoesAreRunning = State.Idle_Right;
-				position.X -= 9f;
+				//position.X -= 9f;
 
 				if (isGuyBeingShot)
 				{

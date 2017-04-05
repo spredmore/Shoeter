@@ -273,13 +273,13 @@ namespace customAnimation
 			else if (state == AnimationState.Guy_Running_Left)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyRunning_RunningLeft"), new Vector2(100, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 36, 48), 0, AnimationState.Guy_Running_Left.ToString());
+				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Running_Left.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_Running_Right)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyRunning_RunningRight"), new Vector2(101, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 36, 48), 0, AnimationState.Guy_Running_Right.ToString());
+				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Running_Right.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_BeingShot_Left)
@@ -351,7 +351,7 @@ namespace customAnimation
 			else if (state == AnimationState.Shoes_Empty)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 26, 16, 69, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 26, 16), 0, AnimationState.Shoes_Running_Left.ToString());
+				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 0, 0), 0, AnimationState.Shoes_Running_Left.ToString());
 				return sprite;
 			}
 

@@ -287,7 +287,7 @@ namespace customAnimation
 		/// </summary>
 		/// <param name="xPosition">X coordinate of the tile in the level.</param>
 		/// <param name="yPosition">Y coordinate of the tile in the level.</param>
-		protected void setTileArrayCoordinates(float xPosition, float yPosition)
+		public void setTileArrayCoordinates(float xPosition, float yPosition)
 		{
 			for (int x = 0; x < Level.numberOfTileColumns; x++)
 			{
@@ -370,26 +370,6 @@ namespace customAnimation
 		protected void updateRectangles(int xOffset, int yOffset)
 		{
 			Vector2 shiftedHitboxPosition = getShiftedPositionOfHitbox();
-			//if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_Empty.ToString())
-			//{
-			//    Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, 36, 48), 0);
-			//}
-			//else if (Hbox.Tag == AnimatedSprite.AnimationState.Shoes_Empty.ToString())
-			//{
-			//    Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, 25, 16), 0);
-			//}
-			//else if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_Idle_Right.ToString())
-			//{
-				
-			//}
-			//else if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_Idle_Left.ToString())
-			//{
-
-			//}
-			//else
-			//{
-			//    Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, Hbox.Width, Hbox.Height), 0);
-			//}
 
 			RotatedRectangle oldHbox = Hbox;
 			Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, oldHbox.Width, oldHbox.Height), 0);
