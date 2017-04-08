@@ -218,6 +218,7 @@ namespace customAnimation
 
 					if (Level.tiles[y, x].TileRepresentation == 'S' && velocity.Y > 1f)
 					{
+						position.Y -= 20f;	// Moves the Guy above the Spring so it doesn't clip through.
 						prepareMovementDueToSpringCollision(currentState);
 					}
 					else if (Level.tiles[y, x].IsLauncher)
@@ -385,8 +386,9 @@ namespace customAnimation
 
 		private void debugs()
 		{
+			debug = "velocity: " + velocity.ToString();
 			//debug = "test: " + test.ToString();
-			debug = "airCannonActivationTimer.ElapsedTime: " + airCannonActivationTimer.ElapsedTime.ToString();
+			//debug = "airCannonActivationTimer.ElapsedTime: " + airCannonActivationTimer.ElapsedTime.ToString();
 			debug2 = "airCannonActivationTimer.TimerStarted: " + airCannonActivationTimer.TimerStarted.ToString();
 			debug3 = "airCannonActivationTimer.TimerCompleted: " + airCannonActivationTimer.TimerCompleted.ToString();
 			//debug3 = "airCannonTileCollidedWith: " + airCannonSwitchCurrentlyCollidingWith.ToString();
