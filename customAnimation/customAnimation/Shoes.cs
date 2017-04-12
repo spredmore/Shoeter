@@ -130,7 +130,7 @@ namespace customAnimation
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					resetMovementModificationsDueToAirCollision();	// If the Shoes collided with this Tile after colliding with an Air, reset the movement properties of the Shoes back to normal.
-					position.X = Level.tiles[y, x].Position.X - Hbox.Width;
+					position.X = Level.tiles[y, x].Position.X - Sprite.RotatedRect.Width;
 					delayMovementAfterSpringCollision = true;
 					prepareMovementDueToSpringCollision(currentState);
 				}
@@ -153,7 +153,7 @@ namespace customAnimation
 				else
 				{
 					resetMovementModificationsDueToAirCollision();
-					position.X = Level.tiles[y, x].Position.X - Hbox.Width;
+					position.X = Level.tiles[y, x].Position.X - Sprite.RotatedRect.Width;
 					checkIfShoesCollidedWithTileViaSpring();
 					checkIfShoesCollidedWithTileViaLauncher();
 				}
@@ -229,7 +229,7 @@ namespace customAnimation
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					resetMovementModificationsDueToAirCollision();
-					position.Y = Level.tiles[y, x].Position.Y - Hbox.Height;
+					position.Y = Level.tiles[y, x].Position.Y - Sprite.RotatedRect.Height;
 					prepareMovementDueToSpringCollision(currentState);
 				}
 				else if (Level.tiles[y, x].IsLauncher)
@@ -251,7 +251,7 @@ namespace customAnimation
 				else
 				{
 					resetMovementModificationsDueToAirCollision();
-					position.Y = Level.tiles[y, x].Position.Y - Hbox.Height;
+					position.Y = Level.tiles[y, x].Position.Y - Sprite.RotatedRect.Height;
 					spriteSpeed = 300f;
 					isJumping = false;
 					isFalling = false;
@@ -1115,7 +1115,7 @@ namespace customAnimation
 			List<Air> airsThatShoesAreNoLongerCollidingWith = new List<Air>();
 			foreach (Air air in airsShoesHasCollidedWith)
 			{
-				if (!air.RotatedRect.Intersects(Hbox))
+				if (!air.RotatedRect.Intersects(Sprite.RotatedRect))
 				{
 					airsThatShoesAreNoLongerCollidingWith.Add(air);
 				}
@@ -1190,7 +1190,7 @@ namespace customAnimation
 		/// <param name="accessGuySprites">Says whether or not to use the Guy's Animated Sprites or not.</param>
 		public void changeSpriteOfTheShoes(AnimatedSprite.AnimationState state)
 		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y, ref hbox);
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y);
 		}
 
 		/// <summary>

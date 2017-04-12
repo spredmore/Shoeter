@@ -31,7 +31,6 @@ namespace customAnimation
 		Single rotation;			// The rotation of the AnimatedSprite.
 
 		RotatedRectangle rotatedRect;
-		public RotatedRectangle hitbox;
 
 		public enum AnimationState
 		{
@@ -78,12 +77,6 @@ namespace customAnimation
 		{
 			get { return rotatedRect; }
 			set { rotatedRect = value; }
-		}
-
-		public RotatedRectangle Hitbox
-		{
-			get { return hitbox; }
-			set { hitbox = value; }
 		}
 
 		/// <summary>
@@ -250,108 +243,112 @@ namespace customAnimation
 		/// <param name="xCoordinateOfSprite">X Coordinate of the newly created Animated Sprite.</param>
 		/// <param name="xCoordinateOfSprite">Y Coordinate of the newly created Animated Sprite.</param>
 		/// <returns>A new Animated Sprite based on the passed in state.</returns>
-		public static AnimatedSprite generateAnimatedSpriteBasedOnState(AnimatedSprite.AnimationState state, ContentManager content, SpriteBatch spriteBatch, int xCoordinateOfSprite, int yCoordinateOfSprite, ref RotatedRectangle hbox)
+		public static AnimatedSprite generateAnimatedSpriteBasedOnState(AnimatedSprite.AnimationState state, ContentManager content, SpriteBatch spriteBatch, int xCoordinateOfSprite, int yCoordinateOfSprite)
 		{
 			if (state == AnimationState.Guy_Idle_Left)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyIdleWithShoes_FacingLeft"), new Vector2(50, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Idle_Left.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Idle_Left.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_Idle_Right)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyIdleWithShoes_FacingRight"), new Vector2(51, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Idle_Right.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Idle_Right.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_Idle_WithoutShoes_Right)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyIdleWithoutShoes_FacingRight"), new Vector2(52, 650), 0, 26, 48, 40, spriteBatch, 33f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 23, 48), 0, AnimationState.Guy_Idle_WithoutShoes_Right.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 23, 48), 0, AnimationState.Guy_Idle_WithoutShoes_Right.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_Running_Left)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyRunning_RunningLeft"), new Vector2(100, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Running_Left.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Running_Left.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_Running_Right)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyRunning_RunningRight"), new Vector2(101, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Running_Right.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Running_Right.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_BeingShot_Left)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyBeingShot_FacingLeft_LessFrames"), new Vector2(150, 650), 0, 68, 70, 18, spriteBatch, 33f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 43), 0, AnimationState.Guy_BeingShot_Left.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 43), 0, AnimationState.Guy_BeingShot_Left.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_BeingShot_Right)
 			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyBeingShot_FacingRight_LessFrames"), new Vector2(150, 650), 0, 68, 70, 18, spriteBatch, 33f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 43), 0, AnimationState.Guy_BeingShot_Right.ToString());
+				//AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyBeingShot_FacingRight_LessFrames"), new Vector2(150, 650), 0, 68, 70, 18, spriteBatch, 33f, MathHelper.ToRadians(0));
+				//sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 43), 0, AnimationState.Guy_BeingShot_Right.ToString());
+				//return sprite;
+
+				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyFalling_FacingRight"), new Vector2(200, 650), 0, 25, 48, 0, spriteBatch, 33f, MathHelper.ToRadians(0));
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Falling_Right.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_Jumping_Right)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyJumping_OnlyJump_FacingRight"), new Vector2(175, 650), 0, 25, 48, 20, spriteBatch, 33f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Jumping_Right.ToString()); 
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Jumping_Right.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_Jumping_Left)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyJumping_OnlyJump_FacingLeft"), new Vector2(175, 650), 0, 25, 48, 20, spriteBatch, 33f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Jumping_Left.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Jumping_Left.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_Falling_Left)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyFalling_FacingLeft"), new Vector2(200, 650), 0, 25, 48, 0, spriteBatch, 33f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Falling_Left.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Falling_Left.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_Falling_Right)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyFalling_FacingRight"), new Vector2(200, 650), 0, 25, 48, 0, spriteBatch, 33f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Falling_Right.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Falling_Right.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Guy_Empty)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 37, 48, 69, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 0, 0), 0, AnimationState.Guy_Running_Left.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 0, 0), 0, AnimationState.Guy_Running_Left.ToString());
 				return sprite;
 			}
 			else if(state == AnimationState.Shoes_Idle_Left)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesIdle_FacingLeft"), new Vector2(10, 650), 0, 23, 16, 10, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 23, 16), 0, AnimationState.Shoes_Idle_Left.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 23, 16), 0, AnimationState.Shoes_Idle_Left.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Shoes_Idle_Right)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesIdle_FacingRight"), new Vector2(11, 650), 0, 23, 16, 10, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 23, 16), 0, AnimationState.Shoes_Idle_Right.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 23, 16), 0, AnimationState.Shoes_Idle_Right.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Shoes_Running_Left)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesRunning_FacingLeft"), new Vector2(100, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 25, 16), 0, AnimationState.Shoes_Running_Left.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 25, 16), 0, AnimationState.Shoes_Running_Left.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Shoes_Running_Right)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesRunning_FacingRight"), new Vector2(101, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 25, 16), 0, AnimationState.Shoes_Running_Right.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 25, 16), 0, AnimationState.Shoes_Running_Right.ToString());
 				return sprite;
 			}
 			else if (state == AnimationState.Shoes_Empty)
 			{
 				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 26, 16, 69, spriteBatch, 34f, MathHelper.ToRadians(0));
-				hbox = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 0, 0), 0, AnimationState.Shoes_Running_Left.ToString());
+				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 0, 0), 0, AnimationState.Shoes_Running_Left.ToString());
 				return sprite;
 			}
 
@@ -364,10 +361,11 @@ namespace customAnimation
 		public void Draw()
 		{
 			PositionRect = new Rectangle((int)Position.X, (int)Position.Y, spriteWidth, spriteHeight);
-			RotatedRect = new RotatedRectangle(PositionRect, 0f);
+			RotatedRect = new RotatedRectangle(PositionRect, RotatedRect.Rotation);
 
 			Rectangle aPositionAdjusted = new Rectangle(rotatedRect.X + (rotatedRect.Width / 2), rotatedRect.Y + (rotatedRect.Height / 2), rotatedRect.Width, rotatedRect.Height);
-			spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, Rotation, new Vector2((int)PositionRect.Width / 2, (int)PositionRect.Height / 2), SpriteEffects.None, 0);
+			//spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, Rotation, new Vector2((int)PositionRect.Width / 2, (int)PositionRect.Height / 2), SpriteEffects.None, 0);
+			spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, RotatedRect.Rotation, new Vector2((int)PositionRect.Width / 2, (int)PositionRect.Height / 2), SpriteEffects.None, 0);
 		}
 	}
 }

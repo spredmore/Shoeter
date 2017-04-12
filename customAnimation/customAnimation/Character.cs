@@ -49,7 +49,6 @@ namespace customAnimation
 		Vector2 tileArrayCoordinates;   // The current tile's coordinates into the level array.
 		Tile currentTileCollidingWith;	// The current tile that the Character is currently colliding with.
 		Tile previousTileCollidingWith;	// The previous tile that the Character collided with.
-		public RotatedRectangle hbox; // Change name to 'hitbox' later. Currently used to differentiate between AnimatedSprite.hitbox easier.
 
 		// Important: Be sure to reset the appropriate border collision variable to false after it has been found that is has been set to true.
 		// Flag that says whether or not the Character has collided with that particular border of the screen.
@@ -61,9 +60,6 @@ namespace customAnimation
 		// Window Information
 		protected int screenHeight;
 		protected int screenWidth;
-
-		public RotatedRectangle rotatedRect;
-
 		public static string charDebug;
 
 		/// <summary>
@@ -121,21 +117,6 @@ namespace customAnimation
 		{
 			get { return positionRect; }
 			set { positionRect = value; }
-		}
-
-		/// <summary>
-		/// The property for a Rotated Rectangle that represents the Position Rectangle.
-		/// </summary>
-		public RotatedRectangle RotatedRect
-		{
-			get { return rotatedRect; }
-			set { rotatedRect = value; }
-		}
-
-		public RotatedRectangle Hbox
-		{
-			get { return hbox; }
-			set { hbox = value; }
 		}
 
 		/// <summary>
@@ -270,7 +251,7 @@ namespace customAnimation
 			{
 				if (futurePositionRec.Intersects(Level.impassableTileRecs[i]))
 				{
-					position.Y = Level.impassableTilePos[i].Y - Hbox.Height;
+					position.Y = Level.impassableTilePos[i].Y - Sprite.RotatedRect.Height;
 					updateRectangles(0, -1);
 					tileCollRect = Level.impassableTileRecs[i];
 					setTileArrayCoordinates(Level.impassableTilePos[i].X, Level.impassableTilePos[i].Y);
@@ -371,18 +352,18 @@ namespace customAnimation
 		{
 			Vector2 shiftedHitboxPosition = getShiftedPositionOfHitbox();
 
-			RotatedRectangle oldHbox = Hbox;
-			Hbox = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, oldHbox.Width, oldHbox.Height), 0);
-			futurePositionRec = new Rectangle((int)Hbox.X + xOffset, (int)Hbox.Y + yOffset, Math.Abs(Hbox.Right - Hbox.Left), Math.Abs(Hbox.Top - Hbox.Bottom));
+			RotatedRectangle oldHbox = Sprite.RotatedRect;
+			Sprite.RotatedRect = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, oldHbox.Width, oldHbox.Height), oldHbox.Rotation);
+			futurePositionRec = new Rectangle((int)Sprite.RotatedRect.X + xOffset, (int)Sprite.RotatedRect.Y + yOffset, Math.Abs(Sprite.RotatedRect.Right - Sprite.RotatedRect.Left), Math.Abs(Sprite.RotatedRect.Top - Sprite.RotatedRect.Bottom));
 		}
 
 		private Vector2 getShiftedPositionOfHitbox()
 		{
-			if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Left.ToString())
+			if (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Left.ToString())
 			{
 				return new Vector2(position.X, position.Y);
 			}
-			else if (Hbox.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Right.ToString())
+			else if (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Right.ToString())
 			{
 				return new Vector2(position.X, position.Y);
 			}
@@ -413,10 +394,10 @@ namespace customAnimation
 		/// <remarks>When a collision is detected, execution is shifted to specializedCollision. This is an overloaded method for a derived class.</remarks>
 		protected void handleCollisions(State potentialState)
 		{
-			int leftTile = (int)Math.Floor((float)Hbox.Left / Level.impassableTileRecs[0].Width);
-			int rightTile = (int)Math.Ceiling(((float)Hbox.Right / Level.impassableTileRecs[0].Width)) - 1;
-			int topTile = (int)Math.Floor((float)Hbox.Top / Level.impassableTileRecs[0].Height);
-			int bottomTile = (int)Math.Ceiling(((float)Hbox.Bottom / Level.impassableTileRecs[0].Height)) - 1;
+			int leftTile = (int)Math.Floor((float)Sprite.RotatedRect.Left / Level.impassableTileRecs[0].Width);
+			int rightTile = (int)Math.Ceiling(((float)Sprite.RotatedRect.Right / Level.impassableTileRecs[0].Width)) - 1;
+			int topTile = (int)Math.Floor((float)Sprite.RotatedRect.Top / Level.impassableTileRecs[0].Height);
+			int bottomTile = (int)Math.Ceiling(((float)Sprite.RotatedRect.Bottom / Level.impassableTileRecs[0].Height)) - 1;
 
 			for (int y = topTile; y <= bottomTile; ++y)
 			{
@@ -431,7 +412,7 @@ namespace customAnimation
 					}
 					else if (x > 79)
 					{
-						position.X = screenWidth - Hbox.Width;
+						position.X = screenWidth - Sprite.RotatedRect.Width;
 						velocity.X = 0f;
 						didCharacterCollideWithRightBorderOfScreen = true;
 					}
@@ -476,14 +457,6 @@ namespace customAnimation
 				}
 			}
 		}
-		
-		/// <summary>
-		/// Draws the Character.
-		/// </summary>
-		public void Draw()
-		{
-			spriteBatch.Draw(Texture, Position, SourceRect, Color.White, 0f, new Vector2(0, 0), 1.0f, FacingRight, 0);
-		}
 
 		/// <summary>
 		/// This method is overloaded for derived classes. Used to handle collisions on a class by class basis (i.e. for the Shoes and Guy).
@@ -522,16 +495,16 @@ namespace customAnimation
 		{
 			PreviousCollidingTile = CurrentCollidingTile;
 
-			int leftTile = (int)Math.Floor((float)Hbox.Left / Level.impassableTileRecs[0].Width);
-			int rightTile = (int)Math.Ceiling(((float)Hbox.Right / Level.impassableTileRecs[0].Width)) - 1;
-			int topTile = (int)Math.Floor((float)Hbox.Top / Level.impassableTileRecs[0].Height);
-			int bottomTile = (int)Math.Ceiling(((float)Hbox.Bottom / Level.impassableTileRecs[0].Height)) - 1;
+			int leftTile = (int)Math.Floor((float)Sprite.RotatedRect.Left / Level.impassableTileRecs[0].Width);
+			int rightTile = (int)Math.Ceiling(((float)Sprite.RotatedRect.Right / Level.impassableTileRecs[0].Width)) - 1;
+			int topTile = (int)Math.Floor((float)Sprite.RotatedRect.Top / Level.impassableTileRecs[0].Height);
+			int bottomTile = (int)Math.Ceiling(((float)Sprite.RotatedRect.Bottom / Level.impassableTileRecs[0].Height)) - 1;
 
 			for (int y = topTile; y <= bottomTile; ++y)
 			{
 				for (int x = leftTile; x <= rightTile; ++x)
 				{
-					if ((x > 0 && x < 79 && y > 0 & y < 44) && Hbox.Intersects(Level.tiles[y, x].SourceRect))
+					if ((x > 0 && x < 79 && y > 0 & y < 44) && Sprite.RotatedRect.Intersects(Level.tiles[y, x].SourceRect))
 					{
 						currentTileCollidingWith = Level.tiles[y, x];
 						tileCollRect = Level.tiles[y, x].SourceRect;

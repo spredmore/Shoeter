@@ -70,6 +70,7 @@ namespace customAnimation
 			gravity = 10f;
 			debug = "";
 			debug2 = "";
+			debug3 = "";
 			collX = 0;
 			collY = 0;
 
@@ -115,7 +116,7 @@ namespace customAnimation
 					// Allow the Guy to pass through an Air Switch Cannon.
 					if (!Level.tiles[y, x].IsAirCannonSwitch)
 					{
-						position.X = Level.tiles[y, x].Position.X - Hbox.Width;
+						position.X = Level.tiles[y, x].Position.X - Sprite.RotatedRect.Width;
 					}
 
 					if (Level.tiles[y, x].TileRepresentation == 'S')
@@ -213,7 +214,7 @@ namespace customAnimation
 				{
 					if (!Level.tiles[y, x].IsAirCannonSwitch)
 					{
-						position.Y = Level.tiles[y, x].Position.Y - Hbox.Width;
+						position.Y = Level.tiles[y, x].Position.Y - Sprite.RotatedRect.Width;
 					}
 
 					if (Level.tiles[y, x].TileRepresentation == 'S' && velocity.Y > 1f)
@@ -263,7 +264,7 @@ namespace customAnimation
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void loadNextLevelIfPossible(Shoes shoes)
 		{
-			if (shoes.Hbox.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
+			if (shoes.Sprite.RotatedRect.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
 			{
 				currentLevel.LoadLevel();
 				shoes.Position = currentLevel.getPlayerStartingPosition();
@@ -386,11 +387,12 @@ namespace customAnimation
 
 		private void debugs()
 		{
-			debug = "velocity: " + velocity.ToString();
+			debug = "Rotation: " + Sprite.RotatedRect.Rotation.ToString();
+			//debug = "velocity: " + velocity.ToString();
 			//debug = "test: " + test.ToString();
 			//debug = "airCannonActivationTimer.ElapsedTime: " + airCannonActivationTimer.ElapsedTime.ToString();
-			debug2 = "airCannonActivationTimer.TimerStarted: " + airCannonActivationTimer.TimerStarted.ToString();
-			debug3 = "airCannonActivationTimer.TimerCompleted: " + airCannonActivationTimer.TimerCompleted.ToString();
+			//debug2 = "airCannonActivationTimer.TimerStarted: " + airCannonActivationTimer.TimerStarted.ToString();
+			//debug3 = "airCannonActivationTimer.TimerCompleted: " + airCannonActivationTimer.TimerCompleted.ToString();
 			//debug3 = "airCannonTileCollidedWith: " + airCannonSwitchCurrentlyCollidingWith.ToString();
 			//debug2 = "airCannonActivationTimer.ElapsedTime: " + airCannonActivationTimer.ElapsedTime.ToString();
 			//debug = "areGuyAndShoesCurrentlyLinked: " + areGuyAndShoesCurrentlyLinked.ToString();
@@ -793,7 +795,7 @@ namespace customAnimation
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void setGuyPositionToShoesUponCollisionIfPossible(Shoes shoes)
 		{
-			if (Hbox.Intersects(shoes.Hbox) && !delayCollisionWithShoesAndGuy && !areGuyAndShoesCurrentlyLinked)
+			if (Sprite.RotatedRect.Intersects(shoes.Sprite.RotatedRect) && !delayCollisionWithShoesAndGuy && !areGuyAndShoesCurrentlyLinked)
 			{
 				velocity = new Vector2(0f, 0f);
 				shoes.velocity = new Vector2(0f, 0f);
@@ -821,7 +823,7 @@ namespace customAnimation
 		/// <param name="state">The State of the Guy. Used to get the correct Animated Sprite.</param>
 		public void changeSpriteOfTheGuy(AnimatedSprite.AnimationState state)
 		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y, ref hbox);
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y);
 		}
 
 		/// <summary>
@@ -849,6 +851,9 @@ namespace customAnimation
 				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Idle_Right);
 				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_BeingShot_Right);
 			}
+
+			Sprite.RotatedRect.Rotation = -.99f;
+			//Sprite.RotatedRect.Rotation = 90f;
 		}
 
 		/// <summary>
