@@ -1252,7 +1252,7 @@ namespace customAnimation
 			{
 				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
 				directionShoesAreRunning = State.Idle_Right;
-				//position.X -= 9f;
+				position.X -= 9f;	// Shift the Shoes over so the Idle animation from clipping through tiles.
 
 				if (isGuyBeingShot)
 				{

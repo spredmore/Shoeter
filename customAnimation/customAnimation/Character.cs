@@ -354,6 +354,7 @@ namespace customAnimation
 
 			RotatedRectangle oldHbox = Sprite.RotatedRect;
 			Sprite.RotatedRect = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, oldHbox.Width, oldHbox.Height), oldHbox.Rotation);
+			Sprite.RotatedRect.Tag = oldHbox.Tag;
 			futurePositionRec = new Rectangle((int)Sprite.RotatedRect.X + xOffset, (int)Sprite.RotatedRect.Y + yOffset, Math.Abs(Sprite.RotatedRect.Right - Sprite.RotatedRect.Left), Math.Abs(Sprite.RotatedRect.Top - Sprite.RotatedRect.Bottom));
 		}
 

@@ -53,6 +53,9 @@ namespace customAnimation
 		public bool usingLauncher = false;
 		private Boolean idleAnimationLockIsOn = false;
 
+		private int baseRotationIncrement;	// The base rate of rotation for when the Guy is being shot.
+		private float rotationRate;	// The rate of rotation for when the Guy is being shot.
+		
 		public static int test;
 
 		public Guy(Texture2D texture, SpriteBatch spriteBatch, int currentFrame, int totalFrames, int spriteWidth, int spriteHeight, int screenHeight, int screenWidth, ContentManager content)
@@ -73,6 +76,8 @@ namespace customAnimation
 			debug3 = "";
 			collX = 0;
 			collY = 0;
+			baseRotationIncrement = 10;
+			rotationRate = 0;
 
 			PlayerMode = Mode.Guy;
 
@@ -249,7 +254,7 @@ namespace customAnimation
 					}
 					else
 					{
-						Position = new Vector2(TileCollisionRectangle.X - 8, TileCollisionRectangle.Y - 32);
+						Position = new Vector2(TileCollisionRectangle.X - 11, TileCollisionRectangle.Y - 32);
 						velocity = new Vector2(0f, 0f); // So the Guy doesn't fall through.
 						useGravity = false;
 						changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_Idle_WithoutShoes_Right);
@@ -387,7 +392,9 @@ namespace customAnimation
 
 		private void debugs()
 		{
-			debug = "Rotation: " + Sprite.RotatedRect.Rotation.ToString();
+			//debug = "rotationRate: " + rotationRate.ToString();
+			//debug = "Rotation: " + Sprite.RotatedRect.Rotation.ToString();
+			//debug = "Tag: " + Sprite.RotatedRect.Tag;
 			//debug = "velocity: " + velocity.ToString();
 			//debug = "test: " + test.ToString();
 			//debug = "airCannonActivationTimer.ElapsedTime: " + airCannonActivationTimer.ElapsedTime.ToString();
@@ -436,6 +443,10 @@ namespace customAnimation
 
 				// Stops delaying collisions with the Guy and other Launchers once he's been launched.
 				stopDelayingCollisionWithGuyAndLaunchersIfPossible();
+
+				// Rotates the Sprite of the Guy while being shot.
+				rotateGuyWhenBeingShot();
+				
 			}
 			else
 			{
@@ -480,6 +491,7 @@ namespace customAnimation
 				areGuyAndShoesCurrentlyLinked = false;
 				velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(angleBetweenGuyAndMouseCursor)) * powerOfLauncherBeingUsed;
 				velocity *= -1;
+				rotationRate = baseRotationIncrement + powerOfLauncherBeingUsed;
 				//shoes.Position = new Vector2(shoes.Position.X, shoes.Position.Y + 32f);	// Move the shoes to the ground.
 				
 				if (shoes.CurrentCollidingTile.IsAirCannonSwitch)
@@ -781,6 +793,7 @@ namespace customAnimation
 				usingLauncher = false;
 				idleAnimationLockIsOn = false;
 				areGuyAndShoesCurrentlyLinked = true;
+				shoes.Position = new Vector2(shoes.Position.X, shoes.Position.Y - 32);
 				Position = new Vector2(shoes.Position.X, shoes.Position.Y);
 				velocity = new Vector2(0f, 0f);
 				delayBetweenLaunchesTimer.stopTimer();
@@ -851,9 +864,6 @@ namespace customAnimation
 				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Idle_Right);
 				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_BeingShot_Right);
 			}
-
-			Sprite.RotatedRect.Rotation = -.99f;
-			//Sprite.RotatedRect.Rotation = 90f;
 		}
 
 		/// <summary>
@@ -880,6 +890,21 @@ namespace customAnimation
 			{
 				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
 				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
+			}
+		}
+
+		/// <summary>
+		/// Rotates the Guy's Sprite.
+		/// </summary>
+		private void rotateGuyWhenBeingShot()
+		{
+			if (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Right.ToString())
+			{
+				Sprite.RotatedRect.Rotation += MathHelper.ToRadians(rotationRate);
+			}
+			else if (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Left.ToString())
+			{
+				Sprite.RotatedRect.Rotation += MathHelper.ToRadians(-rotationRate);
 			}
 		}
 
