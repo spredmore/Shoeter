@@ -414,8 +414,12 @@ namespace customAnimation
 
 		private void debugs()
 		{
-			debug = "airCannonActivationTimer elapsed time: " + airCannonActivationTimer.ElapsedTime.ToString();
-			debug2 = "Are A Cannons On: " + Air.areACannonsOn.ToString();
+			debug = "Tag: " + Sprite.RotatedRect.Tag;
+			debug2 = "Previous Tag: " + Sprite.RotatedRect.PreviousTag;
+			//debug2 = "directionShoesAreRunning: " + directionShoesAreRunning.ToString();
+			//debug3 = "Jumping: " + isJumping.ToString();
+			//debug = "airCannonActivationTimer elapsed time: " + airCannonActivationTimer.ElapsedTime.ToString();
+			//debug2 = "Are A Cannons On: " + Air.areACannonsOn.ToString();
 			//debug2 = "airCannonActivationTimer TimerStarted: " + airCannonActivationTimer.TimerStarted.ToString();
 			//debug3 = "airCannonActivationTimer TimerCompleted: " + airCannonActivationTimer.TimerCompleted.ToString();
 			//debug3 = "airCannonTileCollidedWith: " + airCannonSwitchCurrentlyCollidingWith.ToString();
@@ -544,7 +548,7 @@ namespace customAnimation
 				updateRectangles(1, 0);
 				handleCollisions(State.Running_Right);
 				changeState(State.Running_Right);
-				setRunningAnimationIfPossible(guy.isGuyBeingShot);				
+				setRunningAnimationIfPossible(guy.isGuyBeingShot);
 			}
 			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !stopPlayerInput)
 			{
@@ -558,6 +562,12 @@ namespace customAnimation
 					velocity.Y = 0f;
 				}
 
+				// Prevent the Guy from clipping through tiles if the player was running right, hit a tile, then immediately starting running left.
+				if (tileToTheRight() && (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_Running_Left.ToString() && Sprite.RotatedRect.PreviousTag == AnimatedSprite.AnimationState.Guy_Running_Right.ToString()))
+				{
+					position = new Vector2(position.X - 50, position.Y);
+				}
+
 				updateRectangles(-1, 0);
 				handleCollisions(State.Running_Left);
 				changeState(State.Running_Left);
@@ -568,6 +578,12 @@ namespace customAnimation
 			if (!newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && directionShoesAreRunning != State.Idle_Right && directionShoesAreRunning != State.Idle_Left)
 			{
 				setIdleAnimationIfPossible(guy.isGuyBeingShot);
+
+				// Prevent the Guy from clipping through tiles if the player was running to the right and jumping.
+				if (tileToTheRight() && (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_Idle_Right.ToString() && Sprite.RotatedRect.PreviousTag == AnimatedSprite.AnimationState.Guy_Jumping_Right.ToString()))
+				{
+					position = new Vector2(position.X - 16, position.Y);
+				}
 			}
 		}
 
@@ -1190,7 +1206,19 @@ namespace customAnimation
 		/// <param name="accessGuySprites">Says whether or not to use the Guy's Animated Sprites or not.</param>
 		public void changeSpriteOfTheShoes(AnimatedSprite.AnimationState state)
 		{
+			String tagBeforeUpdate = "";
+
+			if(Sprite != null)
+			{
+				tagBeforeUpdate = Sprite.RotatedRect.Tag;
+			}
+
 			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y);
+
+			if(Sprite.RotatedRect.Tag != tagBeforeUpdate && tagBeforeUpdate != "")
+			{
+				Sprite.RotatedRect.PreviousTag = tagBeforeUpdate;
+			}
 		}
 
 		/// <summary>

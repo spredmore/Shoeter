@@ -12,6 +12,7 @@ namespace customAnimation
 		public float Rotation;
 		public Vector2 Origin;
 		public String Tag;
+		public String PreviousTag;
 
 		public RotatedRectangle(Rectangle theRectangle, float theInitialRotation)
 		{
@@ -28,6 +29,7 @@ namespace customAnimation
 			CollisionRectangle = theRectangle;
 			Rotation = theInitialRotation;
 			Tag = tag;
+			PreviousTag = "";
 
 			//Calculate the Rectangles origin. We assume the center of the Rectangle will
 			//be the point that we will be rotating around and we use that for the origin

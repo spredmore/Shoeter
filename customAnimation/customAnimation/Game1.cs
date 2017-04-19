@@ -155,14 +155,14 @@ namespace customAnimation
 
 			//guy.Draw();
 			guy.Sprite.Draw();
-			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox"), new Rectangle(guy.Hbox.X, guy.Hbox.Y, guy.Hbox.Width, guy.Hbox.Height), Color.White);
+			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox"), new Rectangle(guy.Sprite.RotatedRect.X, guy.Sprite.RotatedRect.Y, guy.Sprite.RotatedRect.Width, guy.Sprite.RotatedRect.Height), Color.White);
 			//spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox2"), guy.FutureRectangleRect, Color.White);
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), guy.TileCollisionRectangle, Color.White);
 
 			//shoes.Draw();
 			shoes.Sprite.Draw();
 			//spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox"), shoes.PositionRect, Color.White);
-			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox2"), new Rectangle(shoes.Hbox.X, shoes.Hbox.Y, shoes.Hbox.Width, shoes.Hbox.Height), Color.White);
+			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/32x48Hitbox2"), new Rectangle(shoes.Sprite.RotatedRect.X, shoes.Sprite.RotatedRect.Y, shoes.Sprite.RotatedRect.Width, shoes.Sprite.RotatedRect.Height), Color.White);
 			spriteBatch.Draw(Content.Load<Texture2D>("Sprites/16x16HitboxUp"), shoes.TileCollisionRectangle, Color.White);
 
 			// Draw the debug font.

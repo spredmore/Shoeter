@@ -359,8 +359,9 @@ namespace customAnimation
 			PositionRect = new Rectangle((int)Position.X, (int)Position.Y, spriteWidth, spriteHeight);
 
 			String tag = RotatedRect.Tag;
-			RotatedRect = new RotatedRectangle(PositionRect, RotatedRect.Rotation);
-			RotatedRect.Tag = tag;
+			String previousTag = RotatedRect.PreviousTag;
+			RotatedRect = new RotatedRectangle(PositionRect, RotatedRect.Rotation, tag);
+			RotatedRect.PreviousTag = previousTag;
 
 			Rectangle aPositionAdjusted = new Rectangle(rotatedRect.X + (rotatedRect.Width / 2), rotatedRect.Y + (rotatedRect.Height / 2), rotatedRect.Width, rotatedRect.Height);
 			//spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, Rotation, new Vector2((int)PositionRect.Width / 2, (int)PositionRect.Height / 2), SpriteEffects.None, 0);
