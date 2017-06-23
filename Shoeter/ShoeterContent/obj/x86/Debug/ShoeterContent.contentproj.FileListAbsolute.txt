@@ -1,0 +1,2 @@
+C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\customAnimationContent\obj\x86\Debug\ShoeterContent.contentprojResolveAssemblyReference.cache
+C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\ShoeterContent\obj\x86\Debug\ShoeterContent.contentprojResolveAssemblyReference.cache

@@ -1,0 +1,43 @@
+Content\debugFont.xnb
+Content\Tiles\TransparentBlock.xnb
+Content\Tiles\test1.xnb
+Content\Sprites\32x48Hitbox.xnb
+Content\Sprites\32x48Hitbox2.xnb
+Content\Sprites\Guy32x48.xnb
+Content\Sprites\Shoes32x48.xnb
+Content\Tiles\Goal-16.xnb
+Content\Tiles\spring.xnb
+Content\Sprites\Shoes32x48_Top.xnb
+Content\Sprites\16x16HitboxUp.xnb
+Content\Tiles\launcher.xnb
+Content\Tiles\launcher_0.xnb
+Content\Tiles\AirCannon.xnb
+Content\Tiles\AirCannonSwitch.xnb
+Content\Sprites\AnimatedAir64x48.xnb
+Content\Sprites\32x48Hitbox3.xnb
+Content\Sprites\Guy Animations\GuyRunning_RunningLeft.xnb
+Content\Sprites\Guy Animations\GuyRunning_RunningRight.xnb
+Content\Sprites\Guy Animations\GuyIdleWithShoes_FacingLeft.xnb
+Content\Sprites\Guy Animations\GuyIdleWithShoes_FacingRight.xnb
+Content\Sprites\Shoes Animations\ShoesIdle_FacingLeft.xnb
+Content\Sprites\Shoes Animations\ShoesIdle_FacingRight.xnb
+Content\Sprites\Transparent16x32.xnb
+Content\Sprites\Shoes Animations\ShoesRunning_FacingRight.xnb
+Content\Sprites\Shoes Animations\ShoesRunning_FacingLeft.xnb
+Content\Sprites\Guy Animations\GuyIdleWithoutShoes_FacingRight.xnb
+Content\Sprites\Guy Animations\GuyBeingShot_FacingRight_LessFrames.xnb
+Content\Sprites\Guy Animations\GuyBeingShot_FacingLeft_LessFrames.xnb
+Content\Sprites\Guy Animations\GuyJumping_OnlyJump_FacingLeft.xnb
+Content\Sprites\Guy Animations\GuyJumping_OnlyJump_FacingRight.xnb
+Content\Sprites\Guy Animations\GuyFalling_FacingLeft.xnb
+Content\Sprites\Guy Animations\GuyFalling_FacingRight.xnb
+Content\Sprites\22x48Hitbox.xnb
+Content\Sprites\Guy Animations\GuyBeingShot_FacingLeft_Static.xnb
+Content\Sprites\Guy Animations\GuyBeingShot_FacingRight_Static.xnb
+Content\Levels\1.txt
+Content\Levels\2.txt
+Content\Levels\3.txt
+Content\Levels\0.txt
+Content\Levels\4.txt
+Content\Levels\5.txt
+Content\Levels\6.txt

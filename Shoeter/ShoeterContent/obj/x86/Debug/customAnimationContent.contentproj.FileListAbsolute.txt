@@ -1,0 +1,4 @@
+C:\Users\spredmore\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimationContent\obj\x86\Debug\customAnimationContent.contentprojResolveAssemblyReference.cache
+C:\Users\Scott\Desktop\customAnimation_Newest\customAnimation\customAnimationContent\obj\x86\Debug\customAnimationContent.contentprojResolveAssemblyReference.cache
+C:\Users\Scott\Documents\Visual Studio 2010\Projects\customAnimation\customAnimation\customAnimationContent\obj\x86\Debug\customAnimationContent.contentprojResolveAssemblyReference.cache
+C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\customAnimationContent\obj\x86\Debug\customAnimationContent.contentprojResolveAssemblyReference.cache
