@@ -7,7 +7,7 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\debugFont.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\debugFont.xnb</Output>
       <Time>2013-10-27T22:59:05.4183033-04:00</Time>
     </Item>
     <Item>
@@ -16,7 +16,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\TransparentBlock.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\TransparentBlock.xnb</Output>
       <Time>2013-11-11T22:24:16.6023388-05:00</Time>
     </Item>
     <Item>
@@ -25,7 +25,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\test1.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\test1.xnb</Output>
       <Time>2013-11-11T22:16:21.0321378-05:00</Time>
     </Item>
     <Item>
@@ -34,7 +34,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\32x48Hitbox.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\32x48Hitbox.xnb</Output>
       <Time>2014-04-12T17:51:16.292124-04:00</Time>
     </Item>
     <Item>
@@ -43,7 +43,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\32x48Hitbox2.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\32x48Hitbox2.xnb</Output>
       <Time>2014-04-12T17:51:16.2951242-04:00</Time>
     </Item>
     <Item>
@@ -52,7 +52,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy32x48.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy32x48.xnb</Output>
       <Time>2014-04-28T21:40:18.9948729-04:00</Time>
     </Item>
     <Item>
@@ -61,7 +61,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes32x48.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes32x48.xnb</Output>
       <Time>2014-05-02T23:57:50.5412703-04:00</Time>
     </Item>
     <Item>
@@ -70,7 +70,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\Goal-16.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\Goal-16.xnb</Output>
       <Time>2014-06-07T19:28:56.9887528-04:00</Time>
     </Item>
     <Item>
@@ -79,7 +79,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\spring.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\spring.xnb</Output>
       <Time>2014-06-26T18:20:09.4319989-04:00</Time>
     </Item>
     <Item>
@@ -88,7 +88,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes32x48_Top.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes32x48_Top.xnb</Output>
       <Time>2014-08-24T19:57:47.4987076-04:00</Time>
     </Item>
     <Item>
@@ -97,7 +97,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\16x16HitboxUp.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\16x16HitboxUp.xnb</Output>
       <Time>2014-09-15T20:48:15.2168895-04:00</Time>
     </Item>
     <Item>
@@ -106,7 +106,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\launcher.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\launcher.xnb</Output>
       <Time>2014-10-18T23:24:16.8693406-04:00</Time>
     </Item>
     <Item>
@@ -115,7 +115,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\launcher_0.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\launcher_0.xnb</Output>
       <Time>2014-10-29T21:55:14.4344871-04:00</Time>
     </Item>
     <Item>
@@ -124,7 +124,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\AirCannon.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\AirCannon.xnb</Output>
       <Time>2016-11-16T22:09:43.2010891-05:00</Time>
     </Item>
     <Item>
@@ -133,7 +133,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\AirCannonSwitch.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Tiles\AirCannonSwitch.xnb</Output>
       <Time>2016-11-17T20:47:55.8982925-05:00</Time>
     </Item>
     <Item>
@@ -142,7 +142,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\AnimatedAir64x48.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\AnimatedAir64x48.xnb</Output>
       <Time>2016-12-01T21:57:45.1805888-05:00</Time>
     </Item>
     <Item>
@@ -151,7 +151,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\32x48Hitbox3.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\32x48Hitbox3.xnb</Output>
       <Time>2016-11-26T13:06:29.5654103-05:00</Time>
     </Item>
     <Item>
@@ -160,7 +160,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyRunning_RunningLeft.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyRunning_RunningLeft.xnb</Output>
       <Time>2017-03-16T20:52:49.9698266-04:00</Time>
     </Item>
     <Item>
@@ -169,7 +169,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyRunning_RunningRight.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyRunning_RunningRight.xnb</Output>
       <Time>2017-03-06T20:51:34.8654923-05:00</Time>
     </Item>
     <Item>
@@ -178,7 +178,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyIdleWithShoes_FacingLeft.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyIdleWithShoes_FacingLeft.xnb</Output>
       <Time>2017-03-16T20:57:46.2287717-04:00</Time>
     </Item>
     <Item>
@@ -187,7 +187,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyIdleWithShoes_FacingRight.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyIdleWithShoes_FacingRight.xnb</Output>
       <Time>2017-03-16T21:00:04.0186528-04:00</Time>
     </Item>
     <Item>
@@ -196,7 +196,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes Animations\ShoesIdle_FacingLeft.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes Animations\ShoesIdle_FacingLeft.xnb</Output>
       <Time>2017-03-18T16:35:01.0219016-04:00</Time>
     </Item>
     <Item>
@@ -205,7 +205,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes Animations\ShoesIdle_FacingRight.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes Animations\ShoesIdle_FacingRight.xnb</Output>
       <Time>2017-03-18T16:33:49.1497908-04:00</Time>
     </Item>
     <Item>
@@ -214,7 +214,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Transparent16x32.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Transparent16x32.xnb</Output>
       <Time>2017-03-18T16:42:14.5816998-04:00</Time>
     </Item>
     <Item>
@@ -223,7 +223,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes Animations\ShoesRunning_FacingRight.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes Animations\ShoesRunning_FacingRight.xnb</Output>
       <Time>2017-03-18T16:52:09.4627251-04:00</Time>
     </Item>
     <Item>
@@ -232,7 +232,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes Animations\ShoesRunning_FacingLeft.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Shoes Animations\ShoesRunning_FacingLeft.xnb</Output>
       <Time>2017-03-18T17:44:13.1833917-04:00</Time>
     </Item>
     <Item>
@@ -241,7 +241,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyIdleWithoutShoes_FacingRight.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyIdleWithoutShoes_FacingRight.xnb</Output>
       <Time>2017-03-18T17:54:36.7870598-04:00</Time>
     </Item>
     <Item>
@@ -250,7 +250,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyBeingShot_FacingRight_LessFrames.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyBeingShot_FacingRight_LessFrames.xnb</Output>
       <Time>2017-03-19T14:59:48.2290832-04:00</Time>
     </Item>
     <Item>
@@ -259,7 +259,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyBeingShot_FacingLeft_LessFrames.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyBeingShot_FacingLeft_LessFrames.xnb</Output>
       <Time>2017-03-19T15:03:16.8550159-04:00</Time>
     </Item>
     <Item>
@@ -268,7 +268,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyJumping_OnlyJump_FacingLeft.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyJumping_OnlyJump_FacingLeft.xnb</Output>
       <Time>2017-03-19T16:41:12.0320568-04:00</Time>
     </Item>
     <Item>
@@ -277,7 +277,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyJumping_OnlyJump_FacingRight.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyJumping_OnlyJump_FacingRight.xnb</Output>
       <Time>2017-03-19T16:31:50.9879669-04:00</Time>
     </Item>
     <Item>
@@ -286,7 +286,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyFalling_FacingLeft.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyFalling_FacingLeft.xnb</Output>
       <Time>2017-03-19T20:23:34.7422162-04:00</Time>
     </Item>
     <Item>
@@ -295,7 +295,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyFalling_FacingRight.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyFalling_FacingRight.xnb</Output>
       <Time>2017-03-19T19:10:28.5163384-04:00</Time>
     </Item>
     <Item>
@@ -304,7 +304,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\22x48Hitbox.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\22x48Hitbox.xnb</Output>
       <Time>2017-03-25T16:22:23.9635268-04:00</Time>
     </Item>
     <Item>
@@ -313,7 +313,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyBeingShot_FacingLeft_Static.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyBeingShot_FacingLeft_Static.xnb</Output>
       <Time>2017-04-12T22:37:10.9533283-04:00</Time>
     </Item>
     <Item>
@@ -322,7 +322,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyBeingShot_FacingRight_Static.xnb</Output>
+      <Output>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\Sprites\Guy Animations\GuyBeingShot_FacingRight_Static.xnb</Output>
       <Time>2017-04-12T22:36:52.4352692-04:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
@@ -331,10 +331,10 @@
       <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\ShoeterContent\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\ShoeterContent\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Scott\Documents\Visual Studio 2010\Projects\Shoeter\Shoeter\Shoeter\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\ShoeterContent\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\ShoeterContent\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Scott\Documents\GitHub\customAnimation\Shoeter\Shoeter\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>
