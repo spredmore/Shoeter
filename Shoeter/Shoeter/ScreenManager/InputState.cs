@@ -28,15 +28,7 @@ namespace Shoeter
 		public const int MaxInputs = 4;
 
 		public readonly KeyboardState[] CurrentKeyboardStates;
-		public readonly GamePadState[] CurrentGamePadStates;
-
 		public readonly KeyboardState[] LastKeyboardStates;
-		public readonly GamePadState[] LastGamePadStates;
-
-		public MouseState CurrentMouseState;
-		public MouseState LastMouseState;
-
-		public readonly bool[] GamePadWasConnected;
 
 		#endregion
 
@@ -49,12 +41,7 @@ namespace Shoeter
 		public InputState()
 		{
 			CurrentKeyboardStates = new KeyboardState[MaxInputs];
-			CurrentGamePadStates = new GamePadState[MaxInputs];
-
 			LastKeyboardStates = new KeyboardState[MaxInputs];
-			LastGamePadStates = new GamePadState[MaxInputs];
-
-			GamePadWasConnected = new bool[MaxInputs];
 		}
 
 
@@ -71,20 +58,7 @@ namespace Shoeter
 			for (int i = 0; i < MaxInputs; i++)
 			{
 				LastKeyboardStates[i] = CurrentKeyboardStates[i];
-				LastGamePadStates[i] = CurrentGamePadStates[i];
-				LastMouseState = CurrentMouseState;
-
 				CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex)i);
-				CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex)i);
-
-				CurrentMouseState = Mouse.GetState();
-
-				// Keep track of whether a gamepad has ever been
-				// connected, so we can detect if it is unplugged.
-				if (CurrentGamePadStates[i].IsConnected)
-				{
-					GamePadWasConnected[i] = true;
-				}
 			}
 		}
 
@@ -104,7 +78,7 @@ namespace Shoeter
 
 				int i = (int)playerIndex;
 
-				return (CurrentKeyboardStates[i].IsKeyDown(key) && LastKeyboardStates[i].IsKeyUp(key));
+				return (CurrentKeyboardStates[i].IsKeyDown(key));
 			}
 			else
 			{
@@ -118,34 +92,6 @@ namespace Shoeter
 
 
 		/// <summary>
-		/// Helper for checking if a button was newly pressed during this update.
-		/// The controllingPlayer parameter specifies which player to read input for.
-		/// If this is null, it will accept input from any player. When a button press
-		/// is detected, the output playerIndex reports which player pressed it.
-		/// </summary>
-		public bool IsNewButtonPress(Buttons button, PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
-		{
-			if (controllingPlayer.HasValue)
-			{
-				// Read input from the specified player.
-				playerIndex = controllingPlayer.Value;
-
-				int i = (int)playerIndex;
-
-				return (CurrentGamePadStates[i].IsButtonDown(button) && LastGamePadStates[i].IsButtonUp(button));
-			}
-			else
-			{
-				// Accept input from any player.
-				return (IsNewButtonPress(button, PlayerIndex.One, out playerIndex) ||
-						IsNewButtonPress(button, PlayerIndex.Two, out playerIndex) ||
-						IsNewButtonPress(button, PlayerIndex.Three, out playerIndex) ||
-						IsNewButtonPress(button, PlayerIndex.Four, out playerIndex));
-			}
-		}
-
-
-		/// <summary>
 		/// Checks for a "menu select" input action.
 		/// The controllingPlayer parameter specifies which player to read input for.
 		/// If this is null, it will accept input from any player. When the action
@@ -154,9 +100,7 @@ namespace Shoeter
 		public bool IsMenuSelect(PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
 		{
 			return IsNewKeyPress(Keys.Space, controllingPlayer, out playerIndex) ||
-				   IsNewKeyPress(Keys.Enter, controllingPlayer, out playerIndex) ||
-				   IsNewButtonPress(Buttons.A, controllingPlayer, out playerIndex) ||
-				   IsNewButtonPress(Buttons.Start, controllingPlayer, out playerIndex);
+				   IsNewKeyPress(Keys.Enter, controllingPlayer, out playerIndex);
 		}
 
 
@@ -168,9 +112,7 @@ namespace Shoeter
 		/// </summary>
 		public bool IsMenuCancel(PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
 		{
-			return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex) ||
-				   IsNewButtonPress(Buttons.B, controllingPlayer, out playerIndex) ||
-				   IsNewButtonPress(Buttons.Back, controllingPlayer, out playerIndex);
+			return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex);
 		}
 
 
@@ -183,9 +125,7 @@ namespace Shoeter
 		{
 			PlayerIndex playerIndex;
 
-			return IsNewKeyPress(Keys.Up, controllingPlayer, out playerIndex) ||
-				   IsNewButtonPress(Buttons.DPadUp, controllingPlayer, out playerIndex) ||
-				   IsNewButtonPress(Buttons.LeftThumbstickUp, controllingPlayer, out playerIndex);
+			return IsNewKeyPress(Keys.Up, controllingPlayer, out playerIndex);
 		}
 
 
@@ -198,9 +138,7 @@ namespace Shoeter
 		{
 			PlayerIndex playerIndex;
 
-			return IsNewKeyPress(Keys.Down, controllingPlayer, out playerIndex) ||
-				   IsNewButtonPress(Buttons.DPadDown, controllingPlayer, out playerIndex) ||
-				   IsNewButtonPress(Buttons.LeftThumbstickDown, controllingPlayer, out playerIndex);
+			return IsNewKeyPress(Keys.Down, controllingPlayer, out playerIndex);
 		}
 
 
@@ -213,9 +151,7 @@ namespace Shoeter
 		{
 			PlayerIndex playerIndex;
 
-			return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex) ||
-				   IsNewButtonPress(Buttons.Back, controllingPlayer, out playerIndex) ||
-				   IsNewButtonPress(Buttons.Start, controllingPlayer, out playerIndex);
+			return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex);
 		}
 
 

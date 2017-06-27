@@ -37,7 +37,6 @@ namespace Shoeter
 
 		float pauseAlpha;
 
-		public GraphicsDeviceManager graphics;
 		public SpriteBatch spriteBatch;
 		private KeyboardState oldKeyboardState;
 		private KeyboardState newKeyboardState;
@@ -55,13 +54,7 @@ namespace Shoeter
 		// The debugging font.
 		public static SpriteFont debugFont;
 
-		// Stores if we are facing right or not.
-		SpriteEffects facingRight;
-
 		Rectangle mouseRect;
-
-		AnimatedSprite testAnimatedSprite;
-		AnimatedSprite testAnimatedSprite2;
 
 		String debug;
 
@@ -154,6 +147,8 @@ namespace Shoeter
 		/// </summary>
 		public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
 		{
+			base.Update(gameTime, otherScreenHasFocus, false);
+
 			newKeyboardState = Keyboard.GetState();
 
 			shoes.Update(gameTime, ref guy);
@@ -183,86 +178,25 @@ namespace Shoeter
 
 			oldKeyboardState = newKeyboardState;
 
-			//testAnimatedSprite.Animate(gameTime);
-			//testAnimatedSprite2.Animate(gameTime);
+			// Gradually fade in or out depending on whether we are covered by the pause screen.
+			if (coveredByOtherScreen)
+			{
+				pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
+			}
 
-			base.Update(gameTime, otherScreenHasFocus, false);
+			else
+			{
+				pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
+			}
 		}
-
-
-		/// <summary>
-		/// Lets the game respond to player input. Unlike the Update method,
-		/// this will only be called when the gameplay screen is active.
-		/// </summary>
-		//public override void HandleInput(InputState input)
-		//{
-		//    if (input == null)
-		//    {
-		//        throw new ArgumentNullException("input");
-		//    }
-
-		//    // Look up inputs for the active player profile.
-		//    int playerIndex = (int)ControllingPlayer.Value;
-
-		//    KeyboardState keyboardState = input.CurrentKeyboardStates[playerIndex];
-		//    GamePadState gamePadState = input.CurrentGamePadStates[playerIndex];
-
-		//    // The game pauses either if the user presses the pause button, or if
-		//    // they unplug the active gamepad. This requires us to keep track of
-		//    // whether a gamepad was ever plugged in, because we don't want to pause
-		//    // on PC if they are playing with a keyboard and have no gamepad at all!
-		//    bool gamePadDisconnected = !gamePadState.IsConnected && input.GamePadWasConnected[playerIndex];
-
-		//    if (input.IsPauseGame(ControllingPlayer) || gamePadDisconnected)
-		//    {
-		//        ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
-		//    }
-		//    else
-		//    {
-		//        // Otherwise move the player position.
-		//        Vector2 movement = Vector2.Zero;
-
-		//        if (keyboardState.IsKeyDown(Keys.Left))
-		//        {
-		//            movement.X--;
-		//        }
-
-		//        if (keyboardState.IsKeyDown(Keys.Right))
-		//        {
-		//            movement.X++;
-		//        }
-
-		//        if (keyboardState.IsKeyDown(Keys.Up))
-		//        {
-		//            movement.Y--;
-		//        }
-
-		//        if (keyboardState.IsKeyDown(Keys.Down))
-		//        {
-		//            movement.Y++;
-		//        }
-
-		//        Vector2 thumbstick = gamePadState.ThumbSticks.Left;
-
-		//        movement.X += thumbstick.X;
-		//        movement.Y -= thumbstick.Y;
-
-		//        if (movement.Length() > 1)
-		//        {
-		//            movement.Normalize();
-		//        }
-
-		//        playerPosition += movement * 2;
-		//    }
-		//}
-
 
 		/// <summary>
 		/// Draws the gameplay screen.
 		/// </summary>
 		public override void Draw(GameTime gameTime)
 		{
-			ScreenManager.GraphicsDevice.Clear(Color.Gainsboro);
+			// This game has a blue background. Why? Because!
+			ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.Gainsboro, 0, 0);
 
 			spriteBatch.Begin();
 
@@ -323,6 +257,36 @@ namespace Shoeter
 			//testAnimatedSprite2.Draw();
 
 			spriteBatch.End();
+
+			// If the game is transitioning on or off, fade it out to black.
+			if (TransitionPosition > 0 || pauseAlpha > 0)
+			{
+				float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
+
+				ScreenManager.FadeBackBufferToBlack(alpha);
+			}
+		}
+
+		/// <summary>
+		/// Lets the game respond to player input. Unlike the Update method,
+		/// this will only be called when the gameplay screen is active.
+		/// </summary>
+		public override void HandleInput(InputState input)
+		{
+			if (input == null)
+			{
+				throw new ArgumentNullException("input");
+			}
+
+			// Look up inputs for the active player profile.
+			int playerIndex = (int)ControllingPlayer.Value;
+
+			KeyboardState keyboardState = input.CurrentKeyboardStates[playerIndex];
+
+			if (input.IsPauseGame(ControllingPlayer))
+			{
+				ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+			}
 		}
 
 
