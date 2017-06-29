@@ -137,10 +137,10 @@ namespace Shoeter
 				const string message = "Loading...";
 
 				// Center the text in the viewport.
-				Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-				Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
+				//Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+				Vector2 windowSize = new Vector2(1280, 720);
 				Vector2 textSize = font.MeasureString(message);
-				Vector2 textPosition = (viewportSize - textSize) / 2;
+				Vector2 textPosition = (windowSize - textSize) / 2;
 
 				Color color = Color.White * TransitionAlpha;
 

@@ -104,7 +104,7 @@ namespace Shoeter
 
 			// Load level.
 			level.LoadLevel();
-		   
+
 			// Create the Shoes.
 			shoes = new Shoes(level.getPlayerStartingPosition(), content.Load<Texture2D>("Sprites/Shoes32x48"), Character.State.Idle_Right, 0, 32, 48, 0, spriteBatch, 720, 1280, Keys.W, Keys.A, Keys.S, Keys.D, content);
 
@@ -196,7 +196,7 @@ namespace Shoeter
 		public override void Draw(GameTime gameTime)
 		{
 			// This game has a blue background. Why? Because!
-			ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.Gainsboro, 0, 0);
+			ScreenManager.GraphicsDevice.Clear(Color.Gainsboro);
 
 			spriteBatch.Begin();
 

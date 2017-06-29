@@ -134,12 +134,12 @@ namespace Shoeter
 		public override void Draw(GameTime gameTime)
 		{
 			// This game has a blue background. Why? Because!
-			ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
+			ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
 
 			// Our player and enemy are both actually just text strings.
 			SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-			Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-			Rectangle fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
+			//Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+			Rectangle fullscreen = new Rectangle(0, 0, 1280, 720);
 
 			spriteBatch.Begin();
 

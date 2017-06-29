@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 #endregion
 
 namespace Shoeter
@@ -107,6 +108,8 @@ namespace Shoeter
 
 		#endregion
 
+		Game game1;
+
 		#region Initialization
 
 
@@ -115,9 +118,7 @@ namespace Shoeter
 		/// </summary>
 		public ScreenManager(Game game)	: base(game)
 		{
-			// we must set EnabledGestures before we can query for them, but
-			// we don't assume the game wants to read them.
-			//TouchPanel.EnabledGestures = GestureType.None;
+			game1 = game;	// Store a copy of game so that the mouse will be set to the correct position.
 		}
 
 
@@ -127,7 +128,6 @@ namespace Shoeter
 		public override void Initialize()
 		{
 			base.Initialize();
-
 			isInitialized = true;
 		}
 
@@ -179,6 +179,8 @@ namespace Shoeter
 		/// </summary>
 		public override void Update(GameTime gameTime)
 		{
+			Mouse.WindowHandle = game1.Window.Handle;
+
 			// Read the keyboard and gamepad.
 			input.Update();
 
@@ -326,11 +328,11 @@ namespace Shoeter
 		/// </summary>
 		public void FadeBackBufferToBlack(float alpha)
 		{
-			Viewport viewport = GraphicsDevice.Viewport;
+			//Viewport viewport = GraphicsDevice.Viewport;
 
 			spriteBatch.Begin();
 
-			spriteBatch.Draw(blankTexture, new Rectangle(0, 0, viewport.Width, viewport.Height), Color.Black * alpha);
+			spriteBatch.Draw(blankTexture, new Rectangle(0, 0, 1280, 720), Color.Black * alpha);
 
 			spriteBatch.End();
 		}

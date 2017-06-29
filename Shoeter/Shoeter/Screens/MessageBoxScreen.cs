@@ -162,10 +162,10 @@ namespace Shoeter
 			ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
 
 			// Center the message text in the viewport.
-			Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-			Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
+			//Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+			Vector2 screenSize = new Vector2(1280, 720);
 			Vector2 textSize = font.MeasureString(message);
-			Vector2 textPosition = (viewportSize - textSize) / 2;
+			Vector2 textPosition = (screenSize - textSize) / 2;
 
 			// The background includes a border somewhat larger than the text itself.
 			const int hPad = 32;

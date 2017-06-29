@@ -94,8 +94,8 @@ namespace Shoeter
 		public override void Draw(GameTime gameTime)
 		{
 			SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-			Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-			Rectangle fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
+			//Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+			Rectangle fullscreen = new Rectangle(0, 0, 1280, 720);
 
 			spriteBatch.Begin();
 

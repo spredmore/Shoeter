@@ -31,7 +31,7 @@ namespace Shoeter
 			"Backgrounds/gradient",
 		};
 
-		
+
 		#endregion
 
 		#region Initialization
@@ -42,9 +42,9 @@ namespace Shoeter
 		/// </summary>
 		public Game1()
 		{
+			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 
-			graphics = new GraphicsDeviceManager(this);
 			graphics.PreferredBackBufferWidth = 1280;
 			graphics.PreferredBackBufferHeight = 720;
 
