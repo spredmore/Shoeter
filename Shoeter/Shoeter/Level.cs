@@ -36,7 +36,8 @@ namespace Shoeter
 
 		// Starts at 0.
 		public int currentLevel = -1;
-		int totalLevels = 6;
+		//int totalLevels = 6;
+		int totalLevels = 0;
 
 		public string debug;
 
@@ -180,6 +181,22 @@ namespace Shoeter
 			}
 
 			return arrayPosition;
+		}
+
+		public void drawBackground(SpriteBatch spriteBatch, ref ContentManager content)
+		{
+			if(currentLevel == 0)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/HillbillyWorld_Background"), new Vector2(0f, 0f), Color.White);
+			}
+		}
+
+		public void drawForeground(SpriteBatch spriteBatch, ref ContentManager content)
+		{
+			if (currentLevel == 0)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/HillbillyWorld_Foreground"), new Vector2(0f, 0f), Color.White);
+			}
 		}
 	}
 }

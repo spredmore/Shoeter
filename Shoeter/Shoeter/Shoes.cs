@@ -565,7 +565,7 @@ namespace Shoeter
 				// Prevent the Guy from clipping through tiles if the player was running right, hit a tile, then immediately starting running left.
 				if (tileToTheRight() && (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_Running_Left.ToString() && Sprite.RotatedRect.PreviousTag == AnimatedSprite.AnimationState.Guy_Running_Right.ToString()))
 				{
-					position = new Vector2(position.X - 50, position.Y);
+					//position = new Vector2(position.X - 50, position.Y);
 				}
 
 				updateRectangles(-1, 0);
