@@ -552,6 +552,12 @@ namespace Shoeter
 			}
 			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !stopPlayerInput)
 			{
+				// Prevent the Guy from clipping through tiles if the player was running right, hit a tile, then immediately starting running left.
+				if(tileToTheRight())
+				{
+					position.X -= 5f;
+				}
+
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
 				position.X -= velocity.X * delta;
@@ -560,12 +566,6 @@ namespace Shoeter
 				{
 					shoesAreCurrentlyMovingDueToLauncher = false;
 					velocity.Y = 0f;
-				}
-
-				// Prevent the Guy from clipping through tiles if the player was running right, hit a tile, then immediately starting running left.
-				if (tileToTheRight() && (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_Running_Left.ToString() && Sprite.RotatedRect.PreviousTag == AnimatedSprite.AnimationState.Guy_Running_Right.ToString()))
-				{
-					//position = new Vector2(position.X - 50, position.Y);
 				}
 
 				updateRectangles(-1, 0);
