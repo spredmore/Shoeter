@@ -196,7 +196,7 @@ namespace Shoeter
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					resetMovementModificationsDueToAirCollision();
-					prepareMovementDueToSpringCollision(State.Decending); // Why is this passing in Decending?
+					prepareMovementDueToSpringCollision(State.Jumping);
 				}
 				else if (Level.tiles[y, x].IsLauncher)
 				{
@@ -747,6 +747,13 @@ namespace Shoeter
 
 				velocity.Y *= 0.55f;    // Decrease the power of the next bounce.
 				position.Y += velocity.Y;
+
+				// If the Shoes are jumping, prevent them from clipping through the bottom of the Spring tile.
+				if(currentState == State.Jumping)
+				{
+					position.Y += velocity.Y + 1f;
+				}
+				
 			}
 			else if (currentState == State.Running_Right)                
 			{

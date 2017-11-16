@@ -35,9 +35,9 @@ namespace Shoeter
 		public Rectangle goalRectangle;
 
 		// Starts at 0.
-		public int currentLevel = -1;
+		public int currentLevel = -1;	// -1 is Level 1
 		//int totalLevels = 6;
-		int totalLevels = 0;
+		int totalLevels = 1;			// 0 represents the first level.
 
 		public string debug;
 
@@ -189,6 +189,10 @@ namespace Shoeter
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/HillbillyWorld_Background"), new Vector2(0f, 0f), Color.White);
 			}
+			else if (currentLevel == 1)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/HumanZoo_Background"), new Vector2(0f, 0f), Color.White);
+			}
 		}
 
 		public void drawForeground(SpriteBatch spriteBatch, ref ContentManager content)
@@ -196,6 +200,10 @@ namespace Shoeter
 			if (currentLevel == 0)
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/HillbillyWorld_Foreground"), new Vector2(0f, 0f), Color.White);
+			}
+			else if (currentLevel == 1)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/HumanZoo_Foreground"), new Vector2(0f, 0f), Color.White);
 			}
 		}
 	}

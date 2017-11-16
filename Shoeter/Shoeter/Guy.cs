@@ -224,7 +224,7 @@ namespace Shoeter
 
 					if (Level.tiles[y, x].TileRepresentation == 'S' && velocity.Y > 1f)
 					{
-						position.Y -= 20f;	// Moves the Guy above the Spring so it doesn't clip through.
+						//position.Y -= 20f;	// Moves the Guy above the Spring so it doesn't clip through.
 						prepareMovementDueToSpringCollision(currentState);
 					}
 					else if (Level.tiles[y, x].IsLauncher)
