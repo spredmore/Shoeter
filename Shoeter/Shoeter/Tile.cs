@@ -184,7 +184,7 @@ namespace Shoeter
 		/// Load a new tile and gives it a texture and collision property.
 		/// </summary>
 		public void LoadTile()
-		{        
+		{
 			// 16 x 16 red block
 			if (tileRepresentation == '*')
 			{
@@ -192,7 +192,7 @@ namespace Shoeter
 				texture = content.Load<Texture2D>("Tiles/test1");
 
 				// Set the collision property of a block.
-				collisionProperty = CollisionProperty.Impassable;                
+				collisionProperty = CollisionProperty.Impassable;
 			}
 
 			// Transparent Block.
@@ -209,9 +209,14 @@ namespace Shoeter
 				collisionProperty = CollisionProperty.Passable;
 			}
 
-			else if (tileRepresentation == 'G')
+			else if (tileRepresentation == 'g')
 			{
 				texture = content.Load<Texture2D>("Tiles/Goal-16");
+				collisionProperty = CollisionProperty.Passable;
+			}
+			else if (tileRepresentation == 'G')
+			{
+				texture = content.Load<Texture2D>("Tiles/Sandwich");
 				collisionProperty = CollisionProperty.Passable;
 			}
 			else if (tileRepresentation == 'S')

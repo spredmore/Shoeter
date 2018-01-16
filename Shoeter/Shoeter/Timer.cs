@@ -19,7 +19,6 @@ namespace Shoeter
 		public float ElapsedTime
 		{
 			get { return elapsedTime; }
-			set { elapsedTime = value; }
 		}
 
 		/// <summary>

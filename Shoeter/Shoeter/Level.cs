@@ -12,7 +12,7 @@ namespace Shoeter
 	class Level
 	{
 		ContentManager contentManager;
-		
+
 		// This stores our level that is read from the text file.
 		List<string> level = new List<string>();
 
@@ -35,9 +35,8 @@ namespace Shoeter
 		public Rectangle goalRectangle;
 
 		// Starts at 0.
-		public int currentLevel = -1;	// -1 is Level 1
-		//int totalLevels = 6;
-		int totalLevels = 1;			// 0 represents the first level.
+		public int currentLevel = -1;	// -1 is Level 1 (the first level)
+		int totalLevels = 2;			// 0 represents Level 1.
 
 		public string debug;
 
@@ -74,7 +73,7 @@ namespace Shoeter
 			// 1 - ****
 			// 2 - ****
 			// ...
-			
+
 			// The problem is lines is only getting 45
 			// Only goes to 65
 			lines = System.IO.File.ReadAllLines("Content/Levels/" + currentLevel.ToString() + ".txt");
@@ -112,7 +111,7 @@ namespace Shoeter
 					{
 						tiles[column, row].Center = new Vector2(0, 0);
 					}
-					
+
 					// We are going to store all the impassable tiles rectangles in a list. We will use this for collision detection.
 					if (tiles[column, row].CollProperties == Tile.CollisionProperty.Impassable)
 					{
@@ -120,7 +119,7 @@ namespace Shoeter
 						impassableTilePos.Add(tiles[column, row].Position);
 					}
 
-					if (tiles[column, row].TileRepresentation == 'G')
+					if (tiles[column, row].TileRepresentation == 'G' || tiles[column, row].TileRepresentation == 'g')
 					{
 						goalRectangle = tiles[column, row].SourceRect;
 					}
@@ -129,24 +128,36 @@ namespace Shoeter
 						playerStartingPosition = tiles[column, row].Position;
 					}
 				}
-			}   
+			}
 		}
 
 		/// <summary>
 		/// Draws the level.
 		/// </summary>
 		/// <param name="sb">Enables a group of sprites to be drawn using the same settings.</param>
-		public void Draw(SpriteBatch sb)
-		{   
+		public void Draw(SpriteBatch sb, Boolean onlyDrawGoal)
+		{
 			// The outer loop goes through the columns.
 			for (int column = 0; column < numberOfTileColumns; column++)
 			{
 				// The inner loop goes through the rows.
 				for (int row = 0; row < numberOfTilesInRow; row++)
 				{
-					sb.Draw(tiles[column, row].Texture, tiles[column, row].Position, null, Color.White, tiles[column, row].Rotation, tiles[column, row].Center, 1f, SpriteEffects.None, 0);
+					if (onlyDrawGoal && tiles[column, row].TileRepresentation == 'G')
+					{
+						sb.Draw(tiles[column, row].Texture, tiles[column, row].Position, null, Color.White, tiles[column, row].Rotation, tiles[column, row].Center, 1f, SpriteEffects.None, 0);
+					}
+					else if(onlyDrawGoal == false)
+					{
+						sb.Draw(tiles[column, row].Texture, tiles[column, row].Position, null, Color.White, tiles[column, row].Rotation, tiles[column, row].Center, 1f, SpriteEffects.None, 0);
+					}
 				}
 			}
+		}
+		public void drawGoal(SpriteBatch sb)
+		{
+			Tile goalSandwich = new Tile('G', ref contentManager);
+			sb.Draw(goalSandwich.Texture, goalSandwich.Position, null, Color.White, goalSandwich.Rotation, goalSandwich.Center, 1f, SpriteEffects.None, 0);
 		}
 
 		/// <summary>
@@ -185,13 +196,17 @@ namespace Shoeter
 
 		public void drawBackground(SpriteBatch spriteBatch, ref ContentManager content)
 		{
-			if(currentLevel == 0)
+			if (currentLevel == 0)
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/HillbillyWorld_Background"), new Vector2(0f, 0f), Color.White);
 			}
 			else if (currentLevel == 1)
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/HumanZoo_Background"), new Vector2(0f, 0f), Color.White);
+			}
+			else if (currentLevel == 2)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/SewerWorld_Background"), new Vector2(0f, 0f), Color.White);
 			}
 		}
 
@@ -204,6 +219,10 @@ namespace Shoeter
 			else if (currentLevel == 1)
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/HumanZoo_Foreground"), new Vector2(0f, 0f), Color.White);
+			}
+			else if (currentLevel == 2)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/SewerWorld_Foreground"), new Vector2(0f, 0f), Color.White);
 			}
 		}
 	}

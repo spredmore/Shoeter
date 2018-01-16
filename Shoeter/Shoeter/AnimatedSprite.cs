@@ -25,7 +25,7 @@ namespace Shoeter
 		int spriteHeight = 64;      // The height of the individual sprite.
 		int totalFrames = 0;        // The total amount of frames in the sprite sheet.
 		Rectangle sourceRect;       // The rectangle in which the AnimatedSprite will be drawn.
-		Vector2 position;			// The position of the AnimatedSprite.
+		public Vector2 position;    // The position of the AnimatedSprite.
 		Rectangle positionRect;
 		Vector2 center;             // The center of the AnimatedSprite.
 		Single rotation;			// The rotation of the AnimatedSprite.
@@ -40,7 +40,7 @@ namespace Shoeter
 			Guy_Running_Right = 3,
 			Guy_Running_Left = 4,
 			Guy_Jumping_Right = 5,
-			Guy_Jumping_Left= 6,
+			Guy_Jumping_Left = 6,
 			Guy_Falling_Right = 7,
 			Guy_Falling_Left = 8,
 			Guy_BeingShot_Right = 9,
@@ -226,127 +226,90 @@ namespace Shoeter
 				{
 					// The end of the sprite sheet has been reached. Reset to the beginning.
 					currentFrame = 0;
-				} 
+				}
 
 				// Reset the timer.
 				timer = 0f;
 			}
 		}
 
-		/// <summary>
-		/// Creates and returns a new Animated Sprite based on the passed in state.
-		/// </summary>
-		/// <param name="state">The State of the Character. Determines which Animated Sprite to return.</param>
-		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
-		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
-		/// <param name="isChangingGuySprite">Says whether or not the Guy is being shot or not.</param>
-		/// <param name="xCoordinateOfSprite">X Coordinate of the newly created Animated Sprite.</param>
-		/// <param name="xCoordinateOfSprite">Y Coordinate of the newly created Animated Sprite.</param>
-		/// <returns>A new Animated Sprite based on the passed in state.</returns>
-		public static AnimatedSprite generateAnimatedSpriteBasedOnState(AnimatedSprite.AnimationState state, ContentManager content, SpriteBatch spriteBatch, int xCoordinateOfSprite, int yCoordinateOfSprite)
+		public static AnimatedSprite generateAnimatedSpriteBasedOnState(String state, ContentManager content, SpriteBatch spriteBatch, Boolean isChangingGuySprite)
 		{
-			if (state == AnimationState.Guy_Idle_Left)
+			if (isChangingGuySprite)
 			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyIdleWithShoes_FacingLeft"), new Vector2(50, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Idle_Left.ToString());
-				return sprite;
+				if (state == "Idle_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyIdleWithShoes_FacingLeft"), new Vector2(50, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Idle_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyIdleWithShoes_FacingRight"), new Vector2(51, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Idle_WithoutShoes_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyIdleWithoutShoes_FacingRight"), new Vector2(52, 650), 0, 26, 48, 40, spriteBatch, 33f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Running_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyRunning_RunningLeft"), new Vector2(100, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Running_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyRunning_RunningRight"), new Vector2(101, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "BeingShot_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyBeingShot_FacingLeft_LessFrames"), new Vector2(150, 650), 0, 68, 70, 18, spriteBatch, 33f, MathHelper.ToRadians(0));
+				}
+				else if (state == "BeingShot_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyBeingShot_FacingRight_LessFrames"), new Vector2(150, 650), 0, 68, 70, 18, spriteBatch, 33f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Jumping_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyJumping_OnlyJump_FacingRight"), new Vector2(175, 650), 0, 25, 48, 20, spriteBatch, 33f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Jumping_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyJumping_OnlyJump_FacingLeft"), new Vector2(175, 650), 0, 25, 48, 20, spriteBatch, 33f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Falling_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyFalling_FacingLeft"), new Vector2(200, 650), 0, 25, 48, 0, spriteBatch, 33f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Falling_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyFalling_FacingRight"), new Vector2(200, 650), 0, 25, 48, 0, spriteBatch, 33f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Empty")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 0, 0, 69, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
 			}
-			else if (state == AnimationState.Guy_Idle_Right)
+			else
 			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyIdleWithShoes_FacingRight"), new Vector2(51, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Idle_Right.ToString());
-				return sprite;
+				if (state == "Idle_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesIdle_FacingLeft"), new Vector2(10, 650), 0, 23, 16, 10, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Idle_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesIdle_FacingRight"), new Vector2(11, 650), 0, 23, 16, 10, spriteBatch, 34f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Running_Left")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesRunning_FacingLeft"), new Vector2(100, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Running_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesRunning_FacingRight"), new Vector2(101, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
+				}
+				else if (state == "Running_Right")
+				{
+					return new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesRunning_FacingRight"), new Vector2(102, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
+				}
 			}
-			else if (state == AnimationState.Guy_Idle_WithoutShoes_Right)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyIdleWithoutShoes_FacingRight"), new Vector2(52, 650), 0, 26, 48, 40, spriteBatch, 33f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 23, 48), 0, AnimationState.Guy_Idle_WithoutShoes_Right.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Guy_Running_Left)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyRunning_RunningLeft"), new Vector2(100, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Running_Left.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Guy_Running_Right)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyRunning_RunningRight"), new Vector2(101, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 45, 48), 0, AnimationState.Guy_Running_Right.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Guy_BeingShot_Left)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyBeingShot_FacingLeft_Static"), new Vector2(200, 650), 0, 43, 43, 0, spriteBatch, 0f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 43, 43), 0, AnimationState.Guy_BeingShot_Left.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Guy_BeingShot_Right)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyBeingShot_FacingRight_Static"), new Vector2(200, 650), 0, 43, 43, 0, spriteBatch, 0f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 43, 43), 0, AnimationState.Guy_BeingShot_Right.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Guy_Jumping_Right)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyJumping_OnlyJump_FacingRight"), new Vector2(175, 650), 0, 25, 48, 20, spriteBatch, 33f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Jumping_Right.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Guy_Jumping_Left)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyJumping_OnlyJump_FacingLeft"), new Vector2(175, 650), 0, 25, 48, 20, spriteBatch, 33f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Jumping_Left.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Guy_Falling_Left)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyFalling_FacingLeft"), new Vector2(200, 650), 0, 25, 48, 0, spriteBatch, 33f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Falling_Left.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Guy_Falling_Right)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Guy Animations/GuyFalling_FacingRight"), new Vector2(200, 650), 0, 25, 48, 0, spriteBatch, 33f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 21, 48), 0, AnimationState.Guy_Falling_Right.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Guy_Empty)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 0, 0, 69, spriteBatch, 34f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 0, 0), 0, AnimationState.Guy_Running_Left.ToString());
-				return sprite;
-			}
-			else if(state == AnimationState.Shoes_Idle_Left)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesIdle_FacingLeft"), new Vector2(10, 650), 0, 23, 16, 10, spriteBatch, 34f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 23, 16), 0, AnimationState.Shoes_Idle_Left.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Shoes_Idle_Right)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesIdle_FacingRight"), new Vector2(11, 650), 0, 23, 16, 10, spriteBatch, 34f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 23, 16), 0, AnimationState.Shoes_Idle_Right.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Shoes_Running_Left)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesRunning_FacingLeft"), new Vector2(100, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 25, 16), 0, AnimationState.Shoes_Running_Left.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Shoes_Running_Right)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Shoes Animations/ShoesRunning_FacingRight"), new Vector2(101, 650), 0, 26, 16, 18, spriteBatch, 1f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 25, 16), 0, AnimationState.Shoes_Running_Right.ToString());
-				return sprite;
-			}
-			else if (state == AnimationState.Shoes_Empty)
-			{
-				AnimatedSprite sprite = new AnimatedSprite(content.Load<Texture2D>("Sprites/Transparent16x32"), new Vector2(25, 650), 0, 26, 16, 69, spriteBatch, 34f, MathHelper.ToRadians(0));
-				sprite.RotatedRect = new RotatedRectangle(new Rectangle(xCoordinateOfSprite, yCoordinateOfSprite, 0, 0), 0, AnimationState.Shoes_Running_Left.ToString());
-				return sprite;
-			}
+
 
 			return null;
 		}
@@ -357,15 +320,10 @@ namespace Shoeter
 		public void Draw()
 		{
 			PositionRect = new Rectangle((int)Position.X, (int)Position.Y, spriteWidth, spriteHeight);
-
-			String tag = RotatedRect.Tag;
-			String previousTag = RotatedRect.PreviousTag;
-			RotatedRect = new RotatedRectangle(PositionRect, RotatedRect.Rotation, tag);
-			RotatedRect.PreviousTag = previousTag;
+			RotatedRect = new RotatedRectangle(PositionRect, 0f);
 
 			Rectangle aPositionAdjusted = new Rectangle(rotatedRect.X + (rotatedRect.Width / 2), rotatedRect.Y + (rotatedRect.Height / 2), rotatedRect.Width, rotatedRect.Height);
-			//spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, Rotation, new Vector2((int)PositionRect.Width / 2, (int)PositionRect.Height / 2), SpriteEffects.None, 0);
-			spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, RotatedRect.Rotation, new Vector2((int)PositionRect.Width / 2, (int)PositionRect.Height / 2), SpriteEffects.None, 0);
+			spriteBatch.Draw(Texture, aPositionAdjusted, SourceRect, Color.White, Rotation, new Vector2((int)PositionRect.Width / 2, (int)PositionRect.Height / 2), SpriteEffects.None, 0);
 		}
 	}
 }

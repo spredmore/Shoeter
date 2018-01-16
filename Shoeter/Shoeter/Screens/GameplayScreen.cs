@@ -207,9 +207,6 @@ namespace Shoeter
 
 			level.drawBackground(spriteBatch, ref content);
 
-			// Draw the level.
-			//level.Draw(spriteBatch);
-
 			//guy.Draw();
 			guy.Sprite.Draw();
 			//spriteBatch.Draw(content.Load<Texture2D>("Sprites/32x48Hitbox"), new Rectangle(guy.Sprite.RotatedRect.X, guy.Sprite.RotatedRect.Y, guy.Sprite.RotatedRect.Width, guy.Sprite.RotatedRect.Height), Color.White);
@@ -223,16 +220,19 @@ namespace Shoeter
 			//spriteBatch.Draw(content.Load<Texture2D>("Sprites/16x16HitboxUp"), shoes.TileCollisionRectangle, Color.White);
 
 			level.drawForeground(spriteBatch, ref content);
+			
+			// Draw the level.
+			level.Draw(spriteBatch, true);
 
 			// Draw the debug font.
-			spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.Black);
-			spriteBatch.DrawString(debugFont, "Guy - Power (Scroll Wheel): " + guy.powerOfLauncherBeingUsed.ToString(), new Vector2(0, 20), Color.Black);
+			spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.LightSlateGray);
+			spriteBatch.DrawString(debugFont, "Guy - Power (Scroll Wheel): " + guy.powerOfLauncherBeingUsed.ToString(), new Vector2(0, 20), Color.LightSlateGray);
 
 			debug = mouseRect.X.ToString() + " " + mouseRect.Y.ToString();
 
 			if (displayInterface)
 			{
-				level.Draw(spriteBatch);
+				level.Draw(spriteBatch, false);
 				spriteBatch.DrawString(debugFont, "Guy - Gravity (./3): " + guy.gravity.ToString(), new Vector2(0, 40), Color.Black);
 				spriteBatch.DrawString(debugFont, "Shoes - Air Movement (7/8): " + shoes.airMovementSpeed.ToString(), new Vector2(0, 60), Color.Black);
 				spriteBatch.DrawString(debugFont, "Shoes - Ground Movement (4/5): " + shoes.groundMovementSpeed.ToString(), new Vector2(0, 80), Color.Black);

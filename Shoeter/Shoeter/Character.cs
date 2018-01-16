@@ -60,6 +60,9 @@ namespace Shoeter
 		// Window Information
 		protected int screenHeight;
 		protected int screenWidth;
+
+		public RotatedRectangle rotatedRect;
+
 		public static string charDebug;
 
 		/// <summary>
@@ -69,18 +72,6 @@ namespace Shoeter
 		{
 			get { return position; }
 			set { position = value; }
-		}
-
-		public int SpriteWidth
-		{
-			get { return spriteWidth; }
-			set { spriteWidth = value; }
-		}
-
-		public int SpriteHeight
-		{
-			get { return spriteWidth; }
-			set { spriteWidth = value; }
 		}
 
 		/// <summary>
@@ -117,6 +108,15 @@ namespace Shoeter
 		{
 			get { return positionRect; }
 			set { positionRect = value; }
+		}
+
+		/// <summary>
+		/// The property for a Rotated Rectangle that represents the Position Rectangle.
+		/// </summary>
+		public RotatedRectangle RotatedRect
+		{
+			get { return rotatedRect; }
+			set { rotatedRect = value; }
 		}
 
 		/// <summary>
@@ -234,9 +234,45 @@ namespace Shoeter
 		/// <summary>
 		/// Constructor for the Character class.
 		/// </summary>
-		public Character() 
-		{ 
+		public Character()
+		{
 			charDebug = "";
+		}
+
+		/// <summary>
+		/// Animates the character.
+		/// </summary>
+		/// <param name="gameTime">Snapshot of the game timing state.</param>
+		protected void handleAnimation(GameTime gameTime)
+		{
+			// Get a rectangle around the current frame we're on.
+			sourceRect = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
+
+			// Increment the timer to see if we need to move to the next frame.
+			timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+			// Check to see if we need to move to the next frame.
+			if (timer > interval)
+			{
+				// Check to see if we can move to the next frame.
+				if (currentFrame < totalFrames)
+				{
+					// Move to the next frame.
+					currentFrame++;
+				}
+				else
+				{
+					// We reached the end of the sprite sheet. Reset to the beginning.
+					currentFrame = 0;
+				}
+
+				// Reset the timer.
+				timer = 0f;
+			}
+
+			// Get the center of the current frame.
+			// The center will be important, because we will have to do rotations about the center of the sprite.
+			center = new Vector2(sourceRect.Width / 2, sourceRect.Height / 2);
 		}
 
 		/// <summary>
@@ -251,7 +287,7 @@ namespace Shoeter
 			{
 				if (futurePositionRec.Intersects(Level.impassableTileRecs[i]))
 				{
-					position.Y = Level.impassableTilePos[i].Y - Sprite.RotatedRect.Height;
+					position.Y = Level.impassableTilePos[i].Y - spriteHeight;
 					updateRectangles(0, -1);
 					tileCollRect = Level.impassableTileRecs[i];
 					setTileArrayCoordinates(Level.impassableTilePos[i].X, Level.impassableTilePos[i].Y);
@@ -268,7 +304,7 @@ namespace Shoeter
 		/// </summary>
 		/// <param name="xPosition">X coordinate of the tile in the level.</param>
 		/// <param name="yPosition">Y coordinate of the tile in the level.</param>
-		public void setTileArrayCoordinates(float xPosition, float yPosition)
+		protected void setTileArrayCoordinates(float xPosition, float yPosition)
 		{
 			for (int x = 0; x < Level.numberOfTileColumns; x++)
 			{
@@ -286,7 +322,7 @@ namespace Shoeter
 		/// Determines if there is a Tile above the Chracter.
 		/// </summary>
 		/// <returns>A boolean saying whether or not there is a Tile above the Character.</returns>
-		public bool underTile()
+		protected bool underTile()
 		{
 			updateRectangles(0, -1);
 
@@ -350,28 +386,8 @@ namespace Shoeter
 		/// <remarks>The offsets are used so that it is always known what's "in front" of the Character. Used for collision detection.</remarks>
 		protected void updateRectangles(int xOffset, int yOffset)
 		{
-			Vector2 shiftedHitboxPosition = getShiftedPositionOfHitbox();
-
-			RotatedRectangle oldHbox = Sprite.RotatedRect;
-			Sprite.RotatedRect = new RotatedRectangle(new Rectangle((int)position.X, (int)position.Y, oldHbox.Width, oldHbox.Height), oldHbox.Rotation, oldHbox.Tag);
-			Sprite.RotatedRect.PreviousTag = oldHbox.PreviousTag;
-			futurePositionRec = new Rectangle((int)Sprite.RotatedRect.X + xOffset, (int)Sprite.RotatedRect.Y + yOffset, Math.Abs(Sprite.RotatedRect.Right - Sprite.RotatedRect.Left), Math.Abs(Sprite.RotatedRect.Top - Sprite.RotatedRect.Bottom));
-		}
-
-		private Vector2 getShiftedPositionOfHitbox()
-		{
-			if (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Left.ToString())
-			{
-				return new Vector2(position.X, position.Y);
-			}
-			else if (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Right.ToString())
-			{
-				return new Vector2(position.X, position.Y);
-			}
-			else
-			{
-				return new Vector2(position.X, position.Y);
-			}
+			positionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
+			futurePositionRec = new Rectangle((int)position.X + xOffset, (int)position.Y + yOffset, spriteWidth, spriteHeight);
 		}
 
 		/// <summary>
@@ -395,10 +411,10 @@ namespace Shoeter
 		/// <remarks>When a collision is detected, execution is shifted to specializedCollision. This is an overloaded method for a derived class.</remarks>
 		protected void handleCollisions(State potentialState)
 		{
-			int leftTile = (int)Math.Floor((float)Sprite.RotatedRect.Left / Level.impassableTileRecs[0].Width);
-			int rightTile = (int)Math.Ceiling(((float)Sprite.RotatedRect.Right / Level.impassableTileRecs[0].Width)) - 1;
-			int topTile = (int)Math.Floor((float)Sprite.RotatedRect.Top / Level.impassableTileRecs[0].Height);
-			int bottomTile = (int)Math.Ceiling(((float)Sprite.RotatedRect.Bottom / Level.impassableTileRecs[0].Height)) - 1;
+			int leftTile = (int)Math.Floor((float)positionRect.Left / Level.impassableTileRecs[0].Width);
+			int rightTile = (int)Math.Ceiling(((float)positionRect.Right / Level.impassableTileRecs[0].Width)) - 1;
+			int topTile = (int)Math.Floor((float)positionRect.Top / Level.impassableTileRecs[0].Height);
+			int bottomTile = (int)Math.Ceiling(((float)positionRect.Bottom / Level.impassableTileRecs[0].Height)) - 1;
 
 			for (int y = topTile; y <= bottomTile; ++y)
 			{
@@ -413,7 +429,7 @@ namespace Shoeter
 					}
 					else if (x > 79)
 					{
-						position.X = screenWidth - Sprite.RotatedRect.Width;
+						position.X = screenWidth - spriteWidth;
 						velocity.X = 0f;
 						didCharacterCollideWithRightBorderOfScreen = true;
 					}
@@ -460,6 +476,14 @@ namespace Shoeter
 		}
 
 		/// <summary>
+		/// Draws the Character.
+		/// </summary>
+		public void Draw()
+		{
+			spriteBatch.Draw(Texture, Position, SourceRect, Color.White, 0f, new Vector2(0, 0), 1.0f, FacingRight, 0);
+		}
+
+		/// <summary>
 		/// This method is overloaded for derived classes. Used to handle collisions on a class by class basis (i.e. for the Shoes and Guy).
 		/// </summary>
 		/// <param name="currentState">The current State of the Character.</param>
@@ -496,16 +520,16 @@ namespace Shoeter
 		{
 			PreviousCollidingTile = CurrentCollidingTile;
 
-			int leftTile = (int)Math.Floor((float)Sprite.RotatedRect.Left / Level.impassableTileRecs[0].Width);
-			int rightTile = (int)Math.Ceiling(((float)Sprite.RotatedRect.Right / Level.impassableTileRecs[0].Width)) - 1;
-			int topTile = (int)Math.Floor((float)Sprite.RotatedRect.Top / Level.impassableTileRecs[0].Height);
-			int bottomTile = (int)Math.Ceiling(((float)Sprite.RotatedRect.Bottom / Level.impassableTileRecs[0].Height)) - 1;
+			int leftTile = (int)Math.Floor((float)positionRect.Left / Level.impassableTileRecs[0].Width);
+			int rightTile = (int)Math.Ceiling(((float)positionRect.Right / Level.impassableTileRecs[0].Width)) - 1;
+			int topTile = (int)Math.Floor((float)positionRect.Top / Level.impassableTileRecs[0].Height);
+			int bottomTile = (int)Math.Ceiling(((float)positionRect.Bottom / Level.impassableTileRecs[0].Height)) - 1;
 
 			for (int y = topTile; y <= bottomTile; ++y)
 			{
 				for (int x = leftTile; x <= rightTile; ++x)
 				{
-					if ((x > 0 && x < 79 && y > 0 & y < 44) && Sprite.RotatedRect.Intersects(Level.tiles[y, x].SourceRect))
+					if ((x > 0 && x < 79 && y > 0 & y < 44) && PositionRect.Intersects(Level.tiles[y, x].SourceRect))
 					{
 						currentTileCollidingWith = Level.tiles[y, x];
 						tileCollRect = Level.tiles[y, x].SourceRect;

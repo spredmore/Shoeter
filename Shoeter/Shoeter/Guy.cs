@@ -13,7 +13,7 @@ namespace Shoeter
 	{
 		private KeyboardState currentKeyboardState;
 		private KeyboardState previousKeyboardState;
-		public MouseState currentMouseState;
+		private MouseState currentMouseState;
 		private MouseState previousMouseState;
 
 		private Vector2 currentMousePosition;
@@ -32,13 +32,10 @@ namespace Shoeter
 		private bool useGravity;
 		private bool areGuyAndShoesCurrentlyLinked = true;
 		public bool isGuyBeingShot = false;
-		
+
 		private float delta;
 
-		private Timer airCannonActivationTimer;	// A timer that keeps track of how long an Air Cannon has been on.
 		public List<Air> airsGuyHasCollidedWith = new List<Air>();
-		public Queue<Char> airCannonSwitchesCollidedWith;
-		public Queue<float> airCannonSwitchesCollidedWithActivationTimes;
 
 		private ContentManager content;
 
@@ -53,41 +50,31 @@ namespace Shoeter
 		public bool usingLauncher = false;
 		private Boolean idleAnimationLockIsOn = false;
 
-		private int baseRotationIncrement;	// The base rate of rotation for when the Guy is being shot.
-		private float rotationRate;	// The rate of rotation for when the Guy is being shot.
-		
-		public static int test;
-
 		public Guy(Texture2D texture, SpriteBatch spriteBatch, int currentFrame, int totalFrames, int spriteWidth, int spriteHeight, int screenHeight, int screenWidth, ContentManager content)
 		{
 			this.spriteBatch = spriteBatch;
 			this.Texture = texture;
 			this.currentFrame = currentFrame;
 			this.totalFrames = totalFrames;
+			this.spriteWidth = spriteWidth;
+			this.spriteHeight = spriteHeight;
 			this.screenHeight = screenHeight;
 			this.screenWidth = screenWidth;
 			this.content = content;
 
-			changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_Empty);
+			changeSpriteOfTheGuy("Empty");
 
 			gravity = 10f;
 			debug = "";
 			debug2 = "";
-			debug3 = "";
 			collX = 0;
 			collY = 0;
-			baseRotationIncrement = 10;
-			rotationRate = 0;
 
 			PlayerMode = Mode.Guy;
 
 			delayCollisionWithGuyAndShoesTimer = new Timer(0.5f);
 			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
 			delayBetweenLaunchesTimer = new Timer(0.1f);
-			airCannonActivationTimer = new Timer(2f);
-
-			airCannonSwitchesCollidedWith = new Queue<Char>();
-			airCannonSwitchesCollidedWithActivationTimes = new Queue<float>();
 		}
 
 		/// <summary>
@@ -116,12 +103,12 @@ namespace Shoeter
 		{
 			if (!delayBetweenLaunchesTimer.TimerStarted)    // Ensures the Guy doesn't use another Launcher too quickly.
 			{
-				if (currentState == State.Running_Right)  
+				if (currentState == State.Running_Right)
 				{
 					// Allow the Guy to pass through an Air Switch Cannon.
 					if (!Level.tiles[y, x].IsAirCannonSwitch)
 					{
-						position.X = Level.tiles[y, x].Position.X - Sprite.RotatedRect.Width;
+						position.X = Level.tiles[y, x].Position.X - spriteWidth;
 					}
 
 					if (Level.tiles[y, x].TileRepresentation == 'S')
@@ -137,12 +124,6 @@ namespace Shoeter
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
 						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
-						queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
-
-						if (!airCannonActivationTimer.TimerStarted)
-						{
-							airCannonActivationTimer.startTimer();
-						}
 					}
 					else
 					{
@@ -170,12 +151,6 @@ namespace Shoeter
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
 						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
-						queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
-
-						if (!airCannonActivationTimer.TimerStarted)
-						{
-							airCannonActivationTimer.startTimer();
-						}
 					}
 					else
 					{
@@ -203,12 +178,6 @@ namespace Shoeter
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
 						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
-						queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
-
-						if (!airCannonActivationTimer.TimerStarted)
-						{
-							airCannonActivationTimer.startTimer();
-						}
 					}
 					else
 					{
@@ -219,12 +188,11 @@ namespace Shoeter
 				{
 					if (!Level.tiles[y, x].IsAirCannonSwitch)
 					{
-						position.Y = Level.tiles[y, x].Position.Y - Sprite.RotatedRect.Width;
+						position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
 					}
 
 					if (Level.tiles[y, x].TileRepresentation == 'S' && velocity.Y > 1f)
 					{
-						//position.Y -= 20f;	// Moves the Guy above the Spring so it doesn't clip through.
 						prepareMovementDueToSpringCollision(currentState);
 					}
 					else if (Level.tiles[y, x].IsLauncher)
@@ -235,29 +203,21 @@ namespace Shoeter
 					}
 					else if (Level.tiles[y, x].IsAirCannonSwitch)
 					{
+						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 						position = new Vector2(Level.tiles[y, x].Position.X - 16, Level.tiles[y, x].Position.Y - 32);
 						velocity = new Vector2(0f, 0f);
 
-						Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
-						queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
-
-						if (!airCannonActivationTimer.TimerStarted)
-						{
-							airCannonActivationTimer.startTimer();
-						}
-
 						if (!idleAnimationLockIsOn)
 						{
-							changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_Idle_WithoutShoes_Right);
+							changeSpriteOfTheGuy("Idle_WithoutShoes_Right");
 							idleAnimationLockIsOn = true;
 						}
 					}
 					else
 					{
-						Position = new Vector2(TileCollisionRectangle.X - 11, TileCollisionRectangle.Y - 32);
 						velocity = new Vector2(0f, 0f); // So the Guy doesn't fall through.
 						useGravity = false;
-						changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_Idle_WithoutShoes_Right);
+						changeSpriteOfTheGuy("Idle_WithoutShoes_Right");
 					}
 				}
 			}
@@ -269,7 +229,7 @@ namespace Shoeter
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void loadNextLevelIfPossible(Shoes shoes)
 		{
-			if (shoes.Sprite.RotatedRect.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
+			if (PositionRect.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
 			{
 				currentLevel.LoadLevel();
 				shoes.Position = currentLevel.getPlayerStartingPosition();
@@ -302,7 +262,7 @@ namespace Shoeter
 		/// </summary>
 		private void changeGravity()
 		{
-			if ((!currentKeyboardState.IsKeyDown(Keys.Decimal) && previousKeyboardState.IsKeyDown(Keys.Decimal)) || 
+			if ((!currentKeyboardState.IsKeyDown(Keys.Decimal) && previousKeyboardState.IsKeyDown(Keys.Decimal)) ||
 				(!currentKeyboardState.IsKeyDown(Keys.Down) && previousKeyboardState.IsKeyDown(Keys.Down)))
 			{
 				if (gravity > 0) gravity -= 1f;
@@ -311,7 +271,7 @@ namespace Shoeter
 				(!currentKeyboardState.IsKeyDown(Keys.Up) && previousKeyboardState.IsKeyDown(Keys.Up)))
 			{
 				gravity += 1f;
-			} 
+			}
 		}
 
 		/// <summary>
@@ -363,7 +323,6 @@ namespace Shoeter
 			delayCollisionWithGuyAndShoesTimer.Update(gameTime);
 			delayLaunchAfterLauncherCollisionTimer.Update(gameTime);
 			delayBetweenLaunchesTimer.Update(gameTime);
-			airCannonActivationTimer.Update(gameTime);
 		}
 
 		/// <summary>
@@ -386,25 +345,14 @@ namespace Shoeter
 			return false;
 		}
 
+		public void changeSpriteOfTheGuy(String state)
+		{
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, true);
+		}
+
 		// ******************
 		// * START MOVEMENT *
 		// ******************
-
-		private void debugs()
-		{
-			//debug = "rotationRate: " + rotationRate.ToString();
-			//debug = "Rotation: " + Sprite.RotatedRect.Rotation.ToString();
-			//debug = "Tag: " + Sprite.RotatedRect.Tag;
-			//debug = "velocity: " + velocity.ToString();
-			//debug = "test: " + test.ToString();
-			//debug = "airCannonActivationTimer.ElapsedTime: " + airCannonActivationTimer.ElapsedTime.ToString();
-			//debug2 = "airCannonActivationTimer.TimerStarted: " + airCannonActivationTimer.TimerStarted.ToString();
-			//debug3 = "airCannonActivationTimer.TimerCompleted: " + airCannonActivationTimer.TimerCompleted.ToString();
-			//debug3 = "airCannonTileCollidedWith: " + airCannonSwitchCurrentlyCollidingWith.ToString();
-			//debug2 = "airCannonActivationTimer.ElapsedTime: " + airCannonActivationTimer.ElapsedTime.ToString();
-			//debug = "areGuyAndShoesCurrentlyLinked: " + areGuyAndShoesCurrentlyLinked.ToString();
-			//debug = "currentLevel.goalRectangle: " + currentLevel.goalRectangle.X + ", " + currentLevel.goalRectangle.Y;
-		}
 
 		/// <summary>
 		/// Handles all of the movement for the Guy.
@@ -413,8 +361,6 @@ namespace Shoeter
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void handleMovement(GameTime gameTime, ref Shoes shoes)
 		{
-			debugs();
-
 			// Updates a variety of variables used for knowing information about the current frame.
 			updateCurrentFrameVariables(gameTime, shoes.Position);
 
@@ -435,18 +381,14 @@ namespace Shoeter
 				// Takes care of movement for the Guy while he's being shot.
 				handleGuyMovementWhenBeingShot();
 
-				// Set the Guy's position to the Shoes' upon collision.
-				setGuyPositionToShoesUponCollisionIfPossible(shoes);
+				// Set the Shoes' position to the Guys' upon collision.
+				setShoesPositionToGuyUponCollisionIfPossible(shoes);
 
 				// Checks to see if the Guy is using a Launcher. If so, then launch the Guy if possible.
 				checkIfGuyCanLaunch(gameTime);
 
 				// Stops delaying collisions with the Guy and other Launchers once he's been launched.
 				stopDelayingCollisionWithGuyAndLaunchersIfPossible();
-
-				// Rotates the Sprite of the Guy while being shot.
-				rotateGuyWhenBeingShot();
-				
 			}
 			else
 			{
@@ -461,7 +403,7 @@ namespace Shoeter
 			changeGravity();
 
 			// If the Guy has turned on a particular set of Air Cannons and has now left that switch, turn the corresponding Air Cannons off.
-			checkIfAirCannonsCanBeTurnedOff();
+			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile, this, null);
 
 			// Updates the variables that are used for storing the previous values of the current values.
 			updatePreviousFrameVariables();
@@ -485,25 +427,34 @@ namespace Shoeter
 					delayCollisionWithGuyAndShoesTimer.startTimer();
 				}
 
-				useGravity = true;
 				isGuyBeingShot = true;
+				useGravity = true;
 				delayCollisionWithShoesAndGuy = true;
-				areGuyAndShoesCurrentlyLinked = false;
 				velocity = Utilities.Vector2FromAngle(MathHelper.ToRadians(angleBetweenGuyAndMouseCursor)) * powerOfLauncherBeingUsed;
 				velocity *= -1;
-				rotationRate = baseRotationIncrement + powerOfLauncherBeingUsed;
-				//shoes.Position = new Vector2(shoes.Position.X, shoes.Position.Y + 32f);	// Move the shoes to the ground.
-				
-				if (shoes.CurrentCollidingTile.IsAirCannonSwitch)
-				{
-					shoes.Position = new Vector2(shoes.CurrentCollidingTile.Position.X, shoes.CurrentCollidingTile.Position.Y);
-				}
-				else
-				{
-					shoes.Position = new Vector2(shoes.Position.X, shoes.Position.Y + 32f);	// Move the shoes to the ground.
-				}
+				areGuyAndShoesCurrentlyLinked = false;
+				shoes.swapTexture(areGuyAndShoesCurrentlyLinked); // Changes the texture/size of the shoes because the Guy is being shot.
 
-				setBeingShotAnimationIfPossible(shoes);
+				if (shoes.directionShoesAreRunning == State.Running_Left)
+				{
+					shoes.changeSpriteOfTheShoes("Running_Left", false);
+					changeSpriteOfTheGuy("BeingShot_Left");
+				}
+				else if (shoes.directionShoesAreRunning == State.Idle_Left)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Left", false);
+					changeSpriteOfTheGuy("BeingShot_Left");
+				}
+				else if (shoes.directionShoesAreRunning == State.Running_Right)
+				{
+					shoes.changeSpriteOfTheShoes("Running_Right", false);
+					changeSpriteOfTheGuy("BeingShot_Right");
+				}
+				else if (shoes.directionShoesAreRunning == State.Idle_Right)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Right", false);
+					changeSpriteOfTheGuy("BeingShot_Right");
+				}
 			}
 		}
 
@@ -550,7 +501,7 @@ namespace Shoeter
 				changeState(State.Jumping);
 			}
 		}
-		
+
 		// ****************
 		// * END MOVEMENT *
 		// ****************
@@ -721,45 +672,6 @@ namespace Shoeter
 			}
 		}
 
-		/// <summary>
-		/// Turns off any activated Air Cannons if they are on.
-		/// </summary>
-		private void checkIfAirCannonsCanBeTurnedOff()
-		{
-			if (airCannonActivationTimer.TimerCompleted)
-			{
-				airCannonActivationTimer.resetTimer();
-				Air.turnOffAirCannonsIfPossible(this, null, airCannonSwitchesCollidedWith.Dequeue());
-
-				// If there are multiple Air Cannon sets activated at the same time, then ensure that the next set to turn off happens at the correct time.
-				if (airCannonSwitchesCollidedWith.Count >= 1)
-				{
-					airCannonActivationTimer.startTimer();
-					airCannonActivationTimer.ElapsedTime += airCannonSwitchesCollidedWithActivationTimes.Dequeue();
-				}
-			}
-		}
-
-		/// <summary>
-		/// If multiple Air Cannon Switches are activated, ensure that subsequent Air Cannon activations (after the initial one) only stay on for the correct length of time.
-		/// </summary>
-		/// <param name="tileRepresentation">Denotes which Air Cannon Switch was activated.</param>
-		private void queueSubsequentAirCannonSwitchCollisions(Char tileRepresentation)
-		{
-			// Add the Air Cannon Switch set to the Queue if that set isn't already in the queue.
-			if (!airCannonSwitchesCollidedWith.Contains<Char>(tileRepresentation))
-			{
-				airCannonSwitchesCollidedWith.Enqueue(tileRepresentation);
-
-				// Enqueue the current elapsed time of the timer if there is a Air Cannon set already active.
-				// This is needed to ensure that every Air Cannon set only stays active for the correct amount of time.
-				if (airCannonActivationTimer.ElapsedTime != 0f)
-				{
-					airCannonSwitchesCollidedWithActivationTimes.Enqueue(airCannonActivationTimer.ElapsedTime);
-				}
-			}
-		}
-
 		// ******************
 		// * END AIR CANNON *
 		// ******************
@@ -787,18 +699,28 @@ namespace Shoeter
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void resetGuyToShoesCurrentPositionIfPossible(Shoes shoes)
 		{
-			if (!(currentMouseState.RightButton == ButtonState.Pressed) && previousMouseState.RightButton == ButtonState.Pressed && !areGuyAndShoesCurrentlyLinked && !shoes.underTile())
+			if (!(currentMouseState.RightButton == ButtonState.Pressed) && previousMouseState.RightButton == ButtonState.Pressed && !areGuyAndShoesCurrentlyLinked)
 			{
 				isGuyBeingShot = false;
 				usingLauncher = false;
 				idleAnimationLockIsOn = false;
 				areGuyAndShoesCurrentlyLinked = true;
-				shoes.Position = new Vector2(shoes.Position.X, shoes.Position.Y - 32);
+				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
 				Position = new Vector2(shoes.Position.X, shoes.Position.Y);
 				velocity = new Vector2(0f, 0f);
-				delayBetweenLaunchesTimer.stopTimer();
 				delayLaunchAfterLauncherCollisionTimer.stopTimer();
-				setIdleAnimationIfPossible(shoes, false);
+				delayBetweenLaunchesTimer.stopTimer();
+
+				if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Left", true);
+					changeSpriteOfTheGuy("Empty");
+				}
+				else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Right", true);
+					changeSpriteOfTheGuy("Empty");
+				}
 			}
 		}
 
@@ -806,110 +728,35 @@ namespace Shoeter
 		/// Set the Shoes's position to the position of the Guy if the collision delay timer is completed and the Guy and Shoes are not currently linked.
 		/// </summary>
 		/// <param name="shoes">A reference to the Shoes.</param>
-		private void setGuyPositionToShoesUponCollisionIfPossible(Shoes shoes)
+		private void setShoesPositionToGuyUponCollisionIfPossible(Shoes shoes)
 		{
-			if (Sprite.RotatedRect.Intersects(shoes.Sprite.RotatedRect) && !delayCollisionWithShoesAndGuy && !areGuyAndShoesCurrentlyLinked)
+			if (PositionRect.Intersects(shoes.PositionRect) && !delayCollisionWithShoesAndGuy && !areGuyAndShoesCurrentlyLinked)
 			{
 				velocity = new Vector2(0f, 0f);
 				shoes.velocity = new Vector2(0f, 0f);
-				Position = new Vector2(shoes.Position.X, shoes.Position.Y);
+				shoes.Position = new Vector2(Position.X, Position.Y + 40);
 				isGuyBeingShot = false;
 				shoes.stopPlayerInput = true;
 				idleAnimationLockIsOn = false;
 				delayCollisionWithShoesAndGuy = true;
 				areGuyAndShoesCurrentlyLinked = true;
-				setIdleAnimationIfPossible(shoes, true);
+				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
+
+				if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Left", true);
+					changeSpriteOfTheGuy("Empty");
+				}
+				else if (shoes.directionShoesAreRunning == State.Running_Right || shoes.directionShoesAreRunning == State.Idle_Right)
+				{
+					shoes.changeSpriteOfTheShoes("Idle_Right", true);
+					changeSpriteOfTheGuy("Empty");
+				}
 			}
 		}
 
 		// ************************
 		// * END POSITION SETTING *
 		// ************************
-
-		// *******************
-		// * START ANIMATION *
-		// *******************
-
-		/// <summary>
-		/// Sets the Animated Sprite for the Guy to a new Animated Sprite.
-		/// </summary>
-		/// <param name="state">The State of the Guy. Used to get the correct Animated Sprite.</param>
-		public void changeSpriteOfTheGuy(AnimatedSprite.AnimationState state)
-		{
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y);
-		}
-
-		/// <summary>
-		/// Sets the Animated Sprite for the Guy to the Being Shot Animation.
-		/// </summary>
-		private void setBeingShotAnimationIfPossible(Shoes shoes)
-		{
-			if (shoes.directionShoesAreRunning == State.Running_Left)
-			{
-				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Running_Left);
-				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_BeingShot_Left);
-			}
-			else if (shoes.directionShoesAreRunning == State.Idle_Left)
-			{
-				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Idle_Left);
-				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_BeingShot_Left);
-			}
-			else if (shoes.directionShoesAreRunning == State.Running_Right)
-			{
-				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Running_Right);
-				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_BeingShot_Right);
-			}
-			else if (shoes.directionShoesAreRunning == State.Idle_Right)
-			{
-				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Idle_Right);
-				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Guy_BeingShot_Right);
-			}
-		}
-
-		/// <summary>
-		/// Sets the Animated Sprite for the Guy to the Idle With Shoes Animation.
-		/// </summary>
-		private void setIdleAnimationIfPossible(Shoes shoes, Boolean calledFromMutualCollision)
-		{
-			if (shoes.directionShoesAreRunning == State.Running_Left && !calledFromMutualCollision)
-			{
-				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Running_Left);
-				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
-			}
-			else if ((shoes.directionShoesAreRunning == State.Idle_Left || calledFromMutualCollision) && shoes.directionShoesAreRunning != State.Running_Right)
-			{
-				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Left);
-				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
-			}
-			else if (shoes.directionShoesAreRunning == State.Running_Right && !calledFromMutualCollision)
-			{
-				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Running_Right);
-				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
-			}
-			else if ((shoes.directionShoesAreRunning == State.Idle_Right || calledFromMutualCollision) && shoes.directionShoesAreRunning != State.Running_Left)
-			{
-				shoes.changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
-				changeSpriteOfTheGuy(AnimatedSprite.AnimationState.Shoes_Empty);
-			}
-		}
-
-		/// <summary>
-		/// Rotates the Guy's Sprite.
-		/// </summary>
-		private void rotateGuyWhenBeingShot()
-		{
-			if (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Right.ToString())
-			{
-				Sprite.RotatedRect.Rotation += MathHelper.ToRadians(rotationRate);
-			}
-			else if (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_BeingShot_Left.ToString())
-			{
-				Sprite.RotatedRect.Rotation += MathHelper.ToRadians(-rotationRate);
-			}
-		}
-
-		// *****************
-		// * END ANIMATION *
-		// *****************
 	}
 }

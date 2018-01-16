@@ -46,12 +46,12 @@ namespace Shoeter
 		/// <param name="position"></param>
 		public Air(Texture2D texture, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, Vector2 position, Single rotation, Char type)
 		{
-		    this.Texture = texture;
-		    this.CurrentFrame = currentFrame;
-		    this.SpriteWidth = spriteWidth;
-		    this.SpriteHeight = spriteHeight;
-		    this.TotalFrames = totalFrames;
-		    this.SpriteBatch = spriteBatch;
+			this.Texture = texture;
+			this.CurrentFrame = currentFrame;
+			this.SpriteWidth = spriteWidth;
+			this.SpriteHeight = spriteHeight;
+			this.TotalFrames = totalFrames;
+			this.SpriteBatch = spriteBatch;
 			this.Position = position;
 			this.PositionRect = new Rectangle((int)position.X, (int)position.Y, spriteWidth, spriteHeight);
 			this.Rotation = rotation;
@@ -73,17 +73,17 @@ namespace Shoeter
 		{
 			Animate(gameTime);
 
-			foreach(Air air in Air.allAirs)
+			foreach (Air air in Air.allAirs)
 			{
 				// Shoes Collision
-				if (air.RotatedRect.Intersects(shoes.Sprite.RotatedRect) && !shoes.airsShoesHasCollidedWith.Contains(air))
+				if (air.RotatedRect.Intersects(new RotatedRectangle(shoes.PositionRect, 0.0f)) && !shoes.airsShoesHasCollidedWith.Contains(air))
 				{
 					shoes.airsShoesHasCollidedWith.Add(air);
 					shoes.setVelocityUponAirCollision(air.airCannonRepresentation);
 				}
 
 				// Guy Collision
-				if (air.RotatedRect.Intersects(guy.Sprite.RotatedRect) && !guy.airsGuyHasCollidedWith.Contains(air))
+				if (air.RotatedRect.Intersects(new RotatedRectangle(guy.PositionRect, 0.0f)) && !guy.airsGuyHasCollidedWith.Contains(air))
 				{
 					guy.airsGuyHasCollidedWith.Add(air);
 					guy.setVelocityUponAirCollision(air.airCannonRepresentation);
@@ -104,7 +104,7 @@ namespace Shoeter
 		{
 			if (airCannonSwitch.TileRepresentation == 'Q')
 			{
-				if (!Air.areQCannonsOn)
+				if (!Air.areQCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
 				{
 					Air.areQCannonsOn = true;
 					Air.turnOnAllQCannons(content, spriteBatch);
@@ -112,7 +112,7 @@ namespace Shoeter
 			}
 			else if (airCannonSwitch.TileRepresentation == 'W')
 			{
-				if (!Air.areWCannonsOn)
+				if (!Air.areWCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
 				{
 					Air.areWCannonsOn = true;
 					Air.turnOnAllWCannons(content, spriteBatch);
@@ -120,7 +120,7 @@ namespace Shoeter
 			}
 			else if (airCannonSwitch.TileRepresentation == 'E')
 			{
-				if (!Air.areECannonsOn)
+				if (!Air.areECannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
 				{
 					Air.areECannonsOn = true;
 					Air.turnOnAllECannons(content, spriteBatch);
@@ -128,7 +128,7 @@ namespace Shoeter
 			}
 			else if (airCannonSwitch.TileRepresentation == 'A')
 			{
-				if (!Air.areACannonsOn)
+				if (!Air.areACannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
 				{
 					Air.areACannonsOn = true;
 					Air.turnOnAllACannons(content, spriteBatch);
@@ -136,7 +136,7 @@ namespace Shoeter
 			}
 			else if (airCannonSwitch.TileRepresentation == 'D')
 			{
-				if (!Air.areDCannonsOn)
+				if (!Air.areDCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
 				{
 					Air.areDCannonsOn = true;
 					Air.turnOnAllDCannons(content, spriteBatch);
@@ -144,7 +144,7 @@ namespace Shoeter
 			}
 			else if (airCannonSwitch.TileRepresentation == 'Z')
 			{
-				if (!Air.areZCannonsOn)
+				if (!Air.areZCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
 				{
 					Air.areZCannonsOn = true;
 					Air.turnOnAllZCannons(content, spriteBatch);
@@ -152,7 +152,7 @@ namespace Shoeter
 			}
 			else if (airCannonSwitch.TileRepresentation == 'X')
 			{
-				if (!Air.areXCannonsOn)
+				if (!Air.areXCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
 				{
 					Air.areXCannonsOn = true;
 					Air.turnOnAllXCannons(content, spriteBatch);
@@ -160,7 +160,7 @@ namespace Shoeter
 			}
 			else if (airCannonSwitch.TileRepresentation == 'C')
 			{
-				if (!Air.areCCannonsOn)
+				if (!Air.areCCannonsOn && tileCharacterCurrentlyCollidingWith == airCannonSwitch)
 				{
 					Air.areCCannonsOn = true;
 					Air.turnOnAllCCannons(content, spriteBatch);
@@ -175,7 +175,7 @@ namespace Shoeter
 		/// <param name="spriteBatch">Enables a group of sprites to be drawn using the same settings.</param>
 		public static void turnOnAllQCannons(ContentManager content, SpriteBatch spriteBatch)
 		{
-			foreach(Tile cannon in allQCannons)
+			foreach (Tile cannon in allQCannons)
 			{
 				cannon.IsAirCannonSwitchOn = true;
 				Air newAir = new Air(content.Load<Texture2D>("Sprites/AnimatedAir64x48"), 0, 32, 48, 1, spriteBatch, new Vector2(cannon.Position.X - 39, cannon.Position.Y - 46), cannon.Rotation, 'Q');
@@ -293,56 +293,66 @@ namespace Shoeter
 		/// </summary>
 		/// <param name="tileCharacterCurrentlyCollidingWith">The tile that the Character is currently colliding with.</param>
 		/// <param name="tileCharacterPreviouslyCollidedWith">The tile that the Character previously collided with.</param>
-		public static void turnOffAirCannonsIfPossible(Guy guy, Shoes shoes, Char airCannonSetToTurnOff)
+		public static void turnOffAirCannonsIfPossible(Tile tileCharacterCurrentlyCollidingWith, Tile tileCharacterPreviouslyCollidedWith, Guy guy, Shoes shoes)
 		{
-			if(guy != null && shoes == null)
+			if ((tileCharacterCurrentlyCollidingWith != null && tileCharacterPreviouslyCollidedWith != null) && !tileCharacterCurrentlyCollidingWith.IsAirCannonSwitch && tileCharacterPreviouslyCollidedWith.IsAirCannonSwitch)
 			{
-				guy.airsGuyHasCollidedWith.Clear();
-			}
-			else if(shoes != null && guy == null)
-			{
-				shoes.airsShoesHasCollidedWith.Clear();
-			}
+				if (guy != null && shoes == null)
+				{
+					guy.airsGuyHasCollidedWith.Clear();
+				}
+				else if (shoes != null && guy == null)
+				{
+					shoes.airsShoesHasCollidedWith.Clear();
+				}
 
-			if (Air.areQCannonsOn && airCannonSetToTurnOff == 'Q')
-			{
-				Air.areQCannonsOn = false;
-				Air.turnOffSpecificSetOfCannons('Q');
-			}
-			else if (Air.areWCannonsOn && airCannonSetToTurnOff == 'W')
-			{
-				Air.areWCannonsOn = false;
-				Air.turnOffSpecificSetOfCannons('W');
-			}	
-			else if (Air.areECannonsOn && airCannonSetToTurnOff == 'E')
-			{
-				Air.areECannonsOn = false;
-				Air.turnOffSpecificSetOfCannons('E');
-			}
-			else if (Air.areACannonsOn && airCannonSetToTurnOff == 'A')
-			{
-				Air.areACannonsOn = false;
-				Air.turnOffSpecificSetOfCannons('A');
-			}
-			else if (Air.areDCannonsOn && airCannonSetToTurnOff == 'D')
-			{
-				Air.areDCannonsOn = false;
-				Air.turnOffSpecificSetOfCannons('D');
-			}
-			else if (Air.areZCannonsOn && airCannonSetToTurnOff == 'Z')
-			{
-				Air.areZCannonsOn = false;
-				Air.turnOffSpecificSetOfCannons('Z');
-			}
-			else if (Air.areXCannonsOn && airCannonSetToTurnOff == 'X')
-			{
-				Air.areXCannonsOn = false;
-				Air.turnOffSpecificSetOfCannons('X');
-			}
-			else if (Air.areCCannonsOn && airCannonSetToTurnOff == 'C')
-			{
-				Air.areCCannonsOn = false;
-				Air.turnOffSpecificSetOfCannons('C');
+				if (Air.areQCannonsOn)
+				{
+					Air.areQCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('Q');
+				}
+
+				if (Air.areWCannonsOn)
+				{
+					Air.areWCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('W');
+				}
+
+				if (Air.areECannonsOn)
+				{
+					Air.areECannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('E');
+				}
+
+				if (Air.areACannonsOn)
+				{
+					Air.areACannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('A');
+				}
+
+				if (Air.areDCannonsOn)
+				{
+					Air.areDCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('D');
+				}
+
+				if (Air.areZCannonsOn)
+				{
+					Air.areZCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('Z');
+				}
+
+				if (Air.areXCannonsOn)
+				{
+					Air.areXCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('X');
+				}
+
+				if (Air.areCCannonsOn)
+				{
+					Air.areCCannonsOn = false;
+					Air.turnOffSpecificSetOfCannons('C');
+				}
 			}
 		}
 

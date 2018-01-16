@@ -15,9 +15,6 @@ namespace Shoeter
 		private KeyboardState oldKeyboardState;
 		private KeyboardState newKeyboardState;
 
-		public MouseState currentMouseState;
-		public MouseState previousMouseState;
-
 		private Keys right;
 		private Keys left;
 		private Keys up;
@@ -51,12 +48,12 @@ namespace Shoeter
 		private int angleInDegreesOfLauncherShoesIsUsing;			// Stores the coordinates of the Launcher Tile from the level. Used to launch the Shoes at the correct angle.
 		private bool shoesAreCurrentlyMovingDueToLauncher = false;	// Says whether or not the Shoes are moving due to being launched from a Launcher. 
 
-		private Timer airCannonActivationTimer;							// A timer that keeps track of how long an Air Cannon has been on.
-		public List<Air> airsShoesHasCollidedWith = new List<Air>();	// The List of Airs that the Shoes are colliding with.
-		private float horizontalVelocityDueToAirCollision = 0f;			// Stores the horizontal velocity due to using an Air Cannon.
-		private Boolean haveShoesCollidedWithAnAir = false;				// Says whether or not the Shoes have collided with an Air or not. Used to prevent jumping while the Shoes are moving due to using an Air Cannon.
-		public Queue<Char> airCannonSwitchesCollidedWith;
-		public Queue<float> airCannonSwitchesCollidedWithActivationTimes;
+		public List<Air> airsShoesHasCollidedWith = new List<Air>();			// The List of Airs that the Shoes are colliding with.
+		private float horizontalVelocityDueToAirCollision = 0f;					// Stores the horizontal velocity due to using an Air Cannon.
+		private Timer delayMovementAfterAirCannonSwitchCollisionTimer;			// Delays movement upon Air Cannon Switch collision so that activating Switches is easier.
+		private Boolean movementLockedDueToAirCannonSwitchCollision = false;	// Locks movement for the Shoes upon Air Cannon Switch collision.
+		private Boolean haveShoesMovedToADifferentTile = false;					// Says whether or not the Shoes have moved to a different tile after an Air Cannon Switch collision.
+		private Boolean haveShoesCollidedWithAnAir = false;						// Says whether or not the Shoes have collided with an Air or not. Used to prevent jumping while the Shoes are moving due to using an Air Cannon.
 
 		public Boolean stopPlayerInput = false;	// Used to stop player input once the Shoes have collided with the Guy initially. Prevents clipping through tiles.
 		private bool isGravityOn = true;		// Flag to use gravity or not.
@@ -70,6 +67,8 @@ namespace Shoeter
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
 			this.state = state;                 // The initial state of the player.
 			this.currentFrame = currentFrame;   // The current frame that we are drawing.
+			this.spriteWidth = spriteWidth;     // The width of the individual sprite.
+			this.spriteHeight = spriteHeight;   // The height of the individual sprite.
 			this.totalFrames = totalFrames;     // The total frames in the current sprite sheet.
 			this.spriteBatch = spriteBatch;     // The spriteBatch we will use to draw the player.
 			this.screenHeight = screenHeight;
@@ -80,11 +79,12 @@ namespace Shoeter
 			this.down = down;
 			this.content = content;
 
-			position = startingPosition;
+			this.position = startingPosition;
 
-			changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
-			directionShoesAreRunning = State.Idle_Right;
+			changeSpriteOfTheShoes("Idle_Right", true);
 			Sprite.Position = Position;
+
+			this.directionShoesAreRunning = State.Idle_Right;
 
 			gravity = 30f;
 			debug = "";
@@ -93,11 +93,8 @@ namespace Shoeter
 
 			delayMovementAfterSpringCollisionTimer = new Timer(0.3f);
 			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
-			airCannonActivationTimer = new Timer(2f);
+			delayMovementAfterAirCannonSwitchCollisionTimer = new Timer(0.25f);
 			angleInDegreesOfLauncherShoesIsUsing = 0;
-
-			airCannonSwitchesCollidedWith = new Queue<Char>();
-			airCannonSwitchesCollidedWithActivationTimes = new Queue<float>();
 		}
 
 		/// <summary>
@@ -107,13 +104,12 @@ namespace Shoeter
 		/// <param name="guy">A reference to the Guy.</param>
 		public void Update(GameTime gameTime, ref Guy guy)
 		{
-			currentMouseState = Mouse.GetState();
+			//handleAnimation(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref guy);
 			doInterface(guy.isGuyBeingShot);
 			Sprite.Animate(gameTime);
 			oldKeyboardState = newKeyboardState; // In Update() so the interface works. Commented out at the bottom of handleMovement.
-			previousMouseState = currentMouseState;
 		}
 
 		/// <summary>
@@ -130,7 +126,7 @@ namespace Shoeter
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					resetMovementModificationsDueToAirCollision();	// If the Shoes collided with this Tile after colliding with an Air, reset the movement properties of the Shoes back to normal.
-					position.X = Level.tiles[y, x].Position.X - Sprite.RotatedRect.Width;
+					position.X = Level.tiles[y, x].Position.X - spriteWidth;
 					delayMovementAfterSpringCollision = true;
 					prepareMovementDueToSpringCollision(currentState);
 				}
@@ -141,19 +137,19 @@ namespace Shoeter
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 					resetMovementModificationsDueToAirCollision();
-					queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
-					
-					if (!airCannonActivationTimer.TimerStarted)
+					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
+
+					if (!delayMovementAfterAirCannonSwitchCollisionTimer.TimerStarted && haveShoesMovedToADifferentTile)
 					{
-						airCannonActivationTimer.startTimer();
+						delayMovementAfterAirCannonSwitchCollisionTimer.startTimer();
+						movementLockedDueToAirCannonSwitchCollision = true;
 					}
 				}
 				else
 				{
 					resetMovementModificationsDueToAirCollision();
-					position.X = Level.tiles[y, x].Position.X - Sprite.RotatedRect.Width;
+					position.X = Level.tiles[y, x].Position.X - spriteWidth;
 					checkIfShoesCollidedWithTileViaSpring();
 					checkIfShoesCollidedWithTileViaLauncher();
 				}
@@ -174,13 +170,13 @@ namespace Shoeter
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 					resetMovementModificationsDueToAirCollision();
-					queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
+					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 
-					if (!airCannonActivationTimer.TimerStarted)
+					if (!delayMovementAfterAirCannonSwitchCollisionTimer.TimerStarted && haveShoesMovedToADifferentTile)
 					{
-						airCannonActivationTimer.startTimer();
+						delayMovementAfterAirCannonSwitchCollisionTimer.startTimer();
+						movementLockedDueToAirCannonSwitchCollision = true;
 					}
 				}
 				else
@@ -196,7 +192,7 @@ namespace Shoeter
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					resetMovementModificationsDueToAirCollision();
-					prepareMovementDueToSpringCollision(State.Jumping);
+					prepareMovementDueToSpringCollision(State.Decending); // Why is this passing in Decending?
 				}
 				else if (Level.tiles[y, x].IsLauncher)
 				{
@@ -205,14 +201,8 @@ namespace Shoeter
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 					resetMovementModificationsDueToAirCollision();
-					queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
-
-					if (!airCannonActivationTimer.TimerStarted)
-					{
-						airCannonActivationTimer.startTimer();
-					}
+					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 				}
 				else
 				{
@@ -229,7 +219,7 @@ namespace Shoeter
 				if (Level.tiles[y, x].TileRepresentation == 'S')
 				{
 					resetMovementModificationsDueToAirCollision();
-					position.Y = Level.tiles[y, x].Position.Y - Sprite.RotatedRect.Height;
+					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
 					prepareMovementDueToSpringCollision(currentState);
 				}
 				else if (Level.tiles[y, x].IsLauncher)
@@ -239,19 +229,13 @@ namespace Shoeter
 				}
 				else if (Level.tiles[y, x].IsAirCannonSwitch)
 				{
-					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 					resetMovementModificationsDueToAirCollision();
-					queueSubsequentAirCannonSwitchCollisions(Level.tiles[y, x].TileRepresentation);
-
-					if (!airCannonActivationTimer.TimerStarted)
-					{
-						airCannonActivationTimer.startTimer();
-					}
+					Air.activateAirCannons(Level.tiles[y, x], CurrentCollidingTile, content, spriteBatch);
 				}
 				else
 				{
 					resetMovementModificationsDueToAirCollision();
-					position.Y = Level.tiles[y, x].Position.Y - Sprite.RotatedRect.Height;
+					position.Y = Level.tiles[y, x].Position.Y - spriteHeight;
 					spriteSpeed = 300f;
 					isJumping = false;
 					isFalling = false;
@@ -368,6 +352,31 @@ namespace Shoeter
 		}
 
 		/// <summary>
+		/// Swaps the texture and dimensions of the Shoes. Used to switch between the Guy being shot and the Guy traveling with the Shoes.
+		/// </summary>
+		/// <param name="currentLinkedState">Flag that says whether or not the Shoes and Guy are currently linked or not.</param>
+		public void swapTexture(bool areGuyAndShoesCurrentlyLinked)
+		{
+			if (areGuyAndShoesCurrentlyLinked)
+			{
+				spriteHeight = 48;
+				Texture = content.Load<Texture2D>("Sprites/Shoes32x48"); // Bottom
+				position.Y -= 32f;
+			}
+			else
+			{
+				spriteHeight = 16;
+				Texture = content.Load<Texture2D>("Sprites/Shoes32x48_Top");
+				position.Y += 32f;
+			}
+		}
+
+		public void changeSpriteOfTheShoes(String state, Boolean accessGuySprites)
+		{
+			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, accessGuySprites);
+		}
+
+		/// <summary>
 		/// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
 		/// </summary>
 		/// <param name="guy">A reference to the Guy. Needed so that a check can be done to ensure that there isn't a tile above the linked Guy/Shoes.</param>
@@ -388,48 +397,12 @@ namespace Shoeter
 		{
 			delayMovementAfterSpringCollisionTimer.Update(gameTime);
 			delayLaunchAfterLauncherCollisionTimer.Update(gameTime);
-			airCannonActivationTimer.Update(gameTime);
-		}
-
-		/// <summary>
-		/// Updates the Position of the Sprite attached to the Shoes.
-		/// </summary>
-		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot or not.</param>
-		private void updateSpritePosition(Boolean isGuyBeingShot)
-		{
-			if (isGuyBeingShot)
-			{
-				Sprite.Position = Position;
-			}
-			else
-			{
-				//Sprite.Position = new Vector2(Position.X, Position.Y - 32);
-				Sprite.Position = Position;
-			}
+			delayMovementAfterAirCannonSwitchCollisionTimer.Update(gameTime);
 		}
 
 		// ******************
 		// * START MOVEMENT *
 		// ******************
-
-		private void debugs()
-		{
-			debug = "Tag: " + Sprite.RotatedRect.Tag;
-			debug2 = "Previous Tag: " + Sprite.RotatedRect.PreviousTag;
-			//debug2 = "directionShoesAreRunning: " + directionShoesAreRunning.ToString();
-			//debug3 = "Jumping: " + isJumping.ToString();
-			//debug = "airCannonActivationTimer elapsed time: " + airCannonActivationTimer.ElapsedTime.ToString();
-			//debug2 = "Are A Cannons On: " + Air.areACannonsOn.ToString();
-			//debug2 = "airCannonActivationTimer TimerStarted: " + airCannonActivationTimer.TimerStarted.ToString();
-			//debug3 = "airCannonActivationTimer TimerCompleted: " + airCannonActivationTimer.TimerCompleted.ToString();
-			//debug3 = "airCannonTileCollidedWith: " + airCannonSwitchCurrentlyCollidingWith.ToString();
-			//debug3 = airCannonSwitchesCollidedWith.Count.ToString();
-
-			//if (airCannonSwitchesCollidedWith.Peek() != null) 
-			//{
-			//    debug3 = "airCannonSwitchesCollidedWith Peek: " + airCannonSwitchesCollidedWith.Peek().ToString();
-			//}
-		}
 
 		/// <summary>
 		/// Handles all of the movement for the Shoes.
@@ -438,13 +411,17 @@ namespace Shoeter
 		/// <param name="guy">A reference to the Guy.</param>
 		private void handleMovement(GameTime gameTime, ref Guy guy)
 		{
-			debugs();
-
 			float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;	// Represents the amount of time that has passed since the previous frame.
 			newKeyboardState = Keyboard.GetState();						// Get the new state of the keyboard.
 
+			// Checks if the Shoes can have their movement unlocked after colliding with an Air Cannon Switch.
+			checkIfShoesHaveMovedToAnAirCannonSwitchFromADifferentTile();
+
 			// Handles delaying movement after the Shoes have collided with a Spring.
 			stopDelayingMovementAfterSpringCollisionIfPossible();
+
+			// Handles delaying movement after the Shoes have collided with an Air Cannon Switch.
+			stopDelayingMovementAfterAirSwitchCollisionIfPossible();
 
 			// Set the horizontal velocity based on if the Shoes are on the ground or in the air.
 			setHorizontalVelocity();
@@ -471,13 +448,20 @@ namespace Shoeter
 			resetShoesAndGuyToLevelStartingPositionIfNecessary(guy);
 
 			// If the Shoes have turned on a particular set of Air Cannons and have now left that switch, turn the corresponding Air Cannons off.
-			checkIfAirCannonsCanBeTurnedOff();
-
-			// Update the Position of the Sprite attached to the Shoes.
-			updateSpritePosition(guy.isGuyBeingShot);
+			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile, null, this);
 
 			// Update timers.
 			updateTimers(gameTime);
+
+			if (guy.isGuyBeingShot)
+			{
+				Sprite.Position = Position;
+			}
+			else
+			{
+				//Sprite.Position = new Vector2(Position.X, Position.Y - 32);
+				Sprite.Position = Position;
+			}
 
 			// Get the old state of the keyboard.
 			//oldKeyboardState = newKeyboardState; // Commented out so the interface works.
@@ -513,7 +497,20 @@ namespace Shoeter
 			{
 				isJumping = true;
 				velocity.Y = jumpImpulse * -1;
-				setJumpingAnimationIfPossible(isGuyBeingShot);
+
+				if (CurrentState == State.Jumping && !jumpingAnimationLockIsOn && !isGuyBeingShot)
+				{
+					if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
+					{
+						changeSpriteOfTheShoes("Jumping_Left", true);
+						jumpingAnimationLockIsOn = true;
+					}
+					else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
+					{
+						changeSpriteOfTheShoes("Jumping_Right", true);
+						jumpingAnimationLockIsOn = true;
+					}
+				}
 			}
 		}
 
@@ -530,7 +527,7 @@ namespace Shoeter
 			}
 
 			// Allow movement if the player has pressed the correct key to move the Shoes, and the Shoes are allowed to move after colliding with a Spring, and the Shoes aren't locked into a Launcher.
-			if (newKeyboardState.IsKeyDown(right) && !newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !stopPlayerInput)
+			if (newKeyboardState.IsKeyDown(right) && !newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
 			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
@@ -548,16 +545,20 @@ namespace Shoeter
 				updateRectangles(1, 0);
 				handleCollisions(State.Running_Right);
 				changeState(State.Running_Right);
-				setRunningAnimationIfPossible(guy.isGuyBeingShot);
-			}
-			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !stopPlayerInput)
-			{
-				// Prevent the Guy from clipping through tiles if the player was running right, hit a tile, then immediately starting running left.
-				if(tileToTheRight())
-				{
-					position.X -= 5f;
-				}
 
+				if (directionShoesAreRunning != State.Running_Right)
+				{
+					changeSpriteOfTheShoes("Running_Right", true);
+					directionShoesAreRunning = State.Running_Right;
+
+					if (guy.isGuyBeingShot)
+					{
+						changeSpriteOfTheShoes("Running_Right", false);
+					}
+				}
+			}
+			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
+			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
 				position.X -= velocity.X * delta;
@@ -571,18 +572,40 @@ namespace Shoeter
 				updateRectangles(-1, 0);
 				handleCollisions(State.Running_Left);
 				changeState(State.Running_Left);
-				setRunningAnimationIfPossible(guy.isGuyBeingShot);
+
+				if (directionShoesAreRunning != State.Running_Left)
+				{
+					changeSpriteOfTheShoes("Running_Left", true);
+					directionShoesAreRunning = State.Running_Left;
+
+					if (guy.isGuyBeingShot)
+					{
+						changeSpriteOfTheShoes("Running_Left", false);
+					}
+				}
 			}
 
-			// Sets the Idle Animation if possible.
 			if (!newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && directionShoesAreRunning != State.Idle_Right && directionShoesAreRunning != State.Idle_Left)
 			{
-				setIdleAnimationIfPossible(guy.isGuyBeingShot);
-
-				// Prevent the Guy from clipping through tiles if the player was running to the right and jumping.
-				if (tileToTheRight() && (Sprite.RotatedRect.Tag == AnimatedSprite.AnimationState.Guy_Idle_Right.ToString() && Sprite.RotatedRect.PreviousTag == AnimatedSprite.AnimationState.Guy_Jumping_Right.ToString()))
+				if (directionShoesAreRunning == State.Running_Right)
 				{
-					position = new Vector2(position.X - 16, position.Y);
+					changeSpriteOfTheShoes("Idle_Right", true);
+					directionShoesAreRunning = State.Idle_Right;
+
+					if (guy.isGuyBeingShot)
+					{
+						changeSpriteOfTheShoes("Idle_Right", false);
+					}
+				}
+				else
+				{
+					changeSpriteOfTheShoes("Idle_Left", true);
+					directionShoesAreRunning = State.Idle_Left;
+
+					if (guy.isGuyBeingShot)
+					{
+						changeSpriteOfTheShoes("Idle_Left", false);
+					}
 				}
 			}
 		}
@@ -591,7 +614,6 @@ namespace Shoeter
 		/// Have the Shoes ascend due to jumping, or fall due to gravity.
 		/// </summary>
 		/// <param name="delta">The amount of time that has passed since the previous frame. Used to ensure consitent movement if the framerate drops below 60 FPS.</param>
-		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot.</param>
 		private void haveShoesAscendFromJumpOrFallFromGravity(float delta, Boolean isGuyBeingShot)
 		{
 			if (isJumping)
@@ -600,7 +622,20 @@ namespace Shoeter
 			}
 			else if (isGravityOn)
 			{
-				setFallingAnimationIfPossible(isGuyBeingShot);				
+				if (CurrentState == State.Decending && !fallingAnimationLockIsOn && !isGuyBeingShot)
+				{
+					if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
+					{
+						changeSpriteOfTheShoes("Falling_Left", true);
+						fallingAnimationLockIsOn = true;
+					}
+					else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
+					{
+						changeSpriteOfTheShoes("Falling_Right", true);
+						fallingAnimationLockIsOn = true;
+					}
+				}
+
 				doGravity(delta); // Handles for when the player walks off the edge of a platform.
 			}
 		}
@@ -747,15 +782,8 @@ namespace Shoeter
 
 				velocity.Y *= 0.55f;    // Decrease the power of the next bounce.
 				position.Y += velocity.Y;
-
-				// If the Shoes are jumping, prevent them from clipping through the bottom of the Spring tile.
-				if(currentState == State.Jumping)
-				{
-					position.Y += velocity.Y + 1f;
-				}
-				
 			}
-			else if (currentState == State.Running_Right)                
+			else if (currentState == State.Running_Right)
 			{
 				delayMovementAfterSpringCollisionTimer.startTimer();
 				delayMovementAfterSpringCollision = true;
@@ -889,7 +917,7 @@ namespace Shoeter
 				position.Y -= 32f;
 				position.X = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.X - 32;
 			}
-			else if (angleInDegreesOfLauncherShoesIsUsing == 270) 
+			else if (angleInDegreesOfLauncherShoesIsUsing == 270)
 			{
 				isGravityOn = false;
 				position.Y = Level.tiles[yTileCoordinateOfLauncher, xTileCoordinateOfLauncher].Position.Y + 48;
@@ -938,7 +966,7 @@ namespace Shoeter
 			if (shoesAreCurrentlyMovingDueToLauncher)
 			{
 				shoesAreCurrentlyMovingDueToLauncher = false;
-			}			
+			}
 
 			// Stop any movement that was occuring.
 			velocity = new Vector2(0f, 0f);
@@ -981,7 +1009,7 @@ namespace Shoeter
 				handleCollisions(State.Decending);
 				changeState(State.Decending);
 			}
-			else if (angleInDegreesOfLauncherShoesIsUsing == 315) 
+			else if (angleInDegreesOfLauncherShoesIsUsing == 315)
 			{
 				updateRectangles(-1, 0);
 				handleCollisions(State.Running_Left);
@@ -1027,7 +1055,7 @@ namespace Shoeter
 			}
 
 			if (shoesAreCurrentlyMovingDueToLauncher)
-			{				
+			{
 				performHorizontalMovementFromLauncher(power);
 
 				// Handle collisions with the borders of the screen.
@@ -1059,6 +1087,34 @@ namespace Shoeter
 		// ********************
 		// * START AIR CANNON *
 		// ********************
+
+		/// <summary>
+		/// Determines if the Shoes have moved to an Air Cannon Switch after moving from a different tile.
+		/// </summary>
+		/// <remarks>Used to unlock Shoes movement upon Air Cannon Switch collision. Needed because it's kind of hard to collide with an Air Cannon Switch reliably.</remarks>
+		private void checkIfShoesHaveMovedToAnAirCannonSwitchFromADifferentTile()
+		{
+			if (CurrentCollidingTile != null && PreviousCollidingTile != null && CurrentCollidingTile != PreviousCollidingTile && CurrentCollidingTile.IsAirCannonSwitch)
+			{
+				haveShoesMovedToADifferentTile = true;
+			}
+			else if (CurrentCollidingTile != null && PreviousCollidingTile != null && CurrentCollidingTile == PreviousCollidingTile)
+			{
+				haveShoesMovedToADifferentTile = false;
+			}
+		}
+
+		/// <summary>
+		/// Handles unlocking movement for the Shoes due to an Air Cannon Switch collision.
+		/// </summary>
+		private void stopDelayingMovementAfterAirSwitchCollisionIfPossible()
+		{
+			if (delayMovementAfterAirCannonSwitchCollisionTimer.TimerCompleted)
+			{
+				delayMovementAfterAirCannonSwitchCollisionTimer.stopTimer();
+				movementLockedDueToAirCannonSwitchCollision = false;
+			}
+		}
 
 		/// <summary>
 		/// Sets the horizontal velocity for Air Cannon movement based on what kind of Air Cannon was used.
@@ -1126,7 +1182,7 @@ namespace Shoeter
 					updateRectangles(-1, 0);
 					handleCollisions(State.Running_Left);
 					changeState(State.Running_Left);
-				}	
+				}
 			}
 		}
 
@@ -1138,7 +1194,7 @@ namespace Shoeter
 			List<Air> airsThatShoesAreNoLongerCollidingWith = new List<Air>();
 			foreach (Air air in airsShoesHasCollidedWith)
 			{
-				if (!air.RotatedRect.Intersects(Sprite.RotatedRect))
+				if (!air.RotatedRect.Intersects(new RotatedRectangle(PositionRect, 0.0f)))
 				{
 					airsThatShoesAreNoLongerCollidingWith.Add(air);
 				}
@@ -1159,176 +1215,8 @@ namespace Shoeter
 			haveShoesCollidedWithAnAir = false;
 		}
 
-		/// <summary>
-		/// Turns off any activated Air Cannons if they are on.
-		/// </summary>
-		private void checkIfAirCannonsCanBeTurnedOff()
-		{
-			if (airCannonActivationTimer.TimerCompleted)
-			{
-				airCannonActivationTimer.resetTimer();
-				Air.turnOffAirCannonsIfPossible(null, this, airCannonSwitchesCollidedWith.Dequeue());
-
-				// If there are multiple Air Cannon sets activated at the same time, then ensure that the next set to turn off happens at the correct time.
-				if (airCannonSwitchesCollidedWith.Count >= 1)
-				{
-					airCannonActivationTimer.startTimer();
-					airCannonActivationTimer.ElapsedTime += airCannonSwitchesCollidedWithActivationTimes.Dequeue();
-				}
-			}
-		}
-
-		/// <summary>
-		/// If multiple Air Cannon Switches are activated, ensure that subsequent Air Cannon activations (after the initial one) only stay on for the correct length of time.
-		/// </summary>
-		/// <param name="tileRepresentation">Denotes which Air Cannon Switch was activated.</param>
-		private void queueSubsequentAirCannonSwitchCollisions(Char tileRepresentation)
-		{
-			// Add the Air Cannon Switch set to the Queue if that set isn't already in the queue.
-			if (!airCannonSwitchesCollidedWith.Contains<Char>(tileRepresentation))
-			{
-				airCannonSwitchesCollidedWith.Enqueue(tileRepresentation);
-
-				// Enqueue the current elapsed time of the timer if there is a Air Cannon set already active.
-				// This is needed to ensure that every Air Cannon set only stays active for the correct amount of time.
-				if (airCannonActivationTimer.ElapsedTime != 0f)
-				{
-					airCannonSwitchesCollidedWithActivationTimes.Enqueue(airCannonActivationTimer.ElapsedTime);
-				}
-			}
-		}
-
 		// ******************
 		// * END AIR CANNON *
 		// ******************
-
-		// *******************
-		// * START ANIMATION *
-		// *******************
-
-		/// <summary>
-		/// Sets the Animated Sprite for the Shoes to a new Animated Sprite.
-		/// </summary>
-		/// <param name="state">The State of the Shoes. Used to get the correct Animated Sprite.</param>
-		/// <param name="accessGuySprites">Says whether or not to use the Guy's Animated Sprites or not.</param>
-		public void changeSpriteOfTheShoes(AnimatedSprite.AnimationState state)
-		{
-			String tagBeforeUpdate = "";
-
-			if(Sprite != null)
-			{
-				tagBeforeUpdate = Sprite.RotatedRect.Tag;
-			}
-
-			Sprite = AnimatedSprite.generateAnimatedSpriteBasedOnState(state, content, spriteBatch, (int)Position.X, (int)Position.Y);
-
-			if(Sprite.RotatedRect.Tag != tagBeforeUpdate && tagBeforeUpdate != "")
-			{
-				Sprite.RotatedRect.PreviousTag = tagBeforeUpdate;
-			}
-		}
-
-		/// <summary>
-		/// Sets the Animated Sprite for the Shoes to the Jumping Animation.
-		/// </summary>
-		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot or not.</param>
-		private void setJumpingAnimationIfPossible(Boolean isGuyBeingShot)
-		{
-			if (CurrentState == State.Jumping && !jumpingAnimationLockIsOn && !isGuyBeingShot)
-			{
-				if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
-				{
-					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Jumping_Left);
-					jumpingAnimationLockIsOn = true;
-				}
-				else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
-				{
-					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Jumping_Right);
-					jumpingAnimationLockIsOn = true;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Sets the Animated Sprite for the Shoes to the Running Animation.
-		/// </summary>
-		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot or not.</param>
-		private void setRunningAnimationIfPossible(Boolean isGuyBeingShot)
-		{
-			if (directionShoesAreRunning != State.Running_Right && CurrentState == State.Running_Right)
-			{
-				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Running_Right);
-				directionShoesAreRunning = State.Running_Right;
-
-				if (isGuyBeingShot)
-				{
-					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Running_Right);
-				}
-			}
-			else if (directionShoesAreRunning != State.Running_Left && CurrentState == State.Running_Left)
-			{
-				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Running_Left);
-				directionShoesAreRunning = State.Running_Left;
-
-				if (isGuyBeingShot)
-				{
-					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Running_Left);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Sets the Animated Sprite for the Shoes to the Idle Animation.
-		/// </summary>
-		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot or not.</param>
-		private void setIdleAnimationIfPossible(Boolean isGuyBeingShot)
-		{
-			if (directionShoesAreRunning == State.Running_Right)
-			{
-				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Right);
-				directionShoesAreRunning = State.Idle_Right;
-				position.X -= 9f;	// Shift the Shoes over so the Idle animation from clipping through tiles.
-
-				if (isGuyBeingShot)
-				{
-					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Idle_Right);
-				}
-			}
-			else
-			{
-				changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Idle_Left);
-				directionShoesAreRunning = State.Idle_Left;
-
-				if (isGuyBeingShot)
-				{
-					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Shoes_Idle_Left);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Sets the Animated Sprite for the Shoes to the Falling Animation.
-		/// </summary>
-		/// <param name="isGuyBeingShot">Says whether or not the Guy is being shot or not.</param>
-		private void setFallingAnimationIfPossible(Boolean isGuyBeingShot)
-		{
-			if (CurrentState == State.Decending && !fallingAnimationLockIsOn && !isGuyBeingShot)
-			{
-				if (directionShoesAreRunning == State.Running_Left || directionShoesAreRunning == State.Idle_Left)
-				{
-					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Falling_Left);
-					fallingAnimationLockIsOn = true;
-				}
-				else if (directionShoesAreRunning == State.Running_Right || directionShoesAreRunning == State.Idle_Right)
-				{
-					changeSpriteOfTheShoes(AnimatedSprite.AnimationState.Guy_Falling_Right);
-					fallingAnimationLockIsOn = true;
-				}
-			}
-		}
-
-		// *****************
-		// * END ANIMATION *
-		// *****************
 	}
 }
