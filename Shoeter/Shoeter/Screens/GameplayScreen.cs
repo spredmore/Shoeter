@@ -70,7 +70,7 @@ namespace Shoeter
 		{
 			TransitionOnTime = TimeSpan.FromSeconds(1.5);
 			TransitionOffTime = TimeSpan.FromSeconds(0.5);
-			displayInterface = false;
+			displayInterface = true;
 		}
 
 

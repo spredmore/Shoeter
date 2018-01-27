@@ -35,8 +35,8 @@ namespace Shoeter
 		public Rectangle goalRectangle;
 
 		// Starts at 0.
-		public int currentLevel = -1;	// -1 is Level 1 (the first level)
-		int totalLevels = 2;			// 0 represents Level 1.
+		public int currentLevel = 2;	// -1 is Level 1 (the first level)
+		int totalLevels = 6;			// 0 represents Level 1. 6 is Demo 2.
 
 		public string debug;
 
