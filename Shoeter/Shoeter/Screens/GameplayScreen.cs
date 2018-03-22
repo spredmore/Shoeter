@@ -200,11 +200,6 @@ namespace Shoeter
 
 			spriteBatch.Begin();
 
-			foreach (Air air in Air.allAirs)
-			{
-				air.Draw();
-			}
-
 			level.drawBackground(spriteBatch, ref content);
 
 			//guy.Draw();
@@ -223,6 +218,11 @@ namespace Shoeter
 			
 			// Draw the level.
 			level.Draw(spriteBatch, true);
+
+			foreach (Air air in Air.allAirs)
+			{
+				air.Draw();
+			}
 
 			// Draw the debug font.
 			spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.LightSlateGray);

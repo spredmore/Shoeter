@@ -208,6 +208,10 @@ namespace Shoeter
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/SewerWorld_Background"), new Vector2(0f, 0f), Color.White);
 			}
+			else if (currentLevel == 3)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/HumanSlaughterHouse_Background"), new Vector2(0f, 0f), Color.White);
+			}
 		}
 
 		public void drawForeground(SpriteBatch spriteBatch, ref ContentManager content)
@@ -223,6 +227,10 @@ namespace Shoeter
 			else if (currentLevel == 2)
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/SewerWorld_Foreground"), new Vector2(0f, 0f), Color.White);
+			}
+			else if (currentLevel == 3)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/HumanSlaughterHouse_Foreground"), new Vector2(0f, 0f), Color.White);
 			}
 		}
 	}
