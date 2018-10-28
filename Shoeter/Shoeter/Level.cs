@@ -36,7 +36,7 @@ namespace Shoeter
 
 		// Starts at 0.
 		public int currentLevel = -1;	// -1 is Level 1 (the first level)
-		int totalLevels = 2;			// 0 represents Level 1.
+		int totalLevels = 4;			// 0 represents Level 1. 6 is Demo 2.
 
 		public string debug;
 
@@ -212,6 +212,10 @@ namespace Shoeter
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/HumanSlaughterHouse_Background"), new Vector2(0f, 0f), Color.White);
 			}
+			else if (currentLevel == 4)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/Carnival_Background"), new Vector2(0f, 0f), Color.White);
+			}
 		}
 
 		public void drawForeground(SpriteBatch spriteBatch, ref ContentManager content)
@@ -231,6 +235,10 @@ namespace Shoeter
 			else if (currentLevel == 3)
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/HumanSlaughterHouse_Foreground"), new Vector2(0f, 0f), Color.White);
+			}
+			else if (currentLevel == 4)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/Carnival_Foreground"), new Vector2(0f, 0f), Color.White);
 			}
 		}
 	}

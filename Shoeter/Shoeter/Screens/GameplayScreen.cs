@@ -214,15 +214,15 @@ namespace Shoeter
 			//spriteBatch.Draw(content.Load<Texture2D>("Sprites/32x48Hitbox2"), new Rectangle(shoes.Sprite.RotatedRect.X, shoes.Sprite.RotatedRect.Y, shoes.Sprite.RotatedRect.Width, shoes.Sprite.RotatedRect.Height), Color.White);
 			//spriteBatch.Draw(content.Load<Texture2D>("Sprites/16x16HitboxUp"), shoes.TileCollisionRectangle, Color.White);
 
-			level.drawForeground(spriteBatch, ref content);
-			
-			// Draw the level.
-			level.Draw(spriteBatch, true);
-
 			foreach (Air air in Air.allAirs)
 			{
 				air.Draw();
 			}
+
+			level.drawForeground(spriteBatch, ref content);
+			
+			// Draw the level.
+			level.Draw(spriteBatch, true);
 
 			// Draw the debug font.
 			spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.LightSlateGray);
