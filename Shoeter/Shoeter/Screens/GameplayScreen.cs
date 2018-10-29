@@ -176,6 +176,8 @@ namespace Shoeter
 				}
 			}
 
+			// MusicHandler.PlayMusic(level.currentLevel, level.previousLevel, ref content);
+
 			oldKeyboardState = newKeyboardState;
 
 			// Gradually fade in or out depending on whether we are covered by the pause screen.

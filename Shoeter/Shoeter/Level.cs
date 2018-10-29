@@ -35,7 +35,8 @@ namespace Shoeter
 		public Rectangle goalRectangle;
 
 		// Starts at 0.
-		public int currentLevel = -1;	// -1 is Level 1 (the first level)
+		public static int currentLevel = -1;	// -1 is Level 1 (the first level)
+		public int previousLevel = -2;	// -2 is the level before Level 1 (-1)
 		int totalLevels = 4;			// 0 represents Level 1. 6 is Demo 2.
 
 		public string debug;
@@ -60,12 +61,16 @@ namespace Shoeter
 
 			if (currentLevel + 1 <= totalLevels)
 			{
+				previousLevel++;
 				currentLevel++;
 			}
 			else
 			{
+				previousLevel = -1;
 				currentLevel = 0;
 			}
+
+			MusicHandler.PlayMusic(currentLevel, ref contentManager);
 
 			// This array will store a level. Each element in the array will be
 			//  a line of tiles.

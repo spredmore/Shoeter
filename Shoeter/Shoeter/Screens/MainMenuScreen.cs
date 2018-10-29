@@ -63,6 +63,9 @@ namespace Shoeter
 			howToPlayMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
 			//optionsMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
 			exitMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
+
+			Level.currentLevel = -1;
+			MusicHandler.PlayMusic(-1, ref content);
 		}
 
 
