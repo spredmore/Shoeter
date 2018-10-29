@@ -43,6 +43,7 @@ namespace Shoeter
 			}
 
 			MediaPlayer.Play(song);
+			MediaPlayer.IsRepeating = true;
 		}
 	}
 }
