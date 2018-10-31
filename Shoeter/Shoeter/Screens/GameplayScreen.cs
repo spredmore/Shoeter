@@ -221,15 +221,8 @@ namespace Shoeter
 			// Draw the level.
 			level.Draw(spriteBatch, true);
 
-			// Check to see if the player won. If they did, display the level completion picture and prompt them to left click to move on.
-			if (shoes.stopPlayerInputDueToLevelCompletion && Level.currentLevel == 0)
-			{
-				spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/HillbillyBBQ"), new Vector2(0, 0), Color.White);
-			}
-			else if (shoes.stopPlayerInputDueToLevelCompletion && Level.currentLevel == 1)
-			{
-				spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/HumanZoo"), new Vector2(0, 0), Color.White);
-			}
+			// Check to see if the player won. If they did, display the level completion picture.
+			drawLevelCompleteImageIfPossible();
 
 			// Draw the debug font.
 			spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.LightSlateGray);
@@ -276,6 +269,36 @@ namespace Shoeter
 				float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
 
 				ScreenManager.FadeBackBufferToBlack(alpha);
+			}
+		}
+
+		/// <summary>
+		/// Check to see if the player won. If they did, display the level completion picture.
+		/// </summary>
+		private void drawLevelCompleteImageIfPossible()
+		{
+			if (shoes.stopPlayerInputDueToLevelCompletion)
+			{
+				if(Level.currentLevel == 0)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/HillbillyBBQ"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 1)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/HumanZoo"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 2)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/SewerPersuer"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 3)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/HumanSlaughterHouse"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 4)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
+				}
 			}
 		}
 

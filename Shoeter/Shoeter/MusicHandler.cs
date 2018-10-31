@@ -45,5 +45,10 @@ namespace Shoeter
 			MediaPlayer.Play(song);
 			MediaPlayer.IsRepeating = true;
 		}
+
+		public static void FadeOutMusic()
+		{
+
+		}
 	}
 }
