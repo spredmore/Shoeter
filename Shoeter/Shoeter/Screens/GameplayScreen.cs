@@ -117,9 +117,6 @@ namespace Shoeter
 			// Load the debug font. We use this for debugging purposes.
 			debugFont = content.Load<SpriteFont>("Fonts/debugFont");
 
-			//testAnimatedSprite = new AnimatedSprite(Content.Load<Texture2D>("Sprites/GuyIdleWithShoes"), new Vector2(25, 650), 0, 45, 48, 50, spriteBatch, 34f, MathHelper.ToRadians(0));
-			//testAnimatedSprite2 = new AnimatedSprite(Content.Load<Texture2D>("Sprites/GuyRunning"), new Vector2(100, 650), 0, 37, 48, 27, spriteBatch, 34f, MathHelper.ToRadians(0));
-
 			MouseState currentMouseState;
 			currentMouseState = Mouse.GetState();
 			mouseRect = new Rectangle(currentMouseState.X, currentMouseState.Y, 16, 16);
@@ -176,8 +173,6 @@ namespace Shoeter
 				}
 			}
 
-			// MusicHandler.PlayMusic(level.currentLevel, level.previousLevel, ref content);
-
 			oldKeyboardState = newKeyboardState;
 
 			// Gradually fade in or out depending on whether we are covered by the pause screen.
@@ -225,6 +220,16 @@ namespace Shoeter
 			
 			// Draw the level.
 			level.Draw(spriteBatch, true);
+
+			// Check to see if the player won. If they did, display the level completion picture and prompt them to left click to move on.
+			if (shoes.stopPlayerInputDueToLevelCompletion && Level.currentLevel == 0)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/HillbillyBBQ"), new Vector2(0, 0), Color.White);
+			}
+			else if (shoes.stopPlayerInputDueToLevelCompletion && Level.currentLevel == 1)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/HumanZoo"), new Vector2(0, 0), Color.White);
+			}
 
 			// Draw the debug font.
 			spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.LightSlateGray);

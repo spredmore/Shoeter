@@ -55,8 +55,9 @@ namespace Shoeter
 		private Boolean haveShoesMovedToADifferentTile = false;					// Says whether or not the Shoes have moved to a different tile after an Air Cannon Switch collision.
 		private Boolean haveShoesCollidedWithAnAir = false;						// Says whether or not the Shoes have collided with an Air or not. Used to prevent jumping while the Shoes are moving due to using an Air Cannon.
 
-		public Boolean stopPlayerInput = false;	// Used to stop player input once the Shoes have collided with the Guy initially. Prevents clipping through tiles.
-		private bool isGravityOn = true;		// Flag to use gravity or not.
+		public Boolean stopPlayerInput = false;						// Used to stop player input once the Shoes have collided with the Guy initially. Prevents clipping through tiles.
+		public Boolean stopPlayerInputDueToLevelCompletion = false;	// Used to stop player input once the Shoes and Guy have completed a level.
+		private bool isGravityOn = true;							// Flag to use gravity or not.
 
 		private static int test = 0;
 		public Boolean fallingAnimationLockIsOn = false;
@@ -104,7 +105,6 @@ namespace Shoeter
 		/// <param name="guy">A reference to the Guy.</param>
 		public void Update(GameTime gameTime, ref Guy guy)
 		{
-			//handleAnimation(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref guy);
 			doInterface(guy.isGuyBeingShot);
@@ -493,7 +493,8 @@ namespace Shoeter
 				&& standingOnGround()
 				&& !underTile()
 				&& !isThereATileAboveTheGuy
-				&& (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted))
+				&& (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted)
+				&& !stopPlayerInputDueToLevelCompletion)
 			{
 				isJumping = true;
 				velocity.Y = jumpImpulse * -1;
@@ -527,7 +528,7 @@ namespace Shoeter
 			}
 
 			// Allow movement if the player has pressed the correct key to move the Shoes, and the Shoes are allowed to move after colliding with a Spring, and the Shoes aren't locked into a Launcher.
-			if (newKeyboardState.IsKeyDown(right) && !newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
+			if (newKeyboardState.IsKeyDown(right) && !newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput && !stopPlayerInputDueToLevelCompletion)
 			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
@@ -557,7 +558,8 @@ namespace Shoeter
 					}
 				}
 			}
-			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput)
+
+			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput && !stopPlayerInputDueToLevelCompletion)
 			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;

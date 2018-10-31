@@ -49,6 +49,7 @@ namespace Shoeter
 
 		public bool usingLauncher = false;
 		private Boolean idleAnimationLockIsOn = false;
+		private Boolean displayLevelCompleteImage = false;
 
 		public Guy(Texture2D texture, SpriteBatch spriteBatch, int currentFrame, int totalFrames, int spriteWidth, int spriteHeight, int screenHeight, int screenWidth, ContentManager content)
 		{
@@ -231,8 +232,17 @@ namespace Shoeter
 		{
 			if (PositionRect.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
 			{
-				currentLevel.LoadLevel();
-				shoes.Position = currentLevel.getPlayerStartingPosition();
+				debug = currentMouseState.ToString();
+
+				shoes.stopPlayerInputDueToLevelCompletion = true;
+
+				if (currentKeyboardState.IsKeyUp(Keys.Enter) && previousKeyboardState.IsKeyDown(Keys.Enter))
+				{
+					currentLevel.LoadLevel();
+					shoes.Position = currentLevel.getPlayerStartingPosition();
+
+					shoes.stopPlayerInputDueToLevelCompletion = false;
+				}
 			}
 		}
 
@@ -420,7 +430,7 @@ namespace Shoeter
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void shootGuyIfPossible(Shoes shoes)
 		{
-			if (currentMouseState.LeftButton == ButtonState.Pressed && !isGuyBeingShot)
+			if (currentMouseState.LeftButton == ButtonState.Pressed && !isGuyBeingShot && !shoes.stopPlayerInputDueToLevelCompletion)
 			{
 				if (!delayCollisionWithGuyAndShoesTimer.TimerStarted)
 				{
