@@ -66,8 +66,8 @@ namespace Shoeter
 			}
 			else
 			{
-				previousLevel = -1;
 				currentLevel = 0;
+				previousLevel = -1;
 			}
 
 			MusicHandler.PlayMusic(currentLevel, ref contentManager);

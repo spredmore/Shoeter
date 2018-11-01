@@ -230,19 +230,18 @@ namespace Shoeter
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void loadNextLevelIfPossible(Shoes shoes)
 		{
-			if (PositionRect.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked)
+			if (PositionRect.Intersects(currentLevel.goalRectangle) && areGuyAndShoesCurrentlyLinked && 
+				(currentMouseState.RightButton != ButtonState.Pressed && previousMouseState.RightButton == ButtonState.Released))
 			{
-				debug = currentMouseState.ToString();
-
 				shoes.stopPlayerInputDueToLevelCompletion = true;
+			}
 
-				if (currentKeyboardState.IsKeyUp(Keys.Enter) && previousKeyboardState.IsKeyDown(Keys.Enter))
-				{
-					currentLevel.LoadLevel();
-					shoes.Position = currentLevel.getPlayerStartingPosition();
-
-					shoes.stopPlayerInputDueToLevelCompletion = false;
-				}
+			// The victory screen will show here. Prompt player to continue to the next level.
+			if (currentKeyboardState.IsKeyUp(Keys.Enter) && previousKeyboardState.IsKeyDown(Keys.Enter) && shoes.stopPlayerInputDueToLevelCompletion)
+			{
+				currentLevel.LoadLevel();
+				shoes.Position = currentLevel.getPlayerStartingPosition();
+				shoes.stopPlayerInputDueToLevelCompletion = false;
 			}
 		}
 

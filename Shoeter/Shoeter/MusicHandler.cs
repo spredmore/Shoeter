@@ -42,13 +42,17 @@ namespace Shoeter
 				song = content.Load<Song>("Music/HowToPlay");
 			}
 
+			MediaPlayer.Volume = 1.0f;
 			MediaPlayer.Play(song);
 			MediaPlayer.IsRepeating = true;
 		}
 
-		public static void FadeOutMusic()
+		public static void FadeOutMusicIfPossible(Boolean stopPlayerInputDueToLevelCompletion)
 		{
-
+			if(stopPlayerInputDueToLevelCompletion)
+			{
+				MediaPlayer.Volume -= 0.01f;
+			}
 		}
 	}
 }
