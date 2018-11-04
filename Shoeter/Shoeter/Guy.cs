@@ -49,7 +49,7 @@ namespace Shoeter
 
 		public bool usingLauncher = false;
 		private Boolean idleAnimationLockIsOn = false;
-		private Boolean displayLevelCompleteImage = false;
+		public FadeHandler fadeHandler;
 
 		public Guy(Texture2D texture, SpriteBatch spriteBatch, int currentFrame, int totalFrames, int spriteWidth, int spriteHeight, int screenHeight, int screenWidth, ContentManager content)
 		{
@@ -76,6 +76,7 @@ namespace Shoeter
 			delayCollisionWithGuyAndShoesTimer = new Timer(0.5f);
 			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
 			delayBetweenLaunchesTimer = new Timer(0.1f);
+			fadeHandler = new FadeHandler(5f, spriteBatch);
 		}
 
 		/// <summary>
@@ -87,7 +88,7 @@ namespace Shoeter
 		public void Update(GameTime gameTime, ref Shoes shoes, ref Level level)
 		{
 			currentLevel = level;
-			//handleAnimation(gameTime);
+			fadeHandler.Update(gameTime);
 			setCurrentAndPreviousCollisionTiles();
 			handleMovement(gameTime, ref shoes);
 			Sprite.Animate(gameTime);
@@ -239,9 +240,15 @@ namespace Shoeter
 			// The victory screen will show here. Prompt player to continue to the next level.
 			if (currentKeyboardState.IsKeyUp(Keys.Enter) && previousKeyboardState.IsKeyDown(Keys.Enter) && shoes.stopPlayerInputDueToLevelCompletion)
 			{
+				fadeHandler.fadeToBlack();				
+			}
+
+			if(fadeHandler.fadeToBlackTimer.TimerCompleted)
+			{
 				currentLevel.LoadLevel();
 				shoes.Position = currentLevel.getPlayerStartingPosition();
 				shoes.stopPlayerInputDueToLevelCompletion = false;
+				fadeHandler.resetFadeHandler();
 			}
 		}
 

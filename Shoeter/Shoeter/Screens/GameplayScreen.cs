@@ -173,6 +173,8 @@ namespace Shoeter
 				}
 			}
 
+			MusicHandler.FadeOutMusicIfPossible(shoes.stopPlayerInputDueToLevelCompletion);
+
 			oldKeyboardState = newKeyboardState;
 
 			// Gradually fade in or out depending on whether we are covered by the pause screen.
@@ -258,8 +260,11 @@ namespace Shoeter
 
 			spriteBatch.Draw(content.Load<Texture2D>("Sprites/16x16HitboxUp"), mouseRect, Color.White);
 
-			//testAnimatedSprite.Draw();
-			//testAnimatedSprite2.Draw();
+			guy.fadeHandler.Draw(content.Load<Texture2D>("Backgrounds/blank"));
+			//spriteBatch.Draw(blankTexture, new Rectangle(0, 0, 1280, 720), Color.Black * 0.8f);
+
+			//FadeHandler fadeHandler = new FadeHandler();
+			
 
 			spriteBatch.End();
 
