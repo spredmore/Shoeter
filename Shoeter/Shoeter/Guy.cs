@@ -76,7 +76,7 @@ namespace Shoeter
 			delayCollisionWithGuyAndShoesTimer = new Timer(0.5f);
 			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
 			delayBetweenLaunchesTimer = new Timer(0.1f);
-			fadeHandler = new FadeHandler(5f, spriteBatch);
+			fadeHandler = new FadeHandler(1f, 1f, 1f, spriteBatch);
 		}
 
 		/// <summary>
@@ -240,14 +240,28 @@ namespace Shoeter
 			// The victory screen will show here. Prompt player to continue to the next level.
 			if (currentKeyboardState.IsKeyUp(Keys.Enter) && previousKeyboardState.IsKeyDown(Keys.Enter) && shoes.stopPlayerInputDueToLevelCompletion)
 			{
+				// Begin fading out the sceen.
 				fadeHandler.fadeToBlack();				
 			}
 
+			// Once the screen is completely faded out, hold the fade for the specified time.
 			if(fadeHandler.fadeToBlackTimer.TimerCompleted)
 			{
+				fadeHandler.holdFadeOut();
+			}
+
+			// Once the amount of time to hold the screen has passed, load the next level.
+			if(fadeHandler.holdWhileFadedTimer.TimerCompleted)
+			{
+				fadeHandler.fadeFromBlack();
 				currentLevel.LoadLevel();
 				shoes.Position = currentLevel.getPlayerStartingPosition();
 				shoes.stopPlayerInputDueToLevelCompletion = false;
+			}
+
+			// Once the screen is done fading in, reset the FadeHandler.
+			if (fadeHandler.fadeFromBlackTimer.TimerCompleted) 
+			{
 				fadeHandler.resetFadeHandler();
 			}
 		}

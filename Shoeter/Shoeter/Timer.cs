@@ -22,6 +22,14 @@ namespace Shoeter
 		}
 
 		/// <summary>
+		/// Property for the timer limit.
+		/// </summary>
+		public float TimerEndTime
+		{
+			get { return timerEndTime; }
+		}
+
+		/// <summary>
 		/// Property for if the Timer is running or not.
 		/// </summary>
 		public bool TimerStarted
