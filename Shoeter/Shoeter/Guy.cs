@@ -76,7 +76,7 @@ namespace Shoeter
 			delayCollisionWithGuyAndShoesTimer = new Timer(0.5f);
 			delayLaunchAfterLauncherCollisionTimer = new Timer(2f);
 			delayBetweenLaunchesTimer = new Timer(0.1f);
-			fadeHandler = new FadeHandler(1f, 1f, 1f, spriteBatch);
+			fadeHandler = new FadeHandler(1f, 2f, 1f, spriteBatch);
 		}
 
 		/// <summary>

@@ -145,7 +145,6 @@ namespace Shoeter
 			mainMenuFont = content.Load<SpriteFont>("Fonts/menuFont");
 			dialogBoxFont = content.Load<SpriteFont>("Fonts/dialogBoxFont");
 			pauseMenuFont = content.Load<SpriteFont>("Fonts/pauseMenuFont");
-
 			blankTexture = content.Load<Texture2D>("Backgrounds/blank");
 
 			// Tell each of the screens to load their content.

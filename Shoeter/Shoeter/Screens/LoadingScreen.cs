@@ -134,7 +134,7 @@ namespace Shoeter
 				SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
 				SpriteFont font = ScreenManager.Font;
 
-				const string message = "Loading...";	// CHANGE TO DISPLAYING THE LEVEL NAME
+				const string message = "Hillbilly BBQ";
 
 				// Center the text in the viewport.
 				//Viewport viewport = ScreenManager.GraphicsDevice.Viewport;

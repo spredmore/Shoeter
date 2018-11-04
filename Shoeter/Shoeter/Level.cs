@@ -36,8 +36,8 @@ namespace Shoeter
 
 		// Starts at 0.
 		public static int currentLevel = -1;	// -1 is Level 1 (the first level)
-		public int previousLevel = -2;	// -2 is the level before Level 1 (-1)
-		int totalLevels = 4;			// 0 represents Level 1. 6 is Demo 2.
+		public int previousLevel = -2;			// -2 is the level before Level 1 (-1)
+		int totalLevels = 4;					// 0 represents Level 1. 6 is Demo 2.
 
 		public string debug;
 
@@ -199,6 +199,11 @@ namespace Shoeter
 			return arrayPosition;
 		}
 
+		/// <summary>
+		/// Draws the background to the screen.
+		/// </summary>
+		/// <param name="spriteBatch">Used to draw the foreground to the screen.</param>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
 		public void drawBackground(SpriteBatch spriteBatch, ref ContentManager content)
 		{
 			if (currentLevel == 0)
@@ -223,6 +228,11 @@ namespace Shoeter
 			}
 		}
 
+		/// <summary>
+		/// Draws the foreground of the level.
+		/// </summary>
+		/// <param name="spriteBatch">Used to draw the foreground to the screen.</param>
+		/// <param name="content">Run-time component which loads managed objects from the binary files produced by the design time content pipeline.</param>
 		public void drawForeground(SpriteBatch spriteBatch, ref ContentManager content)
 		{
 			if (currentLevel == 0)
@@ -244,6 +254,34 @@ namespace Shoeter
 			else if (currentLevel == 4)
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/Carnival_Foreground"), new Vector2(0f, 0f), Color.White);
+			}
+		}
+
+		/// <summary>
+		/// Returns the current level's name.
+		/// </summary>
+		/// <returns>The current level's name.</returns>
+		public String getCurrentLevelName()
+		{
+			if (currentLevel == 0)
+			{
+				return "Human Zoo";
+			}
+			else if (currentLevel == 1)
+			{
+				return "Sewer Persuer";
+			}
+			else if (currentLevel == 2)
+			{
+				return "Human Slaughter House";
+			}
+			else if (currentLevel == 3)
+			{
+				return "Carnival of the Wood";
+			}
+			else
+			{
+				return "Hillbilly BBQ";
 			}
 		}
 	}

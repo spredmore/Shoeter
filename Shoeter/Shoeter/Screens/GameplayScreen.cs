@@ -260,15 +260,19 @@ namespace Shoeter
 
 			spriteBatch.Draw(content.Load<Texture2D>("Sprites/16x16HitboxUp"), mouseRect, Color.White);
 
+			// Draw the faded out screen.
 			guy.fadeHandler.Draw(content.Load<Texture2D>("Backgrounds/blank"));
-			//spriteBatch.Draw(blankTexture, new Rectangle(0, 0, 1280, 720), Color.Black * 0.8f);
 
-			//FadeHandler fadeHandler = new FadeHandler();
+			// Draw the level name while the screen is faded out.
+			if (guy.fadeHandler.HoldingWhileFaded)
+			{
+				spriteBatch.DrawString(ScreenManager.Font, level.getCurrentLevelName(), getLevelTransitionTextLocation(), Color.White);
+			}
 			
-
 			spriteBatch.End();
 
 			// If the game is transitioning on or off, fade it out to black.
+			// *** Only for transitioning from the Main Menu to Level 1. ***
 			if (TransitionPosition > 0 || pauseAlpha > 0)
 			{
 				float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
@@ -329,6 +333,17 @@ namespace Shoeter
 			}
 		}
 
+		/// <summary>
+		/// Calculates and returns the location to draw the next level text.
+		/// </summary>
+		/// <returns>Returns the location to draw the next level text</returns>
+		private Vector2 getLevelTransitionTextLocation()
+		{
+			Vector2 windowSize = new Vector2(1280, 720);
+			Vector2 textSize = ScreenManager.Font.MeasureString(level.getCurrentLevelName());
+			
+			return (windowSize - textSize) / 2;
+		}
 
 		#endregion
 	}
