@@ -36,6 +36,7 @@ namespace Shoeter
 
 		SpriteBatch spriteBatch;
 		SpriteFont font;
+		SpriteFont font_small;
 		SpriteFont mainMenuFont;
 		SpriteFont dialogBoxFont;
 		SpriteFont pauseMenuFont;
@@ -69,6 +70,14 @@ namespace Shoeter
 			get { return font; }
 		}
 
+		/// <summary>
+		/// A default font shared by all of the screens. This saves
+		/// each screen having to bother loading their own local copy.
+		/// </summary>
+		public SpriteFont FontSmall
+		{
+			get { return font_small; }
+		}
 
 		/// <summary>
 		/// The main menu font shared by all of the screens.
@@ -142,6 +151,7 @@ namespace Shoeter
 
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			font = content.Load<SpriteFont>("Fonts/menufont");
+			font_small = content.Load<SpriteFont>("Fonts/menufont_small");
 			mainMenuFont = content.Load<SpriteFont>("Fonts/menuFont");
 			dialogBoxFont = content.Load<SpriteFont>("Fonts/dialogBoxFont");
 			pauseMenuFont = content.Load<SpriteFont>("Fonts/pauseMenuFont");
