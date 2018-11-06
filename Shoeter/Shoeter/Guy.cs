@@ -33,7 +33,7 @@ namespace Shoeter
 		private bool areGuyAndShoesCurrentlyLinked = true;
 		public bool isGuyBeingShot = false;
 
-		private float delta;
+		public float delta;
 
 		public List<Air> airsGuyHasCollidedWith = new List<Air>();
 
@@ -50,6 +50,11 @@ namespace Shoeter
 		public bool usingLauncher = false;
 		private Boolean idleAnimationLockIsOn = false;
 		public FadeHandler fadeHandler;
+
+		public Boolean AreGuyAndShoesCurrentlyLinked
+		{
+			get { return areGuyAndShoesCurrentlyLinked; }
+		}
 
 		public Guy(Texture2D texture, SpriteBatch spriteBatch, int currentFrame, int totalFrames, int spriteWidth, int spriteHeight, int screenHeight, int screenWidth, ContentManager content)
 		{
@@ -241,7 +246,7 @@ namespace Shoeter
 			if (currentKeyboardState.IsKeyUp(Keys.Enter) && previousKeyboardState.IsKeyDown(Keys.Enter) && shoes.stopPlayerInputDueToLevelCompletion)
 			{
 				// Begin fading out the sceen.
-				fadeHandler.fadeToBlack();				
+				fadeHandler.fadeToBlack();			
 			}
 
 			// Once the screen is completely faded out, hold the fade for the specified time.
@@ -450,7 +455,7 @@ namespace Shoeter
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void shootGuyIfPossible(Shoes shoes)
 		{
-			if (currentMouseState.LeftButton == ButtonState.Pressed && !isGuyBeingShot && !shoes.stopPlayerInputDueToLevelCompletion)
+			if (currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed && !isGuyBeingShot && !shoes.stopPlayerInputDueToLevelCompletion)
 			{
 				if (!delayCollisionWithGuyAndShoesTimer.TimerStarted)
 				{

@@ -40,6 +40,8 @@ namespace Shoeter
 		public SpriteBatch spriteBatch;
 		private KeyboardState oldKeyboardState;
 		private KeyboardState newKeyboardState;
+		private MouseState oldMouseState;
+		private MouseState newMouseState;
 		private Boolean displayInterface;
 
 		// The shoes
@@ -117,9 +119,7 @@ namespace Shoeter
 			// Load the debug font. We use this for debugging purposes.
 			debugFont = content.Load<SpriteFont>("Fonts/debugFont");
 
-			MouseState currentMouseState;
-			currentMouseState = Mouse.GetState();
-			mouseRect = new Rectangle(currentMouseState.X, currentMouseState.Y, 16, 16);
+			mouseRect = new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 16, 16);
 		}
 
 
@@ -147,13 +147,17 @@ namespace Shoeter
 			base.Update(gameTime, otherScreenHasFocus, false);
 
 			newKeyboardState = Keyboard.GetState();
+			newMouseState = Mouse.GetState();
 
 			shoes.Update(gameTime, ref guy);
 			guy.Update(gameTime, ref shoes, ref level);
 
-			MouseState currentMouseState;
-			currentMouseState = Mouse.GetState();
-			mouseRect = new Rectangle(currentMouseState.X, currentMouseState.Y, 16, 16);
+			if (guy.AreGuyAndShoesCurrentlyLinked && newMouseState.LeftButton == ButtonState.Pressed)
+			{
+				TrajectoryLineHandler.Update(ref guy);
+			}
+
+			mouseRect = new Rectangle(newMouseState.X, newMouseState.Y, 16, 16);
 
 			foreach (Air air in Air.allAirs)
 			{
@@ -176,6 +180,7 @@ namespace Shoeter
 			MusicHandler.FadeOutMusicIfPossible(shoes.stopPlayerInputDueToLevelCompletion);
 
 			oldKeyboardState = newKeyboardState;
+			oldMouseState = newMouseState;
 
 			// Gradually fade in or out depending on whether we are covered by the pause screen.
 			if (coveredByOtherScreen)
@@ -226,15 +231,13 @@ namespace Shoeter
 			// Check to see if the player won. If they did, display the level completion picture.
 			drawLevelCompleteImageIfPossible();
 
-			// Draw the debug font.
-			spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.LightSlateGray);
-			spriteBatch.DrawString(debugFont, "Guy - Power (Scroll Wheel): " + guy.powerOfLauncherBeingUsed.ToString(), new Vector2(0, 20), Color.LightSlateGray);
-
 			debug = mouseRect.X.ToString() + " " + mouseRect.Y.ToString();
 
 			if (displayInterface)
 			{
 				level.Draw(spriteBatch, false);
+				spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.Black);
+				spriteBatch.DrawString(debugFont, "Guy - Power (Scroll Wheel): " + guy.powerOfLauncherBeingUsed.ToString(), new Vector2(0, 20), Color.Black);
 				spriteBatch.DrawString(debugFont, "Guy - Gravity (./3): " + guy.gravity.ToString(), new Vector2(0, 40), Color.Black);
 				spriteBatch.DrawString(debugFont, "Shoes - Air Movement (7/8): " + shoes.airMovementSpeed.ToString(), new Vector2(0, 60), Color.Black);
 				spriteBatch.DrawString(debugFont, "Shoes - Ground Movement (4/5): " + shoes.groundMovementSpeed.ToString(), new Vector2(0, 80), Color.Black);
@@ -260,7 +263,12 @@ namespace Shoeter
 
 			spriteBatch.Draw(content.Load<Texture2D>("Sprites/16x16HitboxUp"), mouseRect, Color.White);
 
-			// Draw the faded out screen.
+			if (guy.AreGuyAndShoesCurrentlyLinked && newMouseState.LeftButton == ButtonState.Pressed)
+			{
+				TrajectoryLineHandler.Draw(spriteBatch, ref content);
+			}
+
+			// Draw the faded out screen if possible.
 			guy.fadeHandler.Draw(content.Load<Texture2D>("Backgrounds/blank"));
 
 			// Draw the level name while the screen is faded out.
