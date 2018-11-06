@@ -263,11 +263,15 @@ namespace Shoeter
 
 			spriteBatch.Draw(content.Load<Texture2D>("Sprites/16x16HitboxUp"), mouseRect, Color.White);
 
+			// Draw the trajectory line while the left mouse button is being held.
 			if (guy.AreGuyAndShoesCurrentlyLinked && newMouseState.LeftButton == ButtonState.Pressed)
 			{
 				TrajectoryLineHandler.Draw(spriteBatch, ref content);
 			}
 
+			// Write the power level below the Shoes or Guy when using a Launcher.
+			displayPowerLevelIfPossible(ref guy, ref shoes);
+			
 			// Draw the faded out screen if possible.
 			guy.fadeHandler.Draw(content.Load<Texture2D>("Backgrounds/blank"));
 
@@ -316,6 +320,32 @@ namespace Shoeter
 				{
 					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
 				}
+			}
+		}
+
+		/// <summary>
+		/// Displays the power level under the Guy and Shoes while they are using a Launcher.
+		/// </summary>
+		/// <param name="guy">A reference to the Guy.</param>
+		/// <param name="shoes">A reference to the Shoes.</param>
+		private void displayPowerLevelIfPossible(ref Guy guy, ref Shoes shoes)
+		{
+			// Display under only the Guy.
+			if (guy.usingLauncher)
+			{
+				spriteBatch.DrawString(ScreenManager.FontSmall, guy.powerOfLauncherBeingUsed.ToString(), new Vector2(guy.Position.X, guy.Position.Y + 60), Color.LimeGreen);
+			}
+
+			// Display under the Shoes depending on if the Guy and Shoes are linked.
+			if (shoes.DelayLaunchAfterLauncherCollisionTimer.TimerStarted && !shoes.DelayLaunchAfterLauncherCollisionTimer.TimerCompleted &&
+				!guy.AreGuyAndShoesCurrentlyLinked)
+			{
+				spriteBatch.DrawString(ScreenManager.FontSmall, guy.powerOfLauncherBeingUsed.ToString(), new Vector2(shoes.Position.X, shoes.Position.Y + 30), Color.LimeGreen);
+			}
+			else if (shoes.DelayLaunchAfterLauncherCollisionTimer.TimerStarted && !shoes.DelayLaunchAfterLauncherCollisionTimer.TimerCompleted &&
+				guy.AreGuyAndShoesCurrentlyLinked)
+			{
+				spriteBatch.DrawString(ScreenManager.FontSmall, guy.powerOfLauncherBeingUsed.ToString(), new Vector2(shoes.Position.X + 15, shoes.Position.Y + 60), Color.LimeGreen);
 			}
 		}
 

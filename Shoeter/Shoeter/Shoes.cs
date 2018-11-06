@@ -63,6 +63,14 @@ namespace Shoeter
 		public Boolean fallingAnimationLockIsOn = false;
 		public Boolean jumpingAnimationLockIsOn = false;
 
+		/// <summary>
+		/// Property to get the delayLaunchAfterLauncherCollisionTimer timer.
+		/// </summary>
+		public Timer DelayLaunchAfterLauncherCollisionTimer
+		{
+			get { return delayLaunchAfterLauncherCollisionTimer; }
+		}
+
 		public Shoes(Vector2 startingPosition, Texture2D texture, State state, int currentFrame, int spriteWidth, int spriteHeight, int totalFrames, SpriteBatch spriteBatch, int screenHeight, int screenWidth, Keys up, Keys left, Keys down, Keys right, ContentManager content)
 		{
 			this.spriteTexture = texture;       // The sprite sheet we will be drawing from.
