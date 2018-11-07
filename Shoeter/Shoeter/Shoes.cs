@@ -502,7 +502,8 @@ namespace Shoeter
 				&& !underTile()
 				&& !isThereATileAboveTheGuy
 				&& (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted)
-				&& !stopPlayerInputDueToLevelCompletion)
+				&& !stopPlayerInputDueToLevelCompletion
+				&& !Utilities.movementLockedDueToActivePauseScreen)
 			{
 				isJumping = true;
 				velocity.Y = jumpImpulse * -1;
@@ -536,7 +537,7 @@ namespace Shoeter
 			}
 
 			// Allow movement if the player has pressed the correct key to move the Shoes, and the Shoes are allowed to move after colliding with a Spring, and the Shoes aren't locked into a Launcher.
-			if (newKeyboardState.IsKeyDown(right) && !newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput && !stopPlayerInputDueToLevelCompletion)
+			if (newKeyboardState.IsKeyDown(right) && !newKeyboardState.IsKeyDown(left) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput && !stopPlayerInputDueToLevelCompletion && !Utilities.movementLockedDueToActivePauseScreen)
 			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;
@@ -567,7 +568,7 @@ namespace Shoeter
 				}
 			}
 
-			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput && !stopPlayerInputDueToLevelCompletion)
+			if (newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && !delayMovementAfterSpringCollision && (!delayLaunchAfterLauncherCollisionTimer.TimerStarted && !delayLaunchAfterLauncherCollisionTimer.TimerCompleted) && !movementLockedDueToAirCannonSwitchCollision && !stopPlayerInput && !stopPlayerInputDueToLevelCompletion && !Utilities.movementLockedDueToActivePauseScreen)
 			{
 				horizontalVelocityDueToAirCollision = 0f; // Cancel Air movement with player input.
 				bouncingHorizontally = 0;

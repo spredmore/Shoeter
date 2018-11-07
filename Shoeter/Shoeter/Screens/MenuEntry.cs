@@ -145,12 +145,6 @@ namespace Shoeter
 			{
 				selectionFade = Math.Max(selectionFade - fadeSpeed, 0);
 			}
-
-			if (isSelected && currentScreenBeingUsed == "MainMenu")
-			{
-				//menuHead.Position = new Vector2(position.X - 80, position.Y - 35);
-				//menuHead.Animate(gameTime);
-			}
 		}
 
 		/// <summary>
@@ -193,13 +187,7 @@ namespace Shoeter
 
 			Vector2 origin = new Vector2(0, font.LineSpacing / 2);
 
-			//spriteBatch.DrawString(font, text, new Vector2(position.X + 2, position.Y), (isSelected ? Color.Black : Color.White), 0, origin, (float)(scale + 0.05), SpriteEffects.None, 0); // Outline
-			spriteBatch.DrawString(font, text, position, color, 0, origin, scale, SpriteEffects.None, 0); // OG
-
-			if (isSelected && currentScreenBeingUsed == "MainMenu")
-			{
-				//menuHead.Draw();
-			}
+			spriteBatch.DrawString(font, text, position, color, 0, origin, scale, SpriteEffects.None, 0);
 		}
 
 		private Color setMenuEntryColor(Boolean isSelected)

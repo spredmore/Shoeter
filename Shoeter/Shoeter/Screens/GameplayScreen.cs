@@ -152,7 +152,7 @@ namespace Shoeter
 			shoes.Update(gameTime, ref guy);
 			guy.Update(gameTime, ref shoes, ref level);
 
-			if (guy.AreGuyAndShoesCurrentlyLinked && newMouseState.LeftButton == ButtonState.Pressed)
+			if (guy.AreGuyAndShoesCurrentlyLinked && newMouseState.LeftButton == ButtonState.Pressed && !Utilities.movementLockedDueToActivePauseScreen)
 			{
 				TrajectoryLineHandler.Update(ref guy);
 			}
@@ -368,6 +368,9 @@ namespace Shoeter
 			if (input.IsPauseGame(ControllingPlayer))
 			{
 				ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+
+				// Lock Guy and Shoes from moving while the pause screen is up
+				Utilities.movementLockedDueToActivePauseScreen = true;
 			}
 		}
 

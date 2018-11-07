@@ -337,8 +337,6 @@ namespace Shoeter
 		/// </summary>
 		public void FadeBackBufferToBlack(float alpha)
 		{
-			//Viewport viewport = GraphicsDevice.Viewport;
-
 			spriteBatch.Begin();
 
 			spriteBatch.Draw(blankTexture, new Rectangle(0, 0, 1280, 720), Color.Black * alpha);

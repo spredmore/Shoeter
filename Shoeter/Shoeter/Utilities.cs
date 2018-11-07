@@ -8,6 +8,8 @@ namespace Shoeter
 {
 	class Utilities
 	{
+		public static Boolean movementLockedDueToActivePauseScreen = false;
+
 		/// <summary>
 		/// Converts an angle in radians to a Vector2.
 		/// </summary>

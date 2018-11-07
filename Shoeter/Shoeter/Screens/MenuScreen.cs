@@ -106,6 +106,7 @@ namespace Shoeter
 			}
 			else if (input.IsMenuCancel(ControllingPlayer, out playerIndex))
 			{
+				Utilities.movementLockedDueToActivePauseScreen = false;
 				OnCancel(playerIndex);
 			}
 		}
@@ -134,6 +135,7 @@ namespace Shoeter
 		/// </summary>
 		protected void OnCancel(object sender, PlayerIndexEventArgs e)
 		{
+			Utilities.movementLockedDueToActivePauseScreen = false;
 			OnCancel(e.PlayerIndex);
 		}
 

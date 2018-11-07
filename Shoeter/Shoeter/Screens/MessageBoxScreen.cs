@@ -67,31 +67,6 @@ namespace Shoeter
 		}
 
 		/// <summary>
-		/// Constructor lets the caller specify whether to include the standard
-		/// "A=ok, B=cancel" usage text prompt.
-		/// </summary>
-		//public MessageBoxScreen(string message, bool includeUsageText)
-		//{
-		//    const string usageText = "\nPress Enter to be a disappointment" +
-		//                             "\nPress Escape to retain some dignity";
-
-		//    if (includeUsageText)
-		//    {
-		//        this.message = message + usageText;
-		//    }
-		//    else
-		//    {
-		//        this.message = message;
-		//    }
-
-		//    IsPopup = true;
-
-		//    TransitionOnTime = TimeSpan.FromSeconds(0.2);
-		//    TransitionOffTime = TimeSpan.FromSeconds(0.2);
-		//}
-
-
-		/// <summary>
 		/// Loads graphics content for this screen. This uses the shared ContentManager
 		/// provided by the Game class, so the content will remain loaded forever.
 		/// Whenever a subsequent MessageBoxScreen tries to load this same content,

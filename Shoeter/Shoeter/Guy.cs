@@ -455,7 +455,7 @@ namespace Shoeter
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void shootGuyIfPossible(Shoes shoes)
 		{
-			if (currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed && !isGuyBeingShot && !shoes.stopPlayerInputDueToLevelCompletion)
+			if (currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed && !isGuyBeingShot && !shoes.stopPlayerInputDueToLevelCompletion && !Utilities.movementLockedDueToActivePauseScreen)
 			{
 				if (!delayCollisionWithGuyAndShoesTimer.TimerStarted)
 				{
@@ -734,7 +734,7 @@ namespace Shoeter
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void resetGuyToShoesCurrentPositionIfPossible(Shoes shoes)
 		{
-			if (!(currentMouseState.RightButton == ButtonState.Pressed) && previousMouseState.RightButton == ButtonState.Pressed && !areGuyAndShoesCurrentlyLinked)
+			if (!(currentMouseState.RightButton == ButtonState.Pressed) && previousMouseState.RightButton == ButtonState.Pressed && !areGuyAndShoesCurrentlyLinked && !Utilities.movementLockedDueToActivePauseScreen)
 			{
 				isGuyBeingShot = false;
 				usingLauncher = false;

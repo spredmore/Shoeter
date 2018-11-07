@@ -40,6 +40,8 @@ namespace Shoeter
 			// Add entries to the menu.
 			MenuEntries.Add(resumeGameMenuEntry);
 			MenuEntries.Add(quitGameMenuEntry);
+
+			Utilities.movementLockedDueToActivePauseScreen = true;
 		}
 
 
@@ -71,6 +73,7 @@ namespace Shoeter
 		void ConfirmQuitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
 		{
 			LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+			Utilities.movementLockedDueToActivePauseScreen = false;
 		}
 
 

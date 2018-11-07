@@ -50,6 +50,8 @@ namespace Shoeter
 			MenuEntries.Add(howToPlayMenuEntry);
 			//MenuEntries.Add(optionsMenuEntry);
 			MenuEntries.Add(exitMenuEntry);
+
+			Utilities.movementLockedDueToActivePauseScreen = false;
 		}
 
 		public override void LoadContent()
