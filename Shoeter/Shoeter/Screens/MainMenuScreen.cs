@@ -23,7 +23,7 @@ namespace Shoeter
 		ContentManager content;
 		MenuEntry playGameMenuEntry;
 		MenuEntry howToPlayMenuEntry;
-		MenuEntry optionsMenuEntry;
+		MenuEntry bonusLevelsMenuEntry;
 		MenuEntry exitMenuEntry;
 
 		#region Initialization
@@ -36,19 +36,19 @@ namespace Shoeter
 			// Create our menu entries.
 			playGameMenuEntry = new MenuEntry("Play Game");
 			howToPlayMenuEntry = new MenuEntry("How To Play");
-			//optionsMenuEntry = new MenuEntry("Options");
+			bonusLevelsMenuEntry = new MenuEntry("Bonus Levels");
 			exitMenuEntry = new MenuEntry("Quit Game");
 
 			// Hook up menu event handlers.
 			playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
 			howToPlayMenuEntry.Selected += HowToPlayMenuEntrySelected;
-			//optionsMenuEntry.Selected += OptionsMenuEntrySelected;
+			bonusLevelsMenuEntry.Selected += BonusLevelsMenuEntrySelected;
 			exitMenuEntry.Selected += OnCancel;
 
 			// Add entries to the menu.
 			MenuEntries.Add(playGameMenuEntry);
 			MenuEntries.Add(howToPlayMenuEntry);
-			//MenuEntries.Add(optionsMenuEntry);
+			MenuEntries.Add(bonusLevelsMenuEntry);
 			MenuEntries.Add(exitMenuEntry);
 
 			Utilities.movementLockedDueToActivePauseScreen = false;
@@ -63,11 +63,8 @@ namespace Shoeter
 
 			playGameMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
 			howToPlayMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
-			//optionsMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
+			bonusLevelsMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
 			exitMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
-
-			Level.currentLevel = -1;
-			MusicHandler.PlayMusic(-1, ref content);
 		}
 
 
@@ -81,21 +78,21 @@ namespace Shoeter
 		/// </summary>
 		void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
 		{
-			LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
+			LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, "Hillbilly BBQ", new GameplayScreen(false));
 		}
 
 		void HowToPlayMenuEntrySelected(object sender, PlayerIndexEventArgs e)
 		{
-			LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new TutorialScreen());
+			LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, "How To Play", new TutorialScreen());
 		}
 
 
 		/// <summary>
-		/// Event handler for when the Options menu entry is selected.
+		/// Event handler for when the Bouns Level menu entry is selected.
 		/// </summary>
-		void OptionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+		void BonusLevelsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
 		{
-			ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
+			LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, "Bonus Level - 1", new GameplayScreen(true));
 		}
 
 

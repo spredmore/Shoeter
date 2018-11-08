@@ -51,7 +51,15 @@ namespace Shoeter
 		{
 			foreach (Vector2 point in pointsAlongTrajectory)
 			{
-				spriteBatch.Draw(content.Load<Texture2D>("Backgrounds/blank"), new Rectangle((int)point.X, (int)point.Y, 3, 3), Color.GreenYellow);
+				if (!Level.bonusLevelsSelected)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Backgrounds/blank"), new Rectangle((int)point.X, (int)point.Y, 3, 3), Color.GreenYellow);
+				}
+				else
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Backgrounds/blank"), new Rectangle((int)point.X, (int)point.Y, 3, 3), Color.Black);
+				}
+				
 			}
 		}
 	}

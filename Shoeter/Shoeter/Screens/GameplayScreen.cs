@@ -60,6 +60,8 @@ namespace Shoeter
 
 		String debug;
 
+		Boolean bonusLevelsSelected;
+
 		#endregion
 
 		#region Initialization
@@ -68,11 +70,24 @@ namespace Shoeter
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public GameplayScreen()
+		public GameplayScreen(Boolean bonusLevelsSelected)
 		{
 			TransitionOnTime = TimeSpan.FromSeconds(1.5);
 			TransitionOffTime = TimeSpan.FromSeconds(0.5);
 			displayInterface = false;
+			this.bonusLevelsSelected = bonusLevelsSelected;
+
+			if (!bonusLevelsSelected)
+			{
+				Level.currentLevel = -1;
+				Level.bonusLevelsSelected = false;
+			}
+			else
+			{
+				Level.currentLevel = 4;
+				Level.bonusLevelsSelected = true;
+			}
+			
 		}
 
 
@@ -102,10 +117,12 @@ namespace Shoeter
 			spriteBatch = ScreenManager.SpriteBatch;
 
 			// Create and load the level.
-			level = new Level(content);
+			level = new Level(content);			
 
 			// Load level.
 			level.LoadLevel();
+
+			MusicHandler.PlayMusic(-1, ref content);
 
 			// Create the Shoes.
 			shoes = new Shoes(level.getPlayerStartingPosition(), content.Load<Texture2D>("Sprites/Shoes32x48"), Character.State.Idle_Right, 0, 32, 48, 0, spriteBatch, 720, 1280, Keys.W, Keys.A, Keys.S, Keys.D, content);
@@ -228,14 +245,15 @@ namespace Shoeter
 			// Draw the level.
 			level.Draw(spriteBatch, true);
 
-			// Check to see if the player won. If they did, display the level completion picture.
-			drawLevelCompleteImageIfPossible();
-
 			debug = mouseRect.X.ToString() + " " + mouseRect.Y.ToString();
+
+			if(Level.bonusLevelsSelected || displayInterface)
+			{
+				level.Draw(spriteBatch, false);
+			}
 
 			if (displayInterface)
 			{
-				level.Draw(spriteBatch, false);
 				spriteBatch.DrawString(debugFont, "Angle between mouse and player: " + guy.angleBetweenGuyAndMouseCursor.ToString(), new Vector2(0, 0), Color.Black);
 				spriteBatch.DrawString(debugFont, "Guy - Power (Scroll Wheel): " + guy.powerOfLauncherBeingUsed.ToString(), new Vector2(0, 20), Color.Black);
 				spriteBatch.DrawString(debugFont, "Guy - Gravity (./3): " + guy.gravity.ToString(), new Vector2(0, 40), Color.Black);
@@ -271,6 +289,9 @@ namespace Shoeter
 
 			// Write the power level below the Shoes or Guy when using a Launcher.
 			displayPowerLevelIfPossible(ref guy, ref shoes);
+
+			// Check to see if the player won. If they did, display the level completion picture.
+			drawLevelCompleteImageIfPossible();
 			
 			// Draw the faded out screen if possible.
 			guy.fadeHandler.Draw(content.Load<Texture2D>("Backgrounds/blank"));
@@ -317,6 +338,34 @@ namespace Shoeter
 					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/HumanSlaughterHouse"), new Vector2(0, 0), Color.White);
 				}
 				else if (Level.currentLevel == 4)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 5)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 6)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 7)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 8)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 9)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 10)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 11)
 				{
 					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
 				}

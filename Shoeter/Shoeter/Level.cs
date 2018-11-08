@@ -35,9 +35,11 @@ namespace Shoeter
 		public Rectangle goalRectangle;
 
 		// Starts at 0.
-		public static int currentLevel = -1;	// -1 is Level 1 (the first level)
+		public static int currentLevel = -1;	// -1 is Level 1 (HillBilly BBQ)
 		public int previousLevel = -2;			// -2 is the level before Level 1 (-1)
-		int totalLevels = 4;					// 0 represents Level 1. 6 is Demo 2.
+		int totalLevels = 11;					// 0 represents Level 1. 6 is Demo 2. 0-4: Main Game | 5-11: Bonus Levels
+		
+		public static Boolean bonusLevelsSelected = false;
 
 		public string debug;
 
@@ -59,15 +61,23 @@ namespace Shoeter
 			impassableTilePos = new List<Vector2>();
 			Air.resetAllAirCannons();
 
-			if (currentLevel + 1 <= totalLevels)
+			if ((!Level.bonusLevelsSelected && currentLevel + 1 <= 4) || (Level.bonusLevelsSelected && currentLevel + 1 <= totalLevels))
 			{
 				previousLevel++;
 				currentLevel++;
 			}
 			else
 			{
-				currentLevel = 0;
-				previousLevel = -1;
+				if (!Level.bonusLevelsSelected)
+				{
+					currentLevel = 0;
+					previousLevel = -1;
+				}
+				else if (Level.bonusLevelsSelected)
+				{
+					currentLevel = 5;
+					previousLevel = 4;
+				}
 			}
 
 			MusicHandler.PlayMusic(currentLevel, ref contentManager);
@@ -279,9 +289,41 @@ namespace Shoeter
 			{
 				return "Carnival of the Wood";
 			}
-			else
+			else if (currentLevel == 4)
 			{
 				return "Hillbilly BBQ";
+			}
+			else if (Level.bonusLevelsSelected && currentLevel == 4)
+			{
+				return "Bonus Level - 1";
+			}
+			else if (Level.bonusLevelsSelected && currentLevel == 5)
+			{
+				return "Bonus Level - 2";
+			}
+			else if (Level.bonusLevelsSelected && currentLevel == 6)
+			{
+				return "Bonus Level - 3";
+			}
+			else if (Level.bonusLevelsSelected && currentLevel == 7)
+			{
+				return "Bonus Level - 4";
+			}
+			else if (Level.bonusLevelsSelected && currentLevel == 8)
+			{
+				return "Bonus Level - 5";
+			}
+			else if (Level.bonusLevelsSelected && currentLevel == 9)
+			{
+				return "Bonus Level - 6";
+			}
+			else if (Level.bonusLevelsSelected && currentLevel == 10)
+			{
+				return "Bonus Level - 7";
+			}
+			else
+			{
+				return "Bonus Level - 1";
 			}
 		}
 	}

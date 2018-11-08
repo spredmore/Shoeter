@@ -35,6 +35,7 @@ namespace Shoeter
 
 		bool loadingIsSlow;
 		bool otherScreensAreGone;
+		String loadingScreenMessage;
 
 		GameScreen[] screensToLoad;
 
@@ -47,10 +48,11 @@ namespace Shoeter
 		/// The constructor is private: loading screens should
 		/// be activated via the static Load method instead.
 		/// </summary>
-		private LoadingScreen(ScreenManager screenManager, bool loadingIsSlow, GameScreen[] screensToLoad)
+		private LoadingScreen(ScreenManager screenManager, bool loadingIsSlow, GameScreen[] screensToLoad, String loadingScreenMessage)
 		{
 			this.loadingIsSlow = loadingIsSlow;
 			this.screensToLoad = screensToLoad;
+			this.loadingScreenMessage = loadingScreenMessage;
 
 			TransitionOnTime = TimeSpan.FromSeconds(0.1);
 		}
@@ -59,7 +61,7 @@ namespace Shoeter
 		/// <summary>
 		/// Activates the loading screen.
 		/// </summary>
-		public static void Load(ScreenManager screenManager, bool loadingIsSlow, PlayerIndex? controllingPlayer, params GameScreen[] screensToLoad)
+		public static void Load(ScreenManager screenManager, bool loadingIsSlow, PlayerIndex? controllingPlayer, String loadingScreenMessage, params GameScreen[] screensToLoad)
 		{
 			// Tell all the current screens to transition off.
 			foreach (GameScreen screen in screenManager.GetScreens())
@@ -68,7 +70,7 @@ namespace Shoeter
 			}
 				
 			// Create and activate the loading screen.
-			LoadingScreen loadingScreen = new LoadingScreen(screenManager, loadingIsSlow, screensToLoad);
+			LoadingScreen loadingScreen = new LoadingScreen(screenManager, loadingIsSlow, screensToLoad, loadingScreenMessage);
 
 			screenManager.AddScreen(loadingScreen, controllingPlayer);
 		}
@@ -134,7 +136,7 @@ namespace Shoeter
 				SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
 				SpriteFont font = ScreenManager.Font;
 
-				const string message = "Hillbilly BBQ";
+				string message = loadingScreenMessage;
 
 				// Center the text in the viewport.
 				//Viewport viewport = ScreenManager.GraphicsDevice.Viewport;

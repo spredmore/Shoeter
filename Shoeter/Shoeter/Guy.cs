@@ -243,7 +243,11 @@ namespace Shoeter
 			}
 
 			// The victory screen will show here. Prompt player to continue to the next level.
-			if (currentKeyboardState.IsKeyUp(Keys.Enter) && previousKeyboardState.IsKeyDown(Keys.Enter) && shoes.stopPlayerInputDueToLevelCompletion)
+			if (currentKeyboardState.IsKeyUp(Keys.Enter) && previousKeyboardState.IsKeyDown(Keys.Enter) && 
+				shoes.stopPlayerInputDueToLevelCompletion &&
+				!fadeHandler.FadingOut &&
+				!fadeHandler.HoldingWhileFaded &&
+				!fadeHandler.FadingIn)
 			{
 				// Begin fading out the sceen.
 				fadeHandler.fadeToBlack();			

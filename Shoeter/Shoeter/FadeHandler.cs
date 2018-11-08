@@ -19,11 +19,27 @@ namespace Shoeter
 		SpriteBatch spriteBatch;			// SpriteBatch used to draw the fade.
 
 		/// <summary>
+		/// Property for getting the boolean that says if the screen is being faded out.
+		/// </summary>
+		public Boolean FadingOut
+		{
+			get { return fadingOut; }
+		}
+
+		/// <summary>
 		/// Property for getting the boolean that says if the screen is being held while faded out.
 		/// </summary>
 		public Boolean HoldingWhileFaded
 		{
 			get { return holdingWhileFaded; }
+		}
+
+		/// <summary>
+		/// Property for getting the boolean that says if the screen is being faded in.
+		/// </summary>
+		public Boolean FadingIn
+		{
+			get { return fadingIn; }
 		}
 
 		/// <summary>
