@@ -341,33 +341,9 @@ namespace Shoeter
 				{
 					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
 				}
-				else if (Level.currentLevel == 5)
+				else
 				{
-					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
-				}
-				else if (Level.currentLevel == 6)
-				{
-					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
-				}
-				else if (Level.currentLevel == 7)
-				{
-					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
-				}
-				else if (Level.currentLevel == 8)
-				{
-					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
-				}
-				else if (Level.currentLevel == 9)
-				{
-					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
-				}
-				else if (Level.currentLevel == 10)
-				{
-					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
-				}
-				else if (Level.currentLevel == 11)
-				{
-					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/BonusLevel"), new Vector2(0, 0), Color.White);
 				}
 			}
 		}
