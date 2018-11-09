@@ -84,7 +84,7 @@ namespace Shoeter
 			}
 			else
 			{
-				Level.currentLevel = 4;
+				Level.currentLevel = 5;
 				Level.bonusLevelsSelected = true;
 			}
 			
@@ -195,6 +195,12 @@ namespace Shoeter
 			}
 
 			MusicHandler.FadeOutMusicIfPossible(shoes.stopPlayerInputDueToLevelCompletion);
+
+			if(Level.exitGame)
+			{
+				Level.exitGame = false;
+				LoadingScreen.Load(ScreenManager, false, null, "Main Menu", new BackgroundScreen(), new MainMenuScreen());
+			}
 
 			oldKeyboardState = newKeyboardState;
 			oldMouseState = newMouseState;
@@ -340,6 +346,10 @@ namespace Shoeter
 				else if (Level.currentLevel == 4)
 				{
 					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/CarnivaloftheWood"), new Vector2(0, 0), Color.White);
+				}
+				else if (Level.currentLevel == 5)
+				{
+					spriteBatch.Draw(content.Load<Texture2D>("Sprites/EndOfLevelPictures/ShoeterComplete"), new Vector2(0, 0), Color.White);
 				}
 				else
 				{

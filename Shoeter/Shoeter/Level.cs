@@ -37,9 +37,10 @@ namespace Shoeter
 		// Starts at 0.
 		public static int currentLevel = -1;	// -1 is Level 1 (HillBilly BBQ)
 		public int previousLevel = -2;			// -2 is the level before Level 1 (-1)
-		int totalLevels = 11;					// 0 represents Level 1. 6 is Demo 2. 0-4: Main Game | 5-11: Bonus Levels
+		int totalLevels = 12;					// 0 represents Level 1. 6 is Demo 2. 0-5: Main Game | 6-12: Bonus Levels
 		
 		public static Boolean bonusLevelsSelected = false;
+		public static Boolean exitGame = false;
 
 		public string debug;
 
@@ -61,7 +62,7 @@ namespace Shoeter
 			impassableTilePos = new List<Vector2>();
 			Air.resetAllAirCannons();
 
-			if ((!Level.bonusLevelsSelected && currentLevel + 1 <= 4) || (Level.bonusLevelsSelected && currentLevel + 1 <= totalLevels))
+			if ((!Level.bonusLevelsSelected && currentLevel + 1 <= 5) || (Level.bonusLevelsSelected && currentLevel + 1 <= totalLevels))
 			{
 				previousLevel++;
 				currentLevel++;
@@ -70,13 +71,15 @@ namespace Shoeter
 			{
 				if (!Level.bonusLevelsSelected)
 				{
+					Level.exitGame = true;
 					currentLevel = 0;
 					previousLevel = -1;
 				}
 				else if (Level.bonusLevelsSelected)
 				{
-					currentLevel = 5;
-					previousLevel = 4;
+					Level.exitGame = true;
+					currentLevel = 6;
+					previousLevel = 5;
 				}
 			}
 
@@ -236,6 +239,10 @@ namespace Shoeter
 			{
 				spriteBatch.Draw(content.Load<Texture2D>("Levels/Carnival_Background"), new Vector2(0f, 0f), Color.White);
 			}
+			else if (currentLevel == 5)
+			{
+				spriteBatch.Draw(content.Load<Texture2D>("Levels/TheEnd"), new Vector2(0f, 0f), Color.White);
+			}
 		}
 
 		/// <summary>
@@ -291,33 +298,37 @@ namespace Shoeter
 			}
 			else if (currentLevel == 4)
 			{
-				return "Hillbilly BBQ";
+				return "The End";
 			}
-			else if (Level.bonusLevelsSelected && currentLevel == 4)
+			else if (currentLevel == 5)
 			{
-				return "Bonus Level - 1";
+				return "Hillbilly BBQ";
 			}
 			else if (Level.bonusLevelsSelected && currentLevel == 5)
 			{
-				return "Bonus Level - 2";
+				return "Bonus Level - 1";
 			}
 			else if (Level.bonusLevelsSelected && currentLevel == 6)
 			{
-				return "Bonus Level - 3";
+				return "Bonus Level - 2";
 			}
 			else if (Level.bonusLevelsSelected && currentLevel == 7)
 			{
-				return "Bonus Level - 4";
+				return "Bonus Level - 3";
 			}
 			else if (Level.bonusLevelsSelected && currentLevel == 8)
 			{
-				return "Bonus Level - 5";
+				return "Bonus Level - 4";
 			}
 			else if (Level.bonusLevelsSelected && currentLevel == 9)
 			{
-				return "Bonus Level - 6";
+				return "Bonus Level - 5";
 			}
 			else if (Level.bonusLevelsSelected && currentLevel == 10)
+			{
+				return "Bonus Level - 6";
+			}
+			else if (Level.bonusLevelsSelected && currentLevel == 11)
 			{
 				return "Bonus Level - 7";
 			}

@@ -429,7 +429,7 @@ namespace Shoeter
 				// Stops delaying collisions with the Guy and other Launchers once he's been launched.
 				stopDelayingCollisionWithGuyAndLaunchersIfPossible();
 			}
-			else
+			else if(!Level.exitGame)
 			{
 				// Load the next level if the player has reached the end of the level and the Guy and Shoes are linked.
 				loadNextLevelIfPossible(shoes);
