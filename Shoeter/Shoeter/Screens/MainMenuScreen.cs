@@ -24,6 +24,7 @@ namespace Shoeter
 		MenuEntry playGameMenuEntry;
 		MenuEntry howToPlayMenuEntry;
 		MenuEntry bonusLevelsMenuEntry;
+		MenuEntry conceptArtMenuEntry;
 		MenuEntry exitMenuEntry;
 
 		#region Initialization
@@ -37,18 +38,21 @@ namespace Shoeter
 			playGameMenuEntry = new MenuEntry("Play Game");
 			howToPlayMenuEntry = new MenuEntry("How To Play");
 			bonusLevelsMenuEntry = new MenuEntry("Bonus Levels");
+			conceptArtMenuEntry = new MenuEntry("Concept Art");
 			exitMenuEntry = new MenuEntry("Quit Game");
 
 			// Hook up menu event handlers.
 			playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
 			howToPlayMenuEntry.Selected += HowToPlayMenuEntrySelected;
 			bonusLevelsMenuEntry.Selected += BonusLevelsMenuEntrySelected;
+			conceptArtMenuEntry.Selected += ConceptArtMenuEntrySelected;
 			exitMenuEntry.Selected += OnCancel;
 
 			// Add entries to the menu.
 			MenuEntries.Add(playGameMenuEntry);
 			MenuEntries.Add(howToPlayMenuEntry);
 			MenuEntries.Add(bonusLevelsMenuEntry);
+			MenuEntries.Add(conceptArtMenuEntry);
 			MenuEntries.Add(exitMenuEntry);
 
 			Utilities.movementLockedDueToActivePauseScreen = false;
@@ -64,6 +68,7 @@ namespace Shoeter
 			playGameMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
 			howToPlayMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
 			bonusLevelsMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
+			conceptArtMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
 			exitMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
 		}
 
@@ -86,15 +91,23 @@ namespace Shoeter
 			LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, "How To Play", new TutorialScreen());
 		}
 
-
 		/// <summary>
-		/// Event handler for when the Bouns Level menu entry is selected.
+		/// Event handler for when the Bonus Level menu entry is selected.
 		/// </summary>
 		void BonusLevelsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
 		{
 			LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, "Bonus Level - 1", new GameplayScreen(true));
 		}
 
+		/// <summary>
+		/// Event handler for when the Concept Art menu entry is selected.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void ConceptArtMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+		{
+			LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, "Concept Art", new ConceptArtScreen());
+		}
 
 		/// <summary>
 		/// When the user cancels the main menu, ask if they want to exit the sample.

@@ -1,34 +1,24 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TutorialScreen.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
-
-#region Using Statements
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-#endregion
 
 namespace Shoeter
 {
-	/// <summary>
-	/// This screen implements the actual game logic. It is just a
-	/// placeholder to get the idea across: you'll probably want to
-	/// put some more interesting gameplay in here!
-	/// </summary>
-	class TutorialScreen : GameScreen
+	class ConceptArtScreen : GameScreen
 	{
 		#region Fields
 
 		ContentManager content;
 		Texture2D backgroundTexture;
+		byte currentConceptArtScreen;
+		KeyboardState currentKeyboardState;
+		KeyboardState previousKeyboardState;
 
 		float pauseAlpha;
 
@@ -40,10 +30,11 @@ namespace Shoeter
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public TutorialScreen()
+		public ConceptArtScreen()
 		{
 			TransitionOnTime = TimeSpan.FromSeconds(1.5);
 			TransitionOffTime = TimeSpan.FromSeconds(0.5);
+			currentConceptArtScreen = 28;
 		}
 
 
@@ -57,7 +48,7 @@ namespace Shoeter
 				content = new ContentManager(ScreenManager.Game.Services, "Content");
 			}
 
-			backgroundTexture = content.Load<Texture2D>("Backgrounds/TutorialScreen");
+			backgroundTexture = content.Load<Texture2D>("Sprites/Concept Art/ConceptArt1");
 
 			// A real game would probably have more content than this sample, so
 			// it would take longer to load. We simulate that by delaying for a
@@ -94,6 +85,10 @@ namespace Shoeter
 		{
 			base.Update(gameTime, otherScreenHasFocus, false);
 
+			currentKeyboardState = Keyboard.GetState();
+
+			determineWhichConceptArtToShow();
+
 			// Gradually fade in or out depending on whether we are covered by the pause screen.
 			if (coveredByOtherScreen)
 			{
@@ -110,6 +105,36 @@ namespace Shoeter
 
 				pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
 			}
+
+			previousKeyboardState = currentKeyboardState;
+		}
+
+		private void determineWhichConceptArtToShow()
+		{
+			if (currentKeyboardState.IsKeyDown(Keys.A) && previousKeyboardState.IsKeyUp(Keys.A))
+			{
+				if (currentConceptArtScreen == 1)
+				{
+					currentConceptArtScreen = 28;
+				}
+				else
+				{
+					currentConceptArtScreen -= 1;
+				}
+			}
+			else if (currentKeyboardState.IsKeyDown(Keys.D) && previousKeyboardState.IsKeyUp(Keys.D))
+			{
+				if (currentConceptArtScreen == 28)
+				{
+					currentConceptArtScreen = 1;
+				}
+				else
+				{
+					currentConceptArtScreen += 1;
+				}
+			}
+
+			backgroundTexture = content.Load<Texture2D>("Sprites/Concept Art/ConceptArt" + currentConceptArtScreen.ToString());
 		}
 
 
