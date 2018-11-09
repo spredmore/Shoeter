@@ -791,8 +791,18 @@ namespace Shoeter
 					}
 				}
 
-				velocity.Y *= 0.55f;    // Decrease the power of the next bounce.
-				position.Y += velocity.Y;
+				// Decrease the power of the next bounce.
+				if (!isJumping)
+				{
+					velocity.Y *= -0.55f;    
+					position.Y -= velocity.Y;
+				}
+				else
+				{
+					velocity.Y *= 0.55f;
+					position.Y += velocity.Y;
+				}
+				
 			}
 			else if (currentState == State.Running_Right)
 			{

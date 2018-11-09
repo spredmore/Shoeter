@@ -97,12 +97,6 @@ namespace Shoeter
 
 			else
 			{
-				if (Level.currentLevel != -2)
-				{
-					Level.currentLevel = -2;
-					MusicHandler.PlayMusic(-2, ref content);
-				}
-
 				pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
 			}
 
