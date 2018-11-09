@@ -444,6 +444,8 @@ namespace Shoeter
 			// If the Guy has turned on a particular set of Air Cannons and has now left that switch, turn the corresponding Air Cannons off.
 			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile, this, null);
 
+			resetShoesAndGuyToLevelStartingPositionIfNecessary(ref shoes);
+
 			// Updates the variables that are used for storing the previous values of the current values.
 			updatePreviousFrameVariables();
 
@@ -791,6 +793,19 @@ namespace Shoeter
 					shoes.changeSpriteOfTheShoes("Idle_Right", true);
 					changeSpriteOfTheGuy("Empty");
 				}
+			}
+		}
+
+		/// <summary>
+		/// Resets the Shoes and Guy to the current level's starting position if the Guy falls below the screen.
+		/// </summary>
+		/// <param name="shoes"></param>
+		private void resetShoesAndGuyToLevelStartingPositionIfNecessary(ref Shoes shoes)
+		{
+			if (Position.Y > 720)
+			{
+				shoes.Position = Level.playerStartingPosition;
+				Position = shoes.Position;
 			}
 		}
 

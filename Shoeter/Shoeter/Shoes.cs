@@ -791,15 +791,14 @@ namespace Shoeter
 					}
 				}
 
-				// Decrease the power of the next bounce.
-				if (!isJumping)
+				if (velocity.Y > 0f && !shoesAreCurrentlyMovingDueToLauncher && isJumping)
 				{
-					velocity.Y *= -0.55f;    
+					velocity.Y *= -0.55f;    // Decrease the power of the next bounce.
 					position.Y -= velocity.Y;
 				}
 				else
 				{
-					velocity.Y *= 0.55f;
+					velocity.Y *= 0.55f;    // Decrease the power of the next bounce.
 					position.Y += velocity.Y;
 				}
 				
