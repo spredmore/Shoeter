@@ -71,13 +71,11 @@ namespace Shoeter
 			{
 				if (!Level.bonusLevelsSelected)
 				{
-					Level.exitGame = true;
 					currentLevel = 0;
 					previousLevel = -1;
 				}
 				else if (Level.bonusLevelsSelected)
 				{
-					Level.exitGame = true;
 					currentLevel = 6;
 					previousLevel = 5;
 				}

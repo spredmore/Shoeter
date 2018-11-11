@@ -79,7 +79,7 @@ namespace Shoeter
 
 			if (!bonusLevelsSelected)
 			{
-				Level.currentLevel = -1;
+				Level.currentLevel = -1; // -1
 				Level.bonusLevelsSelected = false;
 			}
 			else
@@ -196,11 +196,8 @@ namespace Shoeter
 
 			MusicHandler.FadeOutMusicIfPossible(shoes.stopPlayerInputDueToLevelCompletion);
 
-			if(Level.exitGame)
-			{
-				Level.exitGame = false;
-				LoadingScreen.Load(ScreenManager, false, null, "Main Menu", new BackgroundScreen(), new MainMenuScreen());
-			}
+			// Exit to the main menu if possible.
+			exitToMainMenuIfNeeded();
 
 			oldKeyboardState = newKeyboardState;
 			oldMouseState = newMouseState;
@@ -419,6 +416,18 @@ namespace Shoeter
 			Vector2 textSize = ScreenManager.Font.MeasureString(level.getCurrentLevelName());
 			
 			return (windowSize - textSize) / 2;
+		}
+
+		/// <summary>
+		/// Watches to see if Level.exitGame is true. If it is, exit to the main menu upon level completion.
+		/// </summary>
+		private void exitToMainMenuIfNeeded()
+		{
+			if (Level.exitGame)
+			{
+				Level.exitGame = false;
+				LoadingScreen.Load(ScreenManager, false, null, "Main Menu", new BackgroundScreen(), new MainMenuScreen());
+			}
 		}
 
 		#endregion

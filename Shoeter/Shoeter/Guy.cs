@@ -249,8 +249,17 @@ namespace Shoeter
 				!fadeHandler.HoldingWhileFaded &&
 				!fadeHandler.FadingIn)
 			{
-				// Begin fading out the sceen.
-				fadeHandler.fadeToBlack();			
+				// If the player hasn't completed all of the Main Game levels or the Bonus Levels, keep loading them. Otherwise, exit to main menu.
+				if ((!Level.bonusLevelsSelected && Level.currentLevel + 1 <= 5) || (Level.bonusLevelsSelected && Level.currentLevel + 1 <= 12)) 
+				{
+					// Begin fading out the sceen.
+					fadeHandler.fadeToBlack();
+				}
+				else
+				{
+					// Exit to main menu.
+					Level.exitGame = true;
+				}
 			}
 
 			// Once the screen is completely faded out, hold the fade for the specified time.
@@ -260,7 +269,7 @@ namespace Shoeter
 			}
 
 			// Once the amount of time to hold the screen has passed, load the next level.
-			if(fadeHandler.holdWhileFadedTimer.TimerCompleted)
+			if (fadeHandler.holdWhileFadedTimer.TimerCompleted)
 			{
 				fadeHandler.fadeFromBlack();
 				currentLevel.LoadLevel();
@@ -429,7 +438,7 @@ namespace Shoeter
 				// Stops delaying collisions with the Guy and other Launchers once he's been launched.
 				stopDelayingCollisionWithGuyAndLaunchersIfPossible();
 			}
-			else if(!Level.exitGame)
+			else
 			{
 				// Load the next level if the player has reached the end of the level and the Guy and Shoes are linked.
 				loadNextLevelIfPossible(shoes);
