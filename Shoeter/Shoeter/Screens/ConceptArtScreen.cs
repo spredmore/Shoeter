@@ -59,6 +59,9 @@ namespace Shoeter
 			// timing mechanism that we have just finished a very long frame, and that
 			// it should not try to catch up.
 			ScreenManager.Game.ResetElapsedTime();
+
+			// Don't play music on the Concept Art screen.
+			MusicHandler.StopMusic();
 		}
 
 

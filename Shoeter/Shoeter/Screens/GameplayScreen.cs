@@ -119,10 +119,8 @@ namespace Shoeter
 			// Create and load the level.
 			level = new Level(content);			
 
-			// Load level.
+			// Load level and music.
 			level.LoadLevel();
-
-			MusicHandler.PlayMusic(-1, ref content);
 
 			// Create the Shoes.
 			shoes = new Shoes(level.getPlayerStartingPosition(), content.Load<Texture2D>("Sprites/Shoes32x48"), Character.State.Idle_Right, 0, 32, 48, 0, spriteBatch, 720, 1280, Keys.W, Keys.A, Keys.S, Keys.D, content);

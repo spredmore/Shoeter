@@ -70,6 +70,9 @@ namespace Shoeter
 			bonusLevelsMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
 			conceptArtMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
 			exitMenuEntry.prepareToDraw(content, ScreenManager.SpriteBatch, "MainMenu");
+
+			Level.bonusLevelsSelected = false;
+			MusicHandler.PlayMusic(-1, ref content);
 		}
 
 
