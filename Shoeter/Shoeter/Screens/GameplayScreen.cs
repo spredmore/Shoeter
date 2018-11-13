@@ -61,6 +61,8 @@ namespace Shoeter
 		String debug;
 
 		Boolean bonusLevelsSelected;
+		Boolean hasEndOfGameSoundEffectPlayed;
+		Boolean slapEffectLocked;
 
 		#endregion
 
@@ -76,6 +78,8 @@ namespace Shoeter
 			TransitionOffTime = TimeSpan.FromSeconds(0.5);
 			displayInterface = false;
 			this.bonusLevelsSelected = bonusLevelsSelected;
+			this.hasEndOfGameSoundEffectPlayed = false;
+			this.slapEffectLocked = false;
 
 			if (!bonusLevelsSelected)
 			{
@@ -134,6 +138,9 @@ namespace Shoeter
 			// Load the debug font. We use this for debugging purposes.
 			debugFont = content.Load<SpriteFont>("Fonts/debugFont");
 
+			// Loads the sound effects that will be used in the game.
+			SoundEffectHandler.LoadSoundEffects(content);
+
 			mouseRect = new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 16, 16);
 		}
 
@@ -174,6 +181,9 @@ namespace Shoeter
 
 			mouseRect = new Rectangle(newMouseState.X, newMouseState.Y, 16, 16);
 
+			// Handles for if the player hits the Guy with the mouse cursor.
+			handleSlappingSoundEffect();
+
 			foreach (Air air in Air.allAirs)
 			{
 				air.Update(gameTime, ref shoes, ref guy);
@@ -193,6 +203,9 @@ namespace Shoeter
 			}
 
 			MusicHandler.FadeOutMusicIfPossible(shoes.stopPlayerInputDueToLevelCompletion);
+
+			// If the player has won the game, play the end of game sound effect.
+			playEndOfGameSoundEffectIfPossible();
 
 			// Exit to the main menu if possible.
 			exitToMainMenuIfNeeded();
@@ -425,6 +438,49 @@ namespace Shoeter
 			{
 				Level.exitGame = false;
 				LoadingScreen.Load(ScreenManager, false, null, "Main Menu", new BackgroundScreen(), new MainMenuScreen());
+			}
+		}
+
+		/// <summary>
+		/// Plays the end of game sound effect if possible.
+		/// </summary>
+		private void playEndOfGameSoundEffectIfPossible()
+		{
+			if (shoes.stopPlayerInputDueToLevelCompletion && 
+				Level.currentLevel == 5 &&
+				!hasEndOfGameSoundEffectPlayed)
+			{
+				hasEndOfGameSoundEffectPlayed = true;
+				SoundEffectHandler.playEndOfGameCompleteSoundEffect();
+			}
+			
+		}
+
+		/// <summary>
+		/// Plays one of the slapping sound effects based on a random number and if the player has gone for a new slap.
+		/// </summary>
+		private void handleSlappingSoundEffect()
+		{
+			if (mouseRect.Intersects(guy.PositionRect) &&
+					!slapEffectLocked)
+			{
+				Random randomizer = new Random();
+				int randomNumber = randomizer.Next(0, 2);
+				slapEffectLocked = true;
+
+				if (randomNumber == 0)
+				{
+					SoundEffectHandler.playSlap1SoundEffect();
+				}
+				else
+				{
+					SoundEffectHandler.playSlap2SoundEffect();
+				}
+			}
+			else if(!mouseRect.Intersects(guy.PositionRect) && 
+				slapEffectLocked)
+			{
+				slapEffectLocked = false;
 			}
 		}
 

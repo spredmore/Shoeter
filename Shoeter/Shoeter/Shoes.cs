@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Shoeter
 {
@@ -435,7 +436,7 @@ namespace Shoeter
 			setHorizontalVelocity();
 
 			// Check to see if the player wants to jump. If so, set the vertical velocity appropriately.
-			checkIfShoesWantToJump(guy.tileAbove(), guy.isGuyBeingShot);
+			checkIfShoesWantToJump(guy.tileAbove(), guy.isGuyBeingShot, guy.AreGuyAndShoesCurrentlyLinked);
 
 			// Move the Shoes if the player has pressed the appropriate key.
 			moveShoesLeftOrRightIfPossible(delta, guy);
@@ -494,7 +495,7 @@ namespace Shoeter
 		/// Check to see if the player wants to jump. If so, set the velocity to a negetive number so that the Shoes will move upwards.
 		/// </summary>
 		/// <param name="isThereATileAboveTheGuy">Flag that says whether or not there is a tile above the linked Guy/Shoes.</param>
-		private void checkIfShoesWantToJump(Boolean isThereATileAboveTheGuy, Boolean isGuyBeingShot)
+		private void checkIfShoesWantToJump(Boolean isThereATileAboveTheGuy, Boolean isGuyBeingShot, Boolean areGuyAndShoesCurrentlyLinked)
 		{
 			if (!isJumping
 				&& ((newKeyboardState.IsKeyDown(up) && !oldKeyboardState.IsKeyDown(up)) || (newKeyboardState.IsKeyDown(Keys.Space) && !oldKeyboardState.IsKeyDown(Keys.Space)))
@@ -507,6 +508,15 @@ namespace Shoeter
 			{
 				isJumping = true;
 				velocity.Y = jumpImpulse * -1;
+
+				if (areGuyAndShoesCurrentlyLinked)
+				{
+					SoundEffectHandler.stopGuyAndShoesRunningEffect();
+				}
+				else
+				{
+					SoundEffectHandler.stopShoesRunningEffect();
+				}
 
 				if (CurrentState == State.Jumping && !jumpingAnimationLockIsOn && !isGuyBeingShot)
 				{
@@ -549,6 +559,17 @@ namespace Shoeter
 					shoesAreCurrentlyMovingDueToLauncher = false;
 					velocity.Y = 0f;
 				}
+				else if (!shoesAreCurrentlyMovingDueToLauncher && !isJumping && !isFalling)
+				{
+					if (!guy.AreGuyAndShoesCurrentlyLinked)
+					{
+						SoundEffectHandler.playShoesRunningEffect();
+					}
+					else
+					{
+						SoundEffectHandler.playGuyAndShoesRunningSoundEffect();
+					}
+				}
 
 				// Create the rectangle for the player's future position.
 				// Draw a rectangle around the player's position after they move.
@@ -579,6 +600,17 @@ namespace Shoeter
 					shoesAreCurrentlyMovingDueToLauncher = false;
 					velocity.Y = 0f;
 				}
+				else if (!shoesAreCurrentlyMovingDueToLauncher && !isJumping && !isFalling)
+				{
+					if (!guy.AreGuyAndShoesCurrentlyLinked)
+					{
+						SoundEffectHandler.playShoesRunningEffect();
+					}
+					else
+					{
+						SoundEffectHandler.playGuyAndShoesRunningSoundEffect();
+					}
+				}
 
 				updateRectangles(-1, 0);
 				handleCollisions(State.Running_Left);
@@ -598,6 +630,16 @@ namespace Shoeter
 
 			if (!newKeyboardState.IsKeyDown(left) && !newKeyboardState.IsKeyDown(right) && directionShoesAreRunning != State.Idle_Right && directionShoesAreRunning != State.Idle_Left)
 			{
+				// Stop playing the Running sound effects when the Guy and Shoes go Idle.
+				if (!guy.AreGuyAndShoesCurrentlyLinked)
+				{
+					SoundEffectHandler.stopShoesRunningEffect();
+				}
+				else
+				{
+					SoundEffectHandler.stopGuyAndShoesRunningEffect();
+				}
+
 				if (directionShoesAreRunning == State.Running_Right)
 				{
 					changeSpriteOfTheShoes("Idle_Right", true);

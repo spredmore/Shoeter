@@ -225,6 +225,7 @@ namespace Shoeter
 						velocity = new Vector2(0f, 0f); // So the Guy doesn't fall through.
 						useGravity = false;
 						changeSpriteOfTheGuy("Idle_WithoutShoes_Right");
+						SoundEffectHandler.playGuyLandingSoundEffect();
 					}
 				}
 			}
@@ -791,6 +792,7 @@ namespace Shoeter
 				delayCollisionWithShoesAndGuy = true;
 				areGuyAndShoesCurrentlyLinked = true;
 				shoes.swapTexture(areGuyAndShoesCurrentlyLinked);
+				SoundEffectHandler.stopShoesRunningEffect();
 
 				if (shoes.directionShoesAreRunning == State.Running_Left || shoes.directionShoesAreRunning == State.Idle_Left)
 				{
