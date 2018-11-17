@@ -45,7 +45,7 @@ namespace Shoeter
 		private bool delayMovementAfterSpringCollision = false;		// The player cannot move the Shoes themselves after a Spring has been used.
 		private Timer delayMovementAfterSpringCollisionTimer;		// Delays movement of the Shoes from using a Spring too quickly.
 
-		private Timer delayLaunchAfterLauncherCollisionTimer;		// Delays launching the Shoes upon initial collision.
+		public Timer delayLaunchAfterLauncherCollisionTimer;		// Delays launching the Shoes upon initial collision.
 		private int angleInDegreesOfLauncherShoesIsUsing;			// Stores the coordinates of the Launcher Tile from the level. Used to launch the Shoes at the correct angle.
 		private bool shoesAreCurrentlyMovingDueToLauncher = false;	// Says whether or not the Shoes are moving due to being launched from a Launcher. 
 
@@ -389,12 +389,15 @@ namespace Shoeter
 		/// If the Shoes have fallen to the bottom of the map, reset the Shoes and Guy to the starting position of the level.
 		/// </summary>
 		/// <param name="guy">A reference to the Guy. Needed so that a check can be done to ensure that there isn't a tile above the linked Guy/Shoes.</param>
-		private void resetShoesAndGuyToLevelStartingPositionIfNecessary(Guy guy)
+		public void resetShoesAndGuyToLevelStartingPositionIfNecessary(Guy guy)
 		{
 			if (Position.Y > 704)
 			{
 				Position = Level.playerStartingPosition;
 				guy.Position = Position;
+				guy.delayLaunchAfterLauncherCollisionTimer.resetTimer();
+				guy.delayBetweenLaunchesTimer.resetTimer();
+				guy.usingLauncher = false;
 			}
 		}
 

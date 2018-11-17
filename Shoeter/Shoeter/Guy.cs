@@ -23,8 +23,8 @@ namespace Shoeter
 
 		private bool delayCollisionWithShoesAndGuy = true;			// We need to let the Guy travel a little bit before Shoes can catch him.
 		private Timer delayCollisionWithGuyAndShoesTimer;			// Delay so that the Guy and Shoes don't link back together too quickly.
-		private Timer delayLaunchAfterLauncherCollisionTimer;		// Delays launching the Guy upon initial collision.
-		private Timer delayBetweenLaunchesTimer;					// Delay so the Guy doesn't use another launcher too quickly.
+		public Timer delayLaunchAfterLauncherCollisionTimer;		// Delays launching the Guy upon initial collision.
+		public Timer delayBetweenLaunchesTimer;					// Delay so the Guy doesn't use another launcher too quickly.
 
 		public float angleBetweenGuyAndMouseCursor;
 		public float powerOfLauncherBeingUsed = 5f;
@@ -423,7 +423,8 @@ namespace Shoeter
 			shootGuyIfPossible(shoes);
 
 			// Reset the Guy to the Shoes' position if the player clicks the right mouse button.
-			resetGuyToShoesCurrentPositionIfPossible(shoes);
+			// This should be disabled in game.
+			//resetGuyToShoesCurrentPositionIfPossible(shoes);
 
 			if (isGuyBeingShot)
 			{
@@ -454,7 +455,8 @@ namespace Shoeter
 			// If the Guy has turned on a particular set of Air Cannons and has now left that switch, turn the corresponding Air Cannons off.
 			Air.turnOffAirCannonsIfPossible(CurrentCollidingTile, PreviousCollidingTile, this, null);
 
-			resetShoesAndGuyToLevelStartingPositionIfNecessary(ref shoes);
+			// Reset the Guy and Shoes to the beginning of the level if they fall off.
+			resetShoesAndGuyToLevelStartingPositionIfNecessary(ref shoes, false);
 
 			// Updates the variables that are used for storing the previous values of the current values.
 			updatePreviousFrameVariables();
@@ -750,7 +752,10 @@ namespace Shoeter
 		/// <param name="shoes">A reference to the Shoes.</param>
 		private void resetGuyToShoesCurrentPositionIfPossible(Shoes shoes)
 		{
-			if (!(currentMouseState.RightButton == ButtonState.Pressed) && previousMouseState.RightButton == ButtonState.Pressed && !areGuyAndShoesCurrentlyLinked && !Utilities.movementLockedDueToActivePauseScreen)
+			if (!(currentMouseState.RightButton == ButtonState.Pressed) && 
+				previousMouseState.RightButton == ButtonState.Pressed && 
+				!areGuyAndShoesCurrentlyLinked && 
+				!Utilities.movementLockedDueToActivePauseScreen)
 			{
 				isGuyBeingShot = false;
 				usingLauncher = false;
@@ -811,12 +816,15 @@ namespace Shoeter
 		/// Resets the Shoes and Guy to the current level's starting position if the Guy falls below the screen.
 		/// </summary>
 		/// <param name="shoes"></param>
-		private void resetShoesAndGuyToLevelStartingPositionIfNecessary(ref Shoes shoes)
+		public void resetShoesAndGuyToLevelStartingPositionIfNecessary(ref Shoes shoes, Boolean playerRestartLevel)
 		{
-			if (Position.Y > 720)
+			if (Position.Y > 720 || playerRestartLevel)
 			{
 				shoes.Position = Level.playerStartingPosition;
 				Position = shoes.Position;
+				delayLaunchAfterLauncherCollisionTimer.resetTimer();
+				delayBetweenLaunchesTimer.resetTimer();
+				usingLauncher = false;
 			}
 		}
 

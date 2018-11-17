@@ -91,7 +91,6 @@ namespace Shoeter
 				Level.currentLevel = 5;
 				Level.bonusLevelsSelected = true;
 			}
-			
 		}
 
 
@@ -174,7 +173,8 @@ namespace Shoeter
 			shoes.Update(gameTime, ref guy);
 			guy.Update(gameTime, ref shoes, ref level);
 
-			if (guy.AreGuyAndShoesCurrentlyLinked && newMouseState.LeftButton == ButtonState.Pressed && !Utilities.movementLockedDueToActivePauseScreen)
+			if (guy.AreGuyAndShoesCurrentlyLinked && newMouseState.LeftButton == ButtonState.Pressed && 
+				!Utilities.movementLockedDueToActivePauseScreen)
 			{
 				TrajectoryLineHandler.Update(ref guy);
 			}
@@ -210,6 +210,9 @@ namespace Shoeter
 			// Exit to the main menu if possible.
 			exitToMainMenuIfNeeded();
 
+			// If the player presses the 'R' key, reset the player to the beginning of the level.
+			restartLevelIfNecessary();
+
 			oldKeyboardState = newKeyboardState;
 			oldMouseState = newMouseState;
 
@@ -237,17 +240,9 @@ namespace Shoeter
 
 			level.drawBackground(spriteBatch, ref content);
 
-			//guy.Draw();
 			guy.Sprite.Draw();
-			//spriteBatch.Draw(content.Load<Texture2D>("Sprites/32x48Hitbox"), new Rectangle(guy.Sprite.RotatedRect.X, guy.Sprite.RotatedRect.Y, guy.Sprite.RotatedRect.Width, guy.Sprite.RotatedRect.Height), Color.White);
-			//spriteBatch.Draw(content.Load<Texture2D>("Sprites/32x48Hitbox2"), guy.FutureRectangleRect, Color.White);
-			//spriteBatch.Draw(content.Load<Texture2D>("Sprites/16x16HitboxUp"), guy.TileCollisionRectangle, Color.White);
 
-			//shoes.Draw();
 			shoes.Sprite.Draw();
-			//spriteBatch.Draw(content.Load<Texture2D>("Sprites/32x48Hitbox"), shoes.PositionRect, Color.White);
-			//spriteBatch.Draw(content.Load<Texture2D>("Sprites/32x48Hitbox2"), new Rectangle(shoes.Sprite.RotatedRect.X, shoes.Sprite.RotatedRect.Y, shoes.Sprite.RotatedRect.Width, shoes.Sprite.RotatedRect.Height), Color.White);
-			//spriteBatch.Draw(content.Load<Texture2D>("Sprites/16x16HitboxUp"), shoes.TileCollisionRectangle, Color.White);
 
 			foreach (Air air in Air.allAirs)
 			{
@@ -258,8 +253,6 @@ namespace Shoeter
 			
 			// Draw the level.
 			level.Draw(spriteBatch, true);
-
-			debug = mouseRect.X.ToString() + " " + mouseRect.Y.ToString();
 
 			if(Level.bonusLevelsSelected || displayInterface)
 			{
@@ -292,8 +285,6 @@ namespace Shoeter
 				spriteBatch.DrawString(debugFont, "Air Debug2: " + Air.debug2, new Vector2(0, 420), Color.Black);
 				spriteBatch.DrawString(debugFont, "Game1 Debug: " + debug, new Vector2(0, 440), Color.Black);
 			}
-
-			spriteBatch.Draw(content.Load<Texture2D>("Sprites/16x16HitboxUp"), mouseRect, Color.White);
 
 			// Draw the trajectory line while the left mouse button is being held.
 			if (guy.AreGuyAndShoesCurrentlyLinked && newMouseState.LeftButton == ButtonState.Pressed)
@@ -374,19 +365,13 @@ namespace Shoeter
 		private void displayPowerLevelIfPossible(ref Guy guy, ref Shoes shoes)
 		{
 			// Display under only the Guy.
-			if (guy.usingLauncher)
+			if (guy.usingLauncher && !guy.AreGuyAndShoesCurrentlyLinked)
 			{
 				spriteBatch.DrawString(ScreenManager.FontSmall, guy.powerOfLauncherBeingUsed.ToString(), new Vector2(guy.Position.X, guy.Position.Y + 60), Color.LimeGreen);
 			}
-
-			// Display under the Shoes depending on if the Guy and Shoes are linked.
-			if (shoes.DelayLaunchAfterLauncherCollisionTimer.TimerStarted && !shoes.DelayLaunchAfterLauncherCollisionTimer.TimerCompleted &&
-				!guy.AreGuyAndShoesCurrentlyLinked)
-			{
-				spriteBatch.DrawString(ScreenManager.FontSmall, guy.powerOfLauncherBeingUsed.ToString(), new Vector2(shoes.Position.X, shoes.Position.Y + 30), Color.LimeGreen);
-			}
-			else if (shoes.DelayLaunchAfterLauncherCollisionTimer.TimerStarted && !shoes.DelayLaunchAfterLauncherCollisionTimer.TimerCompleted &&
-				guy.AreGuyAndShoesCurrentlyLinked)
+			// Display under the Shoes.
+			else if (shoes.delayLaunchAfterLauncherCollisionTimer.TimerStarted &&
+				!shoes.delayLaunchAfterLauncherCollisionTimer.TimerCompleted)
 			{
 				spriteBatch.DrawString(ScreenManager.FontSmall, guy.powerOfLauncherBeingUsed.ToString(), new Vector2(shoes.Position.X + 15, shoes.Position.Y + 60), Color.LimeGreen);
 			}
@@ -481,6 +466,17 @@ namespace Shoeter
 				slapEffectLocked)
 			{
 				slapEffectLocked = false;
+			}
+		}
+
+		/// <summary>
+		/// Resets the Guy and Shoes to the beginning of the level if the player presses the 'R' key.
+		/// </summary>
+		private void restartLevelIfNecessary()
+		{
+			if (!newKeyboardState.IsKeyDown(Keys.R) && oldKeyboardState.IsKeyDown(Keys.R))
+			{
+				guy.resetShoesAndGuyToLevelStartingPositionIfNecessary(ref shoes, true);
 			}
 		}
 
