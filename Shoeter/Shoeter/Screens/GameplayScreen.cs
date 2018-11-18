@@ -293,7 +293,7 @@ namespace Shoeter
 			}
 
 			// Write the power level below the Shoes or Guy when using a Launcher.
-			displayPowerLevelIfPossible(ref guy, ref shoes);
+			displayPowerLevelIfPossible();
 
 			// Check to see if the player won. If they did, display the level completion picture.
 			drawLevelCompleteImageIfPossible();
@@ -362,18 +362,27 @@ namespace Shoeter
 		/// </summary>
 		/// <param name="guy">A reference to the Guy.</param>
 		/// <param name="shoes">A reference to the Shoes.</param>
-		private void displayPowerLevelIfPossible(ref Guy guy, ref Shoes shoes)
+		private void displayPowerLevelIfPossible()
 		{
 			// Display under only the Guy.
 			if (guy.usingLauncher && !guy.AreGuyAndShoesCurrentlyLinked)
 			{
 				spriteBatch.DrawString(ScreenManager.FontSmall, guy.powerOfLauncherBeingUsed.ToString(), new Vector2(guy.Position.X, guy.Position.Y + 60), Color.LimeGreen);
 			}
-			// Display under the Shoes.
+			// Display under both.
 			else if (shoes.delayLaunchAfterLauncherCollisionTimer.TimerStarted &&
+				!shoes.delayLaunchAfterLauncherCollisionTimer.TimerCompleted &&
+				guy.AreGuyAndShoesCurrentlyLinked)
+			{
+				spriteBatch.DrawString(ScreenManager.FontSmall, guy.powerOfLauncherBeingUsed.ToString(), new Vector2(guy.Position.X, guy.Position.Y + 60), Color.LimeGreen);
+			}
+
+			// Display under only the Shoes.
+			if (!guy.AreGuyAndShoesCurrentlyLinked && 
+				shoes.delayLaunchAfterLauncherCollisionTimer.TimerStarted &&
 				!shoes.delayLaunchAfterLauncherCollisionTimer.TimerCompleted)
 			{
-				spriteBatch.DrawString(ScreenManager.FontSmall, guy.powerOfLauncherBeingUsed.ToString(), new Vector2(shoes.Position.X + 15, shoes.Position.Y + 60), Color.LimeGreen);
+				spriteBatch.DrawString(ScreenManager.FontSmall, guy.powerOfLauncherBeingUsed.ToString(), new Vector2(shoes.Position.X, shoes.Position.Y + 30), Color.LimeGreen);
 			}
 		}
 
